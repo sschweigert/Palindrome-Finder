@@ -130,17 +130,8 @@ int main(int argc, char** argv)
 		++seedIterator;
 	}
 
-
-
-	for (const auto& seedString : backwardOrdering)
-	{
-
-		std::cout << seedString << std::endl;
-
-	}
-
-	std::cout << *forwardOrdering.lower_bound("test") << std::endl;
-	std::cout << *forwardOrdering.upper_bound("test") << std::endl;
+	std::cout << *backwardOrdering.lower_bound("test") << std::endl;
+	std::cout << *backwardOrdering.upper_bound("test") << std::endl;
 
 	std::cout << "Found the following palindromes: " << std::endl;
 	for (const auto& palindrome : palindromes)
