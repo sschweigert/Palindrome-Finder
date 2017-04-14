@@ -82,6 +82,8 @@ int main(int argc, char** argv)
 		{
 			if (leftCharacters >= rightCharacters)
 			{
+				// Begin inserting right words
+
 				// Number of left characters that must be matched by the new right characters
 				int numMatchingCharacters = leftCharacters - rightCharacters;
 
@@ -106,8 +108,11 @@ int main(int argc, char** argv)
 					matchingCharacters += *(forwardIterators[index]);
 				}
 
-				reverse(matchingCharacters.begin(), matchingCharacters.end());
+				//reverse(matchingCharacters.begin(), matchingCharacters.end());
 
+				IteratorBounds<ReverseStringSet::iterator> newBounds;
+				newBounds.lowerBound = backwardOrdering.lower_bound(matchingCharacters);
+				newBounds.upperBound = backwardOrdering.upper_bound(matchingCharacters);
 
 				
 			}
