@@ -6,7 +6,7 @@
 #include <functional>
 #include <stack>
 
-#include <reverse_less.h>
+#include <string_set.h>
 #include <palindrome_tools.h>
 
 
@@ -28,11 +28,111 @@ struct IteratorBounds
 
 };
 
+class IWordCandidateIterator
+{
+
+	public:
+
+		virtual std::string operator*() = 0;
+
+		virtual bool hasNext() = 0;
+
+		virtual IWordCandidateIterator& operator++() = 0;
+
+};
+
+class ForwardSubwordIterator : public IWordCandidateIterator
+{
+
+	public:
+
+		ForwardSubwordIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch) :
+		mHasNext(true),
+		mIndex(-1),
+		mWordToMatch(wordToMatch),	
+		mWordsToSearch(wordsToSearch),
+		mSubWord("")
+		{
+
+		}
+
+		virtual std::string operator*()
+		{
+			return mSubWord;	
+		}
+
+		virtual bool hasNext()
+		{
+			return mHasNext;
+		}
+
+		virtual IWordCandidateIterator& operator++()
+		{
+			while (++mIndex < (int)mWordToMatch.size())
+			{
+				mSubWord += mWordToMatch[mIndex];
+				if (mWordsToSearch.count(mSubWord) == 1)
+				{
+					// Subword is valid, so break out of loop
+					return *this;
+				}	
+			}
+
+			// Reached end of word so there is nothing new to add
+			mHasNext = false;
+
+			return *this;
+		}	
+
+	private:
+
+		bool mHasNext;
+
+		int mIndex;
+		
+		const std::string& mWordToMatch;
+
+		const ForwardStringSet& mWordsToSearch;
+
+		std::string mSubWord;
+		
+};
+
+class ForwardCandidateIterator : public IWordCandidateIterator
+{
+
+	public:
+
+		ForwardCandidateIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch) :
+			mSubwordIterator(wordToMatch, wordsToSearch)
+		{
+
+		}
+
+		virtual std::string operator*()
+		{
+
+		}
+
+		virtual bool hasNext()
+		{
+			return mSubwordIterator.hasNext();
+		}
+
+		virtual IWordCandidateIterator& operator++()
+		{
+
+		}
+
+	private:
+
+		ForwardSubwordIterator mSubwordIterator;
+
+};
+
 int main(int argc, char** argv)
 {
 
-	typedef std::set<std::string, std::less<std::string>> ForwardStringSet;
-	typedef std::set<std::string, ReverseLess> ReverseStringSet;
 	/*	
 	std::fstream fileStream;
 	fileStream.open("/home/sebastian/Downloads/words.txt", std::fstream::in);
