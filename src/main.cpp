@@ -98,35 +98,147 @@ class ForwardSubwordIterator : public IWordCandidateIterator
 		
 };
 
-class ForwardCandidateIterator : public IWordCandidateIterator
+class ForwardSuperwordIterator : public IWordCandidateIterator
 {
 
 	public:
 
-		ForwardCandidateIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch) :
-			mSubwordIterator(wordToMatch, wordsToSearch)
+		ForwardSuperwordIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch) :
+		mCurrentValue(wordsToSearch.lower_bound(wordToMatch)),
+		mUpperBounds(calculateUpperBounds(wordToMatch, wordsToSearch))
 		{
 
 		}
 
 		virtual std::string operator*()
 		{
-
+			return *mCurrentValue;	
 		}
 
 		virtual bool hasNext()
 		{
-			return mSubwordIterator.hasNext();
+			return mCurrentValue != mUpperBounds;
 		}
 
 		virtual IWordCandidateIterator& operator++()
 		{
+			++mCurrentValue;
+			return *this;
+		}	
 
+	private:
+
+		ForwardStringSet::const_iterator calculateUpperBounds(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch)
+		{
+			std::string incrementedWord = incrementWord(wordToMatch);
+			return wordsToSearch.upper_bound(incrementedWord);
+		}
+
+		std::string incrementWord(std::string toIncrement)
+		{
+			int i = toIncrement.size() - 1;
+
+			// Remove all z characters except the first one
+			// in the case of string of z's (ie "zzzzzzz")
+			while (toIncrement[i] == 'z' && i > 0)
+			{
+				toIncrement[i] = 'a';
+				--i;
+			}
+
+			// First character is a z
+			if (i == 0)
+			{
+				// Last 'z' is special because string length is increased
+				toIncrement[i] = 'a';
+				toIncrement = 'a' + toIncrement;
+			}
+			else
+			{
+				// Normal increment (most cases will just do this to the
+				// last letter)
+				toIncrement[i] = toIncrement[i] + (char)1;
+			}
+			
+			return toIncrement;
+		}
+
+		ForwardStringSet::const_iterator mCurrentValue;
+
+		const ForwardStringSet::const_iterator mUpperBounds;
+
+};
+
+class ForwardCandidateIterator : public IWordCandidateIterator
+{
+
+	public:
+
+		ForwardCandidateIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch) :
+			mCurrentState(State::SubWord),
+			mSubwordIterator(wordToMatch, wordsToSearch),
+			mSuperwordIterator(wordToMatch, wordsToSearch)
+		{
+
+		}
+
+		virtual std::string operator*()
+		{
+			if (mCurrentState == State::SubWord)
+			{
+				return *mSubwordIterator;	
+			}
+			else
+			{
+				return *mSuperwordIterator;
+			}
+		}
+
+		virtual bool hasNext()
+		{
+			if (mCurrentState == State::SubWord)
+			{
+				return true;		
+			}
+			else
+			{
+				return mSubwordIterator.hasNext();
+			}
+		}
+
+		virtual IWordCandidateIterator& operator++()
+		{
+			if (mCurrentState == State::SubWord)
+			{
+				++mSubwordIterator;
+				if (!mSubwordIterator.hasNext())
+				{
+					mCurrentState = State::Superword;
+				}				
+			}
+			else
+			{
+				++mSuperwordIterator;
+			}
+			return *this;
 		}
 
 	private:
 
+		enum class State
+		{
+
+			SubWord,
+
+			Superword			
+
+		};
+
+		State mCurrentState;
+
 		ForwardSubwordIterator mSubwordIterator;
+
+		ForwardSuperwordIterator mSuperwordIterator;
 
 };
 
