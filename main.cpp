@@ -6,6 +6,43 @@
 #include <functional>
 #include <stack>
 
+template <class Iterator>
+void incrementPastSpaces(Iterator& iterator)
+{
+	while (*iterator == ' ')
+	{
+		++iterator;
+	}
+}
+
+bool isPalindrome(const std::string& first)
+{
+	auto forwardItr = first.begin();
+	auto reverseItr = first.rbegin();
+
+	while (forwardItr != first.end())
+	{
+		incrementPastSpaces(forwardItr);
+		incrementPastSpaces(reverseItr);
+
+		if (*forwardItr != *reverseItr)
+		{
+			return false;
+		}
+
+	}
+	return true;	
+}
+
+enum class Side
+{
+
+	Left,
+
+	Right
+
+};
+
 template <class IteratorType>
 struct IteratorBounds
 {
