@@ -4,6 +4,7 @@ project(programming_test)
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
 
 add_library(programming_test
+	src/palindrome_tools.cpp
 	src/reverse_less.cpp
 )
 

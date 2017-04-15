@@ -7,34 +7,8 @@
 #include <stack>
 
 #include <reverse_less.h>
+#include <palindrome_tools.h>
 
-template <class Iterator>
-void incrementPastSpaces(Iterator& iterator)
-{
-	while (*iterator == ' ')
-	{
-		++iterator;
-	}
-}
-
-bool isPalindrome(const std::string& first)
-{
-	auto forwardItr = first.begin();
-	auto reverseItr = first.rbegin();
-
-	while (forwardItr != first.end())
-	{
-		incrementPastSpaces(forwardItr);
-		incrementPastSpaces(reverseItr);
-
-		if (*forwardItr != *reverseItr)
-		{
-			return false;
-		}
-
-	}
-	return true;	
-}
 
 enum class Side
 {
@@ -56,12 +30,12 @@ struct IteratorBounds
 
 int main(int argc, char** argv)
 {
-	
-	std::fstream fileStream;
-	fileStream.open("/home/sebastian/Downloads/words.txt", std::fstream::in);
 
 	typedef std::set<std::string, std::less<std::string>> ForwardStringSet;
 	typedef std::set<std::string, ReverseLess> ReverseStringSet;
+	/*	
+	std::fstream fileStream;
+	fileStream.open("/home/sebastian/Downloads/words.txt", std::fstream::in);
 
 	ForwardStringSet forwardOrdering;
 	ReverseStringSet backwardOrdering;
@@ -159,6 +133,28 @@ int main(int argc, char** argv)
 	for (const auto& palindrome : palindromes)
 	{
 		std::cout << palindrome << std::endl;
+	}
+	*/
+
+	ForwardStringSet set;
+	set.insert("t");
+	set.insert("te");
+	set.insert("tes");
+	set.insert("tea");
+	set.insert("teaa");
+	set.insert("test");
+	set.insert("testy");
+	set.insert("testacle");
+	set.insert("testicle");
+	set.insert("tesla");
+	
+
+	auto low = set.lower_bound("test");
+	auto upper = set.upper_bound("tesu");
+
+	for (auto itr = low; itr != upper; ++itr)
+	{
+		std::cout << *itr << std::endl;
 	}
 
 	return 0;

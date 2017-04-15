@@ -11224,7 +11224,6 @@ ancylostome
 ancylostomiasis
 ancyroid
 and
-and/or
 anda
 andabata
 andabatarian
@@ -23447,8 +23446,6 @@ azyme
 azymite
 azymous
 b
-b/l
-b/s
 ba
 baa
 baaed
@@ -40846,10 +40843,6 @@ byzantium
 byzants
 bz
 c
-c/d
-c/f
-c/m
-c/o
 ca
 caaba
 caam
@@ -124846,7 +124839,6 @@ hailweed
 haily
 haimsucken
 hain
-hain"t
 hainberry
 hainch
 haine
@@ -126966,7 +126958,6 @@ hdlc
 hdqrs
 hdwe
 he
-he"ll
 head
 headache
 headaches
@@ -137160,7 +137151,6 @@ hyte
 hythergraph
 hyzone
 i
-i/c
 ia
 iago
 iamatology
@@ -144028,7 +144018,6 @@ inpouring
 inpours
 inpush
 input
-input/output
 inputfile
 inputs
 inputted
@@ -149784,7 +149773,6 @@ isuretine
 isuroid
 isz
 it
-it"ll
 ita
 itabirite
 itacism
@@ -153228,7 +153216,6 @@ kb
 kbar
 kbps
 kc
-kc/s
 kcal
 kea
 keach
@@ -154930,7 +154917,6 @@ klva
 klystron
 klystrons
 km
-km/sec
 kmel
 kmet
 kmole
@@ -156044,7 +156030,6 @@ kything
 kytoon
 kyu
 l
-l/w
 la
 laager
 laagered
@@ -162595,8 +162580,6 @@ llb
 ller
 llyn
 lm
-lm/ft
-lm/m
 ln
 lndg
 lnr
@@ -165224,7 +165207,6 @@ lyttae
 lyttas
 lyxose
 m
-m/s
 ma
 maad
 maam
@@ -183582,8 +183564,6 @@ myzostomous
 mzee
 mzungu
 n
-n/a
-n/f
 na
 naa
 naam
@@ -196525,8 +196505,6 @@ nystatin
 nytril
 nyxis
 o
-o/c
-o/s
 oad
 oadal
 oaf
@@ -342070,8 +342048,6 @@ vying
 vyingly
 vyrnwy
 w
-w/
-w/o
 wa
 waac
 waag
