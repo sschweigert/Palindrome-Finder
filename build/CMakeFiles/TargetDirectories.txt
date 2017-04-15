@@ -1,2 +1,0 @@
-/home/sebastian/bOb-Programming-Problem/build/CMakeFiles/programming_test.dir
-/home/sebastian/bOb-Programming-Problem/build/CMakeFiles/main.dir

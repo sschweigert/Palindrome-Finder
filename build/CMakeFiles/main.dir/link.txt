@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++11 -Wall    CMakeFiles/main.dir/src/main.cpp.o  -o main -rdynamic libprogramming_test.a 
