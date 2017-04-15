@@ -6,6 +6,8 @@
 #include <functional>
 #include <stack>
 
+#include <reverse_less.h>
+
 template <class Iterator>
 void incrementPastSpaces(Iterator& iterator)
 {
@@ -49,23 +51,6 @@ struct IteratorBounds
 
 	IteratorType lowerBound;
 	IteratorType upperBound;
-
-};
-
-class ReverseLess
-{
-
-	public:
-
-		bool operator()(const std::string& first, const std::string& second) const
-		{
-			std::string reversedFirst = first;	
-			std::string reversedSecond = second;	
-
-			reverse(reversedFirst.begin(), reversedFirst.end());
-			reverse(reversedSecond.begin(), reversedSecond.end());
-			return reversedFirst < reversedSecond;
-		}
 
 };
 

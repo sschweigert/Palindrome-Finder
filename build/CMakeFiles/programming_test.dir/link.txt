@@ -1,0 +1,2 @@
+/usr/bin/ar cq libprogramming_test.a  CMakeFiles/programming_test.dir/src/reverse_less.cpp.o
+/usr/bin/ranlib libprogramming_test.a

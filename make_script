@@ -1,1 +1,4 @@
-g++ --std=c++11 main.cpp
+mkdir -p build
+cd build
+cmake ..
+make

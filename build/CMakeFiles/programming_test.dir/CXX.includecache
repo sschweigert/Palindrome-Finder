@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/reverse_less.h
+string
+-
+
+/home/sebastian/bOb-Programming-Problem/src/reverse_less.cpp
+reverse_less.h
+-
+algorithm
+-
+
