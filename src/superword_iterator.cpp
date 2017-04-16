@@ -57,3 +57,61 @@ std::string ForwardSuperwordIterator::incrementWord(std::string toIncrement)
 
 	return toIncrement;
 }
+
+ReverseSuperwordIterator::ReverseSuperwordIterator(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch) :
+	mCurrentValue(wordsToSearch.upper_bound(wordToMatch)),
+	mUpperBounds(calculateUpperBounds(wordToMatch, wordsToSearch))
+{
+
+}
+
+std::string ReverseSuperwordIterator::operator*()
+{
+	return *mCurrentValue;	
+}
+
+bool ReverseSuperwordIterator::hasNext()
+{
+	return mCurrentValue != mUpperBounds;
+}
+
+IWordCandidateIterator& ReverseSuperwordIterator::operator++()
+{
+	++mCurrentValue;
+	return *this;
+}	
+
+ReverseStringSet::const_iterator ReverseSuperwordIterator::calculateUpperBounds(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch)
+{
+	std::string incrementedWord = incrementWord(wordToMatch);
+	return wordsToSearch.lower_bound(incrementedWord);
+}
+
+std::string ReverseSuperwordIterator::incrementWord(std::string toIncrement)
+{
+	int i = toIncrement.size() - 1;
+
+	// Remove all z characters except the first one
+	// in the case of string of z's (ie "zzzzzzz")
+	while (toIncrement[i] == 'z' && i > 0)
+	{
+		toIncrement[i] = 'a';
+		--i;
+	}
+
+	// First character is a z
+	if (i == 0)
+	{
+		// Last 'z' is special because string length is increased
+		toIncrement[i] = 'a';
+		toIncrement = 'a' + toIncrement;
+	}
+	else
+	{
+		// Normal increment (most cases will just do this to the
+		// last letter)
+		toIncrement[i] = toIncrement[i] + (char)1;
+	}
+
+	return toIncrement;
+}

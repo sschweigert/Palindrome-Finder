@@ -29,4 +29,29 @@ class ForwardSuperwordIterator : public IWordCandidateIterator
 
 };
 
+class ReverseSuperwordIterator : public IWordCandidateIterator
+{
+
+	public:
+
+		ReverseSuperwordIterator(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch);
+
+		virtual std::string operator*();
+
+		virtual bool hasNext();
+
+		virtual IWordCandidateIterator& operator++();
+
+	private:
+
+		ReverseStringSet::const_iterator calculateUpperBounds(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch);
+
+		std::string incrementWord(std::string toIncrement);
+
+		ReverseStringSet::const_iterator mCurrentValue;
+
+		const ReverseStringSet::const_iterator mUpperBounds;
+
+};
+
 #endif
