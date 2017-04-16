@@ -32,4 +32,32 @@ class ForwardSubwordIterator : public IWordCandidateIterator
 		
 };
 
+
+class ReverseSubwordIterator : public IWordCandidateIterator
+{
+
+	public:
+
+		ReverseSubwordIterator(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch);
+
+		virtual std::string operator*();
+
+		virtual bool hasNext();
+
+		virtual IWordCandidateIterator& operator++();
+
+	private:
+
+		bool mHasNext;
+
+		int mIndex;
+		
+		const std::string& mWordToMatch;
+
+		const ReverseStringSet& mWordsToSearch;
+
+		std::string mSubWord;
+		
+};
+
 #endif

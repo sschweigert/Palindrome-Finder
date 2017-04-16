@@ -38,3 +38,42 @@ IWordCandidateIterator& ForwardSubwordIterator::operator++()
 
 	return *this;
 }	
+
+ReverseSubwordIterator::ReverseSubwordIterator(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch) :
+	mHasNext(true),
+	mIndex(wordToMatch.size()),
+	mWordToMatch(wordToMatch),	
+	mWordsToSearch(wordsToSearch),
+	mSubWord("")
+{
+	operator++();
+}
+
+std::string ReverseSubwordIterator::operator*() 
+{
+	return mSubWord;	
+}
+
+bool ReverseSubwordIterator::hasNext()
+{
+	return mHasNext;
+}
+
+IWordCandidateIterator& ReverseSubwordIterator::operator++()
+{
+	// Note we ignore the case of the full word
+	while (--mIndex > 0)
+	{
+		mSubWord = mWordToMatch[mIndex] + mSubWord;
+		if (mWordsToSearch.count(mSubWord) == 1)
+		{
+			// Subword is valid, so break out of loop
+			return *this;
+		}	
+	}
+
+	// Reached end of word so there is nothing new to add
+	mHasNext = false;
+
+	return *this;
+}	
