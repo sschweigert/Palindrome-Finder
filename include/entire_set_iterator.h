@@ -3,8 +3,8 @@
 
 #include <iword_candidate_iterator.h>
 
-template <class SetType>
-class EntireSetIterator : public IWordCandidateIterator
+template <class SetType, class Interface>
+class EntireSetIterator : public Interface 
 {
 
 	public:

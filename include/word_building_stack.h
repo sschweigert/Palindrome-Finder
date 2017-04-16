@@ -6,6 +6,16 @@
 #include <vector>
 
 #include <iword_candidate_iterator.h>
+#include <side.h>
+
+struct Overhang
+{
+
+	Side side;
+
+	std::string overhangText;
+
+};
 
 class WordBuildingStack
 {
@@ -16,13 +26,19 @@ class WordBuildingStack
 
 		void addItem(std::unique_ptr<IReverseWordCandidateIterator> rightIterator);
 
+		Overhang getOverhang() const;
+
 	private:
+
+		const std::vector<IWordCandidateIterator*>& getSideStack(Side side) const;
+
+		int getSideLength(Side side) const;
 
 		std::stack<std::unique_ptr<IWordCandidateIterator>> candidateStack;
 
-		std::vector<IForwardWordCandidateIterator*> leftIterators;
+		std::vector<IWordCandidateIterator*> leftIterators;
 
-		std::vector<IReverseWordCandidateIterator*> rightIterators;
+		std::vector<IWordCandidateIterator*> rightIterators;
 
 };
 

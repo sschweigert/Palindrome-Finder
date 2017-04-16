@@ -13,14 +13,6 @@
 #include <entire_set_iterator.h>
 
 
-enum class Side
-{
-
-	Left,
-
-	Right
-
-};
 
 
 int main(int argc, char** argv)

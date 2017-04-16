@@ -5,7 +5,7 @@
 #include <subword_iterator.h>
 #include <superword_iterator.h>
 
-template <class SubwordType, class SuperwordType, class StringSetType>
+template <class SubwordType, class SuperwordType, class StringSetType, class Interface>
 class WordCandidateIterator : public IWordCandidateIterator
 {
 
@@ -79,7 +79,7 @@ class WordCandidateIterator : public IWordCandidateIterator
 
 };
 
-typedef WordCandidateIterator<ForwardSubwordIterator, ForwardSuperwordIterator, ForwardStringSet> ForwardCandidateIterator;
-typedef WordCandidateIterator<ReverseSubwordIterator, ReverseSuperwordIterator, ReverseStringSet> ReverseCandidateIterator;
+typedef WordCandidateIterator<ForwardSubwordIterator, ForwardSuperwordIterator, ForwardStringSet, IForwardWordCandidateIterator> ForwardCandidateIterator;
+typedef WordCandidateIterator<ReverseSubwordIterator, ReverseSuperwordIterator, ReverseStringSet, IReverseWordCandidateIterator> ReverseCandidateIterator;
 
 #endif
