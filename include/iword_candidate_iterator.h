@@ -8,11 +8,16 @@ class IWordCandidateIterator
 
 	public:
 
-		virtual std::string operator*() = 0;
+		virtual const std::string& operator*() const = 0;
 
 		virtual bool hasNext() = 0;
 
 		virtual IWordCandidateIterator& operator++() = 0;
+
+		const std::string* operator->() const
+		{
+			return &(this->operator*());
+		}
 
 		virtual ~IWordCandidateIterator()
 		{}

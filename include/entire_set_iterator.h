@@ -14,7 +14,7 @@ class EntireSetIterator : public Interface
 		mCurrentPos(set.begin())
 		{}
 
-		virtual std::string operator*()
+		virtual const std::string& operator*() const
 		{
 			return *mCurrentPos;
 		}

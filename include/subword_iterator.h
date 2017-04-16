@@ -12,7 +12,7 @@ class ForwardSubwordIterator : public IWordCandidateIterator
 
 		ForwardSubwordIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch);
 
-		virtual std::string operator*();
+		virtual const std::string& operator*() const;
 
 		virtual bool hasNext();
 
@@ -40,7 +40,7 @@ class ReverseSubwordIterator : public IWordCandidateIterator
 
 		ReverseSubwordIterator(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch);
 
-		virtual std::string operator*();
+		virtual const std::string& operator*() const;
 
 		virtual bool hasNext();
 

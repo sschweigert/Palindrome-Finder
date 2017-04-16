@@ -30,7 +30,7 @@ int WordBuildingStack::getSideLength(Side side) const
 	int length = 0;
 	for (auto& side : sideStack)
 	{
-		length += side->size();	
+		length += (*side)->size();	
 	}
 	return length;
 }
@@ -54,7 +54,7 @@ Overhang WordBuildingStack::getOverhang() const
 	int index = sideStack.size() - 1;
 	for (; index >= 0 && accumulatedChars < numMatchingCharacters; --index)
 	{
-		accumulatedChars += sideStack[index]->size();	
+		accumulatedChars += (*sideStack[index])->size();	
 	}
 
 	int overlapCharPosition = accumulatedChars - numMatchingCharacters;
@@ -63,12 +63,12 @@ Overhang WordBuildingStack::getOverhang() const
 	if (toReturn.side == Side::Left)
 	{
 		// Deal with overlapping word
-		toReturn.overhangText = (sideStack[overlapIndex])->substr(overlapCharPosition);
+		toReturn.overhangText = (*sideStack[overlapIndex])->substr(overlapCharPosition);
 
 		for (int appendingIndex = overlapIndex + 1; 
 			appendingIndex < sideStack.size() - 1; ++appendingIndex)
 		{
-			toReturn.overhangText += *(sideStack[appendingIndex]);
+			toReturn.overhangText += **(sideStack[appendingIndex]);
 		}
 	}
 	else
@@ -76,11 +76,11 @@ Overhang WordBuildingStack::getOverhang() const
 		for (int appendingIndex = sideStack.size() - 1; 
 			appendingIndex > overlapIndex; --appendingIndex)
 		{
-			toReturn.overhangText += *(sideStack[appendingIndex]);
+			toReturn.overhangText += **(sideStack[appendingIndex]);
 		}
 
 		// Deal with overlapping word
-		toReturn.overhangText += (sideStack[overlapIndex])->substr(0, overlapCharPosition);
+		toReturn.overhangText += (*sideStack[overlapIndex])->substr(0, overlapCharPosition);
 	}
 
 	return toReturn;

@@ -8,7 +8,7 @@ ForwardCandidateIterator::ForwardCandidateIterator(const std::string& wordToMatc
 
 }
 
-std::string ForwardCandidateIterator::operator*()
+std::string ForwardCandidateIterator::operator*() const
 {
 	if (mCurrentState == State::SubWord)
 	{

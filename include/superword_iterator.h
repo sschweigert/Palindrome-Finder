@@ -11,7 +11,7 @@ class ForwardSuperwordIterator : public IWordCandidateIterator
 
 		ForwardSuperwordIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch);
 
-		virtual std::string operator*();
+		virtual const std::string& operator*() const;
 
 		virtual bool hasNext();
 
@@ -34,7 +34,7 @@ class ReverseSuperwordIterator : public IWordCandidateIterator
 
 		ReverseSuperwordIterator(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch);
 
-		virtual std::string operator*();
+		virtual const std::string& operator*() const;
 
 		virtual bool hasNext();
 

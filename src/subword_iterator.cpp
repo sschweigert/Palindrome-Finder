@@ -10,7 +10,7 @@ ForwardSubwordIterator::ForwardSubwordIterator(const std::string& wordToMatch, c
 	operator++();
 }
 
-std::string ForwardSubwordIterator::operator*() 
+const std::string& ForwardSubwordIterator::operator*() const 
 {
 	return mSubWord;	
 }
@@ -49,7 +49,7 @@ ReverseSubwordIterator::ReverseSubwordIterator(const std::string& wordToMatch, c
 	operator++();
 }
 
-std::string ReverseSubwordIterator::operator*() 
+const std::string& ReverseSubwordIterator::operator*() const 
 {
 	return mSubWord;	
 }

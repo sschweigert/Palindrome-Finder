@@ -19,7 +19,7 @@ class WordCandidateIterator : public IWordCandidateIterator
 
 			}
 
-		virtual std::string operator*()
+		virtual std::string operator*() const
 		{
 			if (mCurrentState == State::SubWord)
 			{

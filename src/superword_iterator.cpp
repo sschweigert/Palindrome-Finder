@@ -10,7 +10,7 @@ ForwardSuperwordIterator::ForwardSuperwordIterator(const std::string& wordToMatc
 
 }
 
-std::string ForwardSuperwordIterator::operator*()
+const std::string& ForwardSuperwordIterator::operator*() const
 {
 	return *mCurrentValue;	
 }
@@ -39,7 +39,7 @@ ReverseSuperwordIterator::ReverseSuperwordIterator(const std::string& wordToMatc
 
 }
 
-std::string ReverseSuperwordIterator::operator*()
+const std::string& ReverseSuperwordIterator::operator*() const
 {
 	return *mCurrentValue;	
 }
