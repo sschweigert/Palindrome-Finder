@@ -6,20 +6,21 @@
 #include <superword_iterator.h>
 
 template <class SubwordType, class SuperwordType, class StringSetType, class Interface>
-class WordCandidateIterator : public IWordCandidateIterator
+class WordCandidateIterator : public Interface 
 {
 
 	public:
 
-		WordCandidateIterator(const std::string& wordToMatch, const StringSetType& wordsToSearch) :
+		WordCandidateIterator(std::string wordToMatch, const StringSetType& wordsToSearch) :
+			mWordToMatch(wordToMatch),
 			mCurrentState(State::SubWord),
-			mSubwordIterator(wordToMatch, wordsToSearch),
-			mSuperwordIterator(wordToMatch, wordsToSearch)
+			mSubwordIterator(mWordToMatch, wordsToSearch),
+			mSuperwordIterator(mWordToMatch, wordsToSearch)
 			{
 
 			}
 
-		virtual std::string operator*() const
+		virtual const std::string& operator*() const
 		{
 			if (mCurrentState == State::SubWord)
 			{
@@ -70,6 +71,8 @@ class WordCandidateIterator : public IWordCandidateIterator
 			Superword			
 
 		};
+
+		std::string mWordToMatch;
 
 		State mCurrentState;
 

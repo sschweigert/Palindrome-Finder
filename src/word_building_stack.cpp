@@ -39,8 +39,8 @@ Overhang WordBuildingStack::getOverhang() const
 {
 	Overhang toReturn;
 
-	int leftSideLength = getSideStack(Side::Left).size();
-	int rightSideLength = getSideStack(Side::Right).size();
+	int leftSideLength = getSideLength(Side::Left);
+	int rightSideLength = getSideLength(Side::Right);
 
 	toReturn.side = (rightSideLength > leftSideLength) ? Side::Right : Side::Left; 
 
@@ -58,7 +58,7 @@ Overhang WordBuildingStack::getOverhang() const
 	}
 
 	int overlapCharPosition = accumulatedChars - numMatchingCharacters;
-	int overlapIndex = index;
+	int overlapIndex = index + 1;
 
 	if (toReturn.side == Side::Left)
 	{
@@ -74,7 +74,7 @@ Overhang WordBuildingStack::getOverhang() const
 	else
 	{
 		for (int appendingIndex = sideStack.size() - 1; 
-			appendingIndex > overlapIndex; --appendingIndex)
+			appendingIndex >= overlapIndex + 1; --appendingIndex)
 		{
 			toReturn.overhangText += **(sideStack[appendingIndex]);
 		}

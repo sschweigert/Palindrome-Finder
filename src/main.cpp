@@ -27,15 +27,18 @@ int main(int argc, char** argv)
 	}
 
 	ForwardStringSet forwardOrdering;
-	ReverseStringSet backwardOrdering;
+	ReverseStringSet reverseOrdering;
 
 	while (!fileStream.eof())
 	{
 		std::string line;
 		fileStream >> line;
-		
-		forwardOrdering.insert(line);
-		backwardOrdering.insert(line);
+
+		if (line.size() > 0)	
+		{
+			forwardOrdering.insert(line);
+			reverseOrdering.insert(line);
+		}
 	}
 
 	std::cout << "Words collected" << std::endl;
@@ -50,7 +53,32 @@ int main(int argc, char** argv)
 
 	wordBuildingStack.push(std::move(seedIterator));
 
-	std::cout << wordBuildingStack.generateString() << std::endl;
+	Overhang overhang = wordBuildingStack.getOverhang();
+	if (overhang.side == Side::Left)
+	{
+		std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(overhang.overhangText, forwardOrdering));
+
+		wordBuildingStack.push(std::move(newIterator));
+	}
+	else
+	{
+		std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(overhang.overhangText, reverseOrdering));
+		wordBuildingStack.push(std::move(newIterator));
+	}
+
+
+	std::string textToMatch = "a";
+	ForwardSuperwordIterator forwardItr(textToMatch, forwardOrdering);
+	
+	for (int i = 0; forwardItr.hasNext() && i < 10; i++)
+	{
+		std::cout << *forwardItr << std::endl;
+		++forwardItr;
+	}
+	
+	//std::cout << wordBuildingStack.generateString() << std::endl;
+
+	//
 	/*
 	WordSearcher initialSearcher;
 	initialSearcher.mSide = Side::Left;
