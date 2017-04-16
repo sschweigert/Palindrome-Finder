@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <functional>
 #include <stack>
+#include <memory>
 
 #include <string_set.h>
 #include <palindrome_tools.h>
@@ -29,6 +30,14 @@ struct IteratorBounds
 
 };
 
+struct WordSearcher
+{
+
+	Side side;
+
+	std::unique_ptr<IWordCandidateIterator> wordCandidateIterator;
+
+};
 
 
 int main(int argc, char** argv)
@@ -137,7 +146,9 @@ int main(int argc, char** argv)
 	}
 	*/
 
-	ForwardStringSet set;
+	
+
+	ReverseStringSet set;
 	set.insert("t");
 	set.insert("te");
 	set.insert("tes");
@@ -150,10 +161,15 @@ int main(int argc, char** argv)
 	set.insert("testacle");
 	set.insert("testicle");
 	set.insert("tesla");
+	set.insert("st");
+	set.insert("stest");
+	set.insert("adfsfastest");
+	set.insert("sest");
+	set.insert("uest");
 
 	std::string toMatch = "test";
 	
-	for (auto itr = ForwardCandidateIterator(toMatch, set); itr.hasNext(); ++itr)
+	for (auto itr = ReverseCandidateIterator(toMatch, set); itr.hasNext(); ++itr)
 	{
 		std::cout << *itr << std::endl;
 	}
