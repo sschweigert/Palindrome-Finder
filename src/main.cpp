@@ -39,6 +39,9 @@ class IWordCandidateIterator
 
 		virtual IWordCandidateIterator& operator++() = 0;
 
+		virtual ~IWordCandidateIterator()
+		{}
+
 };
 
 class ForwardSubwordIterator : public IWordCandidateIterator
@@ -53,7 +56,7 @@ class ForwardSubwordIterator : public IWordCandidateIterator
 		mWordsToSearch(wordsToSearch),
 		mSubWord("")
 		{
-
+			operator++();
 		}
 
 		virtual std::string operator*()
@@ -68,7 +71,8 @@ class ForwardSubwordIterator : public IWordCandidateIterator
 
 		virtual IWordCandidateIterator& operator++()
 		{
-			while (++mIndex < (int)mWordToMatch.size())
+			// Note we ignore the case of the full word
+			while (++mIndex < (int)mWordToMatch.size() - 1)
 			{
 				mSubWord += mWordToMatch[mIndex];
 				if (mWordsToSearch.count(mSubWord) == 1)
@@ -76,6 +80,9 @@ class ForwardSubwordIterator : public IWordCandidateIterator
 					// Subword is valid, so break out of loop
 					return *this;
 				}	
+				else
+				{
+				}
 			}
 
 			// Reached end of word so there is nothing new to add
@@ -104,7 +111,7 @@ class ForwardSuperwordIterator : public IWordCandidateIterator
 	public:
 
 		ForwardSuperwordIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch) :
-		mCurrentValue(wordsToSearch.lower_bound(wordToMatch)),
+		mCurrentValue(wordsToSearch.upper_bound(wordToMatch)),
 		mUpperBounds(calculateUpperBounds(wordToMatch, wordsToSearch))
 		{
 
@@ -131,7 +138,7 @@ class ForwardSuperwordIterator : public IWordCandidateIterator
 		ForwardStringSet::const_iterator calculateUpperBounds(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch)
 		{
 			std::string incrementedWord = incrementWord(wordToMatch);
-			return wordsToSearch.upper_bound(incrementedWord);
+			return wordsToSearch.lower_bound(incrementedWord);
 		}
 
 		std::string incrementWord(std::string toIncrement)
@@ -202,7 +209,7 @@ class ForwardCandidateIterator : public IWordCandidateIterator
 			}
 			else
 			{
-				return mSubwordIterator.hasNext();
+				return mSuperwordIterator.hasNext();
 			}
 		}
 
@@ -354,17 +361,17 @@ int main(int argc, char** argv)
 	set.insert("tes");
 	set.insert("tea");
 	set.insert("teaa");
+	set.insert("tess");
 	set.insert("test");
+	set.insert("tesu");
 	set.insert("testy");
 	set.insert("testacle");
 	set.insert("testicle");
 	set.insert("tesla");
+
+	std::string toMatch = "test";
 	
-
-	auto low = set.lower_bound("test");
-	auto upper = set.upper_bound("tesu");
-
-	for (auto itr = low; itr != upper; ++itr)
+	for (auto itr = ForwardCandidateIterator(toMatch, set); itr.hasNext(); ++itr)
 	{
 		std::cout << *itr << std::endl;
 	}
