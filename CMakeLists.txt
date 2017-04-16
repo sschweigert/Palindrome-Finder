@@ -6,6 +6,9 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
 add_library(programming_test
 	src/palindrome_tools.cpp
 	src/string_set.cpp
+	src/subword_iterator.cpp
+	src/superword_iterator.cpp
+	src/word_candidate_iterator.cpp
 )
 
 target_include_directories(programming_test
