@@ -86,3 +86,29 @@ Overhang WordBuildingStack::getOverhang() const
 	return toReturn;
 
 }
+
+int WordBuildingStack::size() const
+{
+	return candidateStack.size();
+}
+
+IWordCandidateIterator& WordBuildingStack::top()
+{
+	return *candidateStack.top();
+}
+
+void WordBuildingStack::pop()
+{
+	IWordCandidateIterator* toPop = &top();
+
+	if (leftIterators.back() == toPop)
+	{
+		leftIterators.pop_back();
+	}
+	else
+	{
+		rightIterators.pop_back();
+	}
+
+	candidateStack.pop();
+}

@@ -28,6 +28,12 @@ class WordBuildingStack
 
 		Overhang getOverhang() const;
 
+		int size() const;
+
+		IWordCandidateIterator& top();
+
+		void pop();
+
 	private:
 
 		const std::vector<IWordCandidateIterator*>& getSideStack(Side side) const;
