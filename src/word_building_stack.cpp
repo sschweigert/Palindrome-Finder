@@ -1,12 +1,12 @@
 #include <word_building_stack.h>
 
-void WordBuildingStack::addItem(std::unique_ptr<IForwardWordCandidateIterator> leftIterator)
+void WordBuildingStack::push(std::unique_ptr<IForwardWordCandidateIterator> leftIterator)
 {
 	leftIterators.push_back(leftIterator.get());
 	candidateStack.push(std::move(leftIterator));
 }
 
-void WordBuildingStack::addItem(std::unique_ptr<IReverseWordCandidateIterator> rightIterator)
+void WordBuildingStack::push(std::unique_ptr<IReverseWordCandidateIterator> rightIterator)
 {
 	rightIterators.push_back(rightIterator.get());
 	candidateStack.push(std::move(rightIterator));
@@ -111,4 +111,21 @@ void WordBuildingStack::pop()
 	}
 
 	candidateStack.pop();
+}
+
+std::string WordBuildingStack::generateString() const
+{
+	std::string toReturn;
+
+	for (int i = 0; i < leftIterators.size(); i++)
+	{
+		toReturn += **leftIterators[i];
+	}
+
+	for (int i = rightIterators.size() - 1; i >= 0; i--)
+	{
+		toReturn += **leftIterators[i];
+	}
+
+	return toReturn;
 }

@@ -22,9 +22,9 @@ class WordBuildingStack
 
 	public:
 
-		void addItem(std::unique_ptr<IForwardWordCandidateIterator> leftIterator);
+		void push(std::unique_ptr<IForwardWordCandidateIterator> leftIterator);
 
-		void addItem(std::unique_ptr<IReverseWordCandidateIterator> rightIterator);
+		void push(std::unique_ptr<IReverseWordCandidateIterator> rightIterator);
 
 		Overhang getOverhang() const;
 
@@ -33,6 +33,8 @@ class WordBuildingStack
 		IWordCandidateIterator& top();
 
 		void pop();
+		
+		std::string generateString() const;
 
 	private:
 
