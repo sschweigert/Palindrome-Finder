@@ -17,7 +17,13 @@ int main(int argc, char** argv)
 {
 
 	std::fstream fileStream;
-	fileStream.open("/home/sebastian/Downloads/words.txt", std::fstream::in);
+	fileStream.open("/home/sebastian/bOb-Programming-Problem/words.txt", std::fstream::in);
+
+	if (fileStream.fail())
+	{
+		std::cout << "Could not open file" << std::endl;	
+		return 0;
+	}
 
 	ForwardStringSet forwardOrdering;
 	ReverseStringSet backwardOrdering;
@@ -31,6 +37,8 @@ int main(int argc, char** argv)
 		backwardOrdering.insert(line);
 	}
 
+	std::cout << "Words collected" << std::endl;
+
 	int numberOfWords = 3;
 
 	std::vector<std::string> palindromes;
@@ -40,6 +48,8 @@ int main(int argc, char** argv)
 	std::unique_ptr<IForwardWordCandidateIterator> seedIterator(new EntireSetIterator<ForwardStringSet, IForwardWordCandidateIterator>(forwardOrdering));
 
 	wordBuildingStack.push(std::move(seedIterator));
+
+	std::cout << wordBuildingStack.generateString() << std::endl;
 	/*
 	WordSearcher initialSearcher;
 	initialSearcher.mSide = Side::Left;
