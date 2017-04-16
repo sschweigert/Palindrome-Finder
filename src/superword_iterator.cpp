@@ -1,5 +1,8 @@
 #include <superword_iterator.h>
 
+#include <palindrome_tools.h>
+#include <algorithm>
+
 ForwardSuperwordIterator::ForwardSuperwordIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch) :
 	mCurrentValue(wordsToSearch.upper_bound(wordToMatch)),
 	mUpperBounds(calculateUpperBounds(wordToMatch, wordsToSearch))
@@ -29,35 +32,6 @@ ForwardStringSet::const_iterator ForwardSuperwordIterator::calculateUpperBounds(
 	return wordsToSearch.lower_bound(incrementedWord);
 }
 
-std::string ForwardSuperwordIterator::incrementWord(std::string toIncrement)
-{
-	int i = toIncrement.size() - 1;
-
-	// Remove all z characters except the first one
-	// in the case of string of z's (ie "zzzzzzz")
-	while (toIncrement[i] == 'z' && i > 0)
-	{
-		toIncrement[i] = 'a';
-		--i;
-	}
-
-	// First character is a z
-	if (i == 0)
-	{
-		// Last 'z' is special because string length is increased
-		toIncrement[i] = 'a';
-		toIncrement = 'a' + toIncrement;
-	}
-	else
-	{
-		// Normal increment (most cases will just do this to the
-		// last letter)
-		toIncrement[i] = toIncrement[i] + (char)1;
-	}
-
-	return toIncrement;
-}
-
 ReverseSuperwordIterator::ReverseSuperwordIterator(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch) :
 	mCurrentValue(wordsToSearch.upper_bound(wordToMatch)),
 	mUpperBounds(calculateUpperBounds(wordToMatch, wordsToSearch))
@@ -83,35 +57,11 @@ IWordCandidateIterator& ReverseSuperwordIterator::operator++()
 
 ReverseStringSet::const_iterator ReverseSuperwordIterator::calculateUpperBounds(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch)
 {
-	std::string incrementedWord = incrementWord(wordToMatch);
+	std::string reverseTemp = wordToMatch;
+	reverse(reverseTemp.begin(), reverseTemp.end());
+
+	std::string incrementedWord = incrementWord(reverseTemp);
+	reverse(incrementedWord.begin(), incrementedWord.end());
+
 	return wordsToSearch.lower_bound(incrementedWord);
-}
-
-std::string ReverseSuperwordIterator::incrementWord(std::string toIncrement)
-{
-	int i = toIncrement.size() - 1;
-
-	// Remove all z characters except the first one
-	// in the case of string of z's (ie "zzzzzzz")
-	while (toIncrement[i] == 'z' && i > 0)
-	{
-		toIncrement[i] = 'a';
-		--i;
-	}
-
-	// First character is a z
-	if (i == 0)
-	{
-		// Last 'z' is special because string length is increased
-		toIncrement[i] = 'a';
-		toIncrement = 'a' + toIncrement;
-	}
-	else
-	{
-		// Normal increment (most cases will just do this to the
-		// last letter)
-		toIncrement[i] = toIncrement[i] + (char)1;
-	}
-
-	return toIncrement;
 }

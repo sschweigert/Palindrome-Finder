@@ -21,8 +21,6 @@ class ForwardSuperwordIterator : public IWordCandidateIterator
 
 		ForwardStringSet::const_iterator calculateUpperBounds(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch);
 
-		std::string incrementWord(std::string toIncrement);
-
 		ForwardStringSet::const_iterator mCurrentValue;
 
 		const ForwardStringSet::const_iterator mUpperBounds;
@@ -45,8 +43,6 @@ class ReverseSuperwordIterator : public IWordCandidateIterator
 	private:
 
 		ReverseStringSet::const_iterator calculateUpperBounds(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch);
-
-		std::string incrementWord(std::string toIncrement);
 
 		ReverseStringSet::const_iterator mCurrentValue;
 

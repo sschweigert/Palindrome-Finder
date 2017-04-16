@@ -14,4 +14,6 @@ void incrementPastSpaces(Iterator& iterator)
 
 bool isPalindrome(const std::string& first);
 
+std::string incrementWord(std::string toIncrement);
+
 #endif
