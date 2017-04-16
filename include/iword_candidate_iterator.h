@@ -19,5 +19,15 @@ class IWordCandidateIterator
 
 };
 
+class IForwardWordCandidateIterator : public IWordCandidateIterator
+{
+
+};
+
+class IReverseWordCandidateIterator : public IWordCandidateIterator
+{
+
+};
+
 
 #endif

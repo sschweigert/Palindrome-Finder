@@ -22,15 +22,6 @@ enum class Side
 
 };
 
-struct WordSearcher
-{
-
-	Side mSide;
-
-	std::unique_ptr<IWordCandidateIterator> mWordCandidateIterator;
-
-};
-
 
 int main(int argc, char** argv)
 {
@@ -139,10 +130,13 @@ int main(int argc, char** argv)
 	*/
 
 	
+	/*
 	WordSearcher initialSearcher;
 	initialSearcher.mSide = Side::Left;
 	initialSearcher.mWordCandidateIterator.reset(new EntireSetIterator<ForwardStringSet>(forwardOrdering));
 
+
+	candidateStack.push(std::move(initialSearcher));
 
 	ReverseStringSet set;
 	set.insert("t");
@@ -169,6 +163,7 @@ int main(int argc, char** argv)
 	{
 		std::cout << *itr << std::endl;
 	}
+	*/
 
 	return 0;
 }
