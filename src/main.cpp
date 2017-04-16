@@ -10,6 +10,7 @@
 #include <string_set.h>
 #include <palindrome_tools.h>
 #include <word_candidate_iterator.h>
+#include <entire_set_iterator.h>
 
 
 enum class Side
@@ -21,21 +22,12 @@ enum class Side
 
 };
 
-template <class IteratorType>
-struct IteratorBounds
-{
-
-	IteratorType lowerBound;
-	IteratorType upperBound;
-
-};
-
 struct WordSearcher
 {
 
-	Side side;
+	Side mSide;
 
-	std::unique_ptr<IWordCandidateIterator> wordCandidateIterator;
+	std::unique_ptr<IWordCandidateIterator> mWordCandidateIterator;
 
 };
 
@@ -43,7 +35,6 @@ struct WordSearcher
 int main(int argc, char** argv)
 {
 
-	/*	
 	std::fstream fileStream;
 	fileStream.open("/home/sebastian/Downloads/words.txt", std::fstream::in);
 
@@ -63,6 +54,7 @@ int main(int argc, char** argv)
 
 	std::vector<std::string> palindromes;
 
+	/*	
 	std::vector<ForwardStringSet::iterator> forwardIterators;
 	std::vector<ReverseStringSet::iterator> reverseIterators;
 
@@ -147,6 +139,10 @@ int main(int argc, char** argv)
 	*/
 
 	
+	WordSearcher initialSearcher;
+	initialSearcher.mSide = Side::Left;
+	initialSearcher.mWordCandidateIterator.reset(new EntireSetIterator<ForwardStringSet>(forwardOrdering));
+
 
 	ReverseStringSet set;
 	set.insert("t");
