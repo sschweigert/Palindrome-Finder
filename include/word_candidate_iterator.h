@@ -5,13 +5,13 @@
 #include <subword_iterator.h>
 #include <superword_iterator.h>
 
-template <class SubwordType, class SuperwordType>
+template <class SubwordType, class SuperwordType, class StringSetType>
 class WordCandidateIterator : public IWordCandidateIterator
 {
 
 	public:
 
-		WordCandidateIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch) :
+		WordCandidateIterator(const std::string& wordToMatch, const StringSetType& wordsToSearch) :
 			mCurrentState(State::SubWord),
 			mSubwordIterator(wordToMatch, wordsToSearch),
 			mSuperwordIterator(wordToMatch, wordsToSearch)
@@ -79,7 +79,7 @@ class WordCandidateIterator : public IWordCandidateIterator
 
 };
 
-typedef WordCandidateIterator<ForwardSubwordIterator, ForwardSuperwordIterator> ForwardCandidateIterator;
-typedef WordCandidateIterator<ReverseSubwordIterator, ReverseSuperwordIterator> ReverseCandidateIterator;
+typedef WordCandidateIterator<ForwardSubwordIterator, ForwardSuperwordIterator, ForwardStringSet> ForwardCandidateIterator;
+typedef WordCandidateIterator<ReverseSubwordIterator, ReverseSuperwordIterator, ReverseStringSet> ReverseCandidateIterator;
 
 #endif
