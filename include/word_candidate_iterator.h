@@ -5,6 +5,8 @@
 #include <subword_iterator.h>
 #include <superword_iterator.h>
 
+#include <iostream>
+
 template <class SubwordType, class SuperwordType, class StringSetType, class Interface>
 class WordCandidateIterator : public Interface 
 {
@@ -13,11 +15,10 @@ class WordCandidateIterator : public Interface
 
 		WordCandidateIterator(std::string wordToMatch, const StringSetType& wordsToSearch) :
 			mWordToMatch(wordToMatch),
-			mCurrentState(State::SubWord),
 			mSubwordIterator(mWordToMatch, wordsToSearch),
-			mSuperwordIterator(mWordToMatch, wordsToSearch)
+			mSuperwordIterator(mWordToMatch, wordsToSearch),
+			mCurrentState(mSubwordIterator.hasNext() ? State::SubWord : State::Superword)
 			{
-
 			}
 
 		virtual const std::string& operator*() const

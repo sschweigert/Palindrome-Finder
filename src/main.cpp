@@ -66,27 +66,12 @@ int main(int argc, char** argv)
 
 		wordBuildingStack.push(std::move(newIterator));
 	}
-
-
+	
 	while (wordBuildingStack.top().hasNext())
 	{
-		++(wordBuildingStack.top());
 		std::cout << wordBuildingStack.generateString() << std::endl;
+		++(wordBuildingStack.top());
 	}
 	
-
-	/*
-	std::string textToMatch = "a";
-	ReverseCandidateIterator forwardItr(textToMatch, reverseOrdering);
-	
-	for (int i = 0; forwardItr.hasNext() && i < 100; i++)
-	{
-		std::cout << *forwardItr << std::endl;
-		++forwardItr;
-	}
-	*/
-	
-	std::cout << wordBuildingStack.generateString() << std::endl;
-
 	return 0;
 }
