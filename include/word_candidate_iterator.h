@@ -74,11 +74,11 @@ class WordCandidateIterator : public Interface
 
 		std::string mWordToMatch;
 
-		State mCurrentState;
-
 		SubwordType mSubwordIterator;
 
 		SuperwordType mSuperwordIterator;
+
+		State mCurrentState;
 
 };
 

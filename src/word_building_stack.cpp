@@ -120,12 +120,16 @@ std::string WordBuildingStack::generateString() const
 	for (int i = 0; i < leftIterators.size(); i++)
 	{
 		toReturn += **leftIterators[i];
+		toReturn += ' ';
 	}
 
 	for (int i = rightIterators.size() - 1; i >= 0; i--)
 	{
-		toReturn += **leftIterators[i];
+		toReturn += **rightIterators[i];
+		toReturn += ' ';
 	}
+
+	toReturn.pop_back();
 
 	return toReturn;
 }

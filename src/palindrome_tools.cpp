@@ -32,7 +32,7 @@ std::string incrementWord(std::string toIncrement)
 	}
 
 	// First character is a z
-	if (i == 0)
+	if (toIncrement[i] == 'z')
 	{
 		// Last 'z' is special because string length is increased
 		toIncrement[i] = 'a';
@@ -44,7 +44,6 @@ std::string incrementWord(std::string toIncrement)
 		// last letter)
 		toIncrement[i] = toIncrement[i] + (char)1;
 	}
-
 	return toIncrement;
 }
 

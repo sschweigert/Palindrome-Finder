@@ -56,63 +56,37 @@ int main(int argc, char** argv)
 	Overhang overhang = wordBuildingStack.getOverhang();
 	if (overhang.side == Side::Left)
 	{
-		std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(overhang.overhangText, forwardOrdering));
+		std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(overhang.overhangText, reverseOrdering));
 
 		wordBuildingStack.push(std::move(newIterator));
 	}
 	else
 	{
-		std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(overhang.overhangText, reverseOrdering));
+		std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(overhang.overhangText, forwardOrdering));
+
 		wordBuildingStack.push(std::move(newIterator));
 	}
 
 
-	std::string textToMatch = "a";
-	ForwardSuperwordIterator forwardItr(textToMatch, forwardOrdering);
+	while (wordBuildingStack.top().hasNext())
+	{
+		++(wordBuildingStack.top());
+		std::cout << wordBuildingStack.generateString() << std::endl;
+	}
 	
-	for (int i = 0; forwardItr.hasNext() && i < 10; i++)
+
+	/*
+	std::string textToMatch = "a";
+	ReverseCandidateIterator forwardItr(textToMatch, reverseOrdering);
+	
+	for (int i = 0; forwardItr.hasNext() && i < 100; i++)
 	{
 		std::cout << *forwardItr << std::endl;
 		++forwardItr;
 	}
-	
-	//std::cout << wordBuildingStack.generateString() << std::endl;
-
-	//
-	/*
-	WordSearcher initialSearcher;
-	initialSearcher.mSide = Side::Left;
-	initialSearcher.mWordCandidateIterator.reset(new EntireSetIterator<ForwardStringSet>(forwardOrdering));
-
-
-	candidateStack.push(std::move(initialSearcher));
-
-	ReverseStringSet set;
-	set.insert("t");
-	set.insert("te");
-	set.insert("tes");
-	set.insert("tea");
-	set.insert("teaa");
-	set.insert("tess");
-	set.insert("test");
-	set.insert("tesu");
-	set.insert("testy");
-	set.insert("testacle");
-	set.insert("testicle");
-	set.insert("tesla");
-	set.insert("st");
-	set.insert("stest");
-	set.insert("adfsfastest");
-	set.insert("sest");
-	set.insert("uest");
-
-	std::string toMatch = "test";
-	
-	for (auto itr = ReverseCandidateIterator(toMatch, set); itr.hasNext(); ++itr)
-	{
-		std::cout << *itr << std::endl;
-	}
 	*/
+	
+	std::cout << wordBuildingStack.generateString() << std::endl;
 
 	return 0;
 }
