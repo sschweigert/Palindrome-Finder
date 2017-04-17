@@ -16,4 +16,6 @@ bool isPalindrome(const std::string& first);
 
 std::string incrementWord(std::string toIncrement);
 
+std::string reverseString(const std::string& toReverse);
+
 #endif

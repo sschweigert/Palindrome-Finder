@@ -53,25 +53,58 @@ int main(int argc, char** argv)
 
 	wordBuildingStack.push(std::move(seedIterator));
 
-	Overhang overhang = wordBuildingStack.getOverhang();
-	if (overhang.side == Side::Left)
-	{
-		std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(overhang.overhangText, reverseOrdering));
-
-		wordBuildingStack.push(std::move(newIterator));
-	}
-	else
-	{
-		std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(overhang.overhangText, forwardOrdering));
-
-		wordBuildingStack.push(std::move(newIterator));
-	}
-	
 	while (wordBuildingStack.top().hasNext())
 	{
-		std::cout << wordBuildingStack.generateString() << std::endl;
+
+		Overhang overhang = wordBuildingStack.getOverhang();
+		if (overhang.side == Side::Left)
+		{
+			std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
+
+			wordBuildingStack.push(std::move(newIterator));
+		}
+		else
+		{
+			std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
+
+			wordBuildingStack.push(std::move(newIterator));
+		}
+
+		
+		
+		while (wordBuildingStack.top().hasNext())
+		{
+
+			Overhang newOverhang = wordBuildingStack.getOverhang();
+			if (newOverhang.side == Side::Left)
+			{
+				std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(reverseString(newOverhang.overhangText), reverseOrdering));
+
+				wordBuildingStack.push(std::move(newIterator));
+			}
+			else
+			{
+				std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(reverseString(newOverhang.overhangText), forwardOrdering));
+
+				wordBuildingStack.push(std::move(newIterator));
+			}
+
+			while (wordBuildingStack.top().hasNext())
+			{
+				std::cout << wordBuildingStack.generateString() << std::endl;
+				++(wordBuildingStack.top());
+			}
+
+			wordBuildingStack.pop();
+
+			++(wordBuildingStack.top());
+		}
+
+		wordBuildingStack.pop();
+
 		++(wordBuildingStack.top());
+
 	}
-	
+
 	return 0;
 }

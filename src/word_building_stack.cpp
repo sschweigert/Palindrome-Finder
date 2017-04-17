@@ -57,8 +57,19 @@ Overhang WordBuildingStack::getOverhang() const
 		accumulatedChars += (*sideStack[index])->size();	
 	}
 
-	int overlapCharPosition = accumulatedChars - numMatchingCharacters;
 	int overlapIndex = index + 1;
+
+	int overlapCharPosition;
+		
+	if (toReturn.side == Side::Left)
+	{
+		overlapCharPosition = accumulatedChars - numMatchingCharacters;
+	}
+	else
+	{
+		overlapCharPosition = (*sideStack[overlapIndex])->size() - (accumulatedChars - numMatchingCharacters);
+	}
+
 
 	if (toReturn.side == Side::Left)
 	{

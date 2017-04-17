@@ -47,3 +47,8 @@ std::string incrementWord(std::string toIncrement)
 	return toIncrement;
 }
 
+std::string reverseString(const std::string& toReverse)
+{
+	std::string toReturn(toReverse.rbegin(), toReverse.rend());
+	return toReturn;
+}
