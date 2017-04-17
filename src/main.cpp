@@ -53,6 +53,43 @@ int main(int argc, char** argv)
 
 	wordBuildingStack.push(std::move(seedIterator));
 
+	do
+	{
+
+		while (wordBuildingStack.size() < numberOfWords)
+		{
+			Overhang overhang = wordBuildingStack.getOverhang();
+			if (overhang.side == Side::Left)
+			{
+				std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
+
+				wordBuildingStack.push(std::move(newIterator));
+			}
+			else
+			{
+				std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
+
+				wordBuildingStack.push(std::move(newIterator));
+			}
+
+		}
+
+		while (wordBuildingStack.top().hasNext())
+		{
+			std::cout << wordBuildingStack.generateString() << std::endl;
+			++(wordBuildingStack.top());
+		}
+
+		do 
+		{
+			wordBuildingStack.pop();
+
+			++(wordBuildingStack.top());
+		} while (!wordBuildingStack.top().hasNext());
+
+	} while (wordBuildingStack.size() > 0);
+
+	/*
 	while (wordBuildingStack.top().hasNext())
 	{
 
@@ -105,6 +142,7 @@ int main(int argc, char** argv)
 		++(wordBuildingStack.top());
 
 	}
+	*/
 
 	return 0;
 }
