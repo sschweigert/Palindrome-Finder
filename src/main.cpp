@@ -13,6 +13,23 @@
 #include <entire_set_iterator.h>
 #include <word_building_stack.h>
 
+void incrementStack(WordBuildingStack& wordBuildingStack)
+{
+	++(wordBuildingStack.top());
+
+	while (!wordBuildingStack.empty() && !wordBuildingStack.top().hasNext())
+	{
+		wordBuildingStack.pop();
+
+		if (wordBuildingStack.empty())
+		{
+			break;
+		}
+
+		++(wordBuildingStack.top());
+	}
+}
+
 int main(int argc, char** argv)
 {
 
@@ -63,86 +80,47 @@ int main(int argc, char** argv)
 			{
 				std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
 
-				wordBuildingStack.push(std::move(newIterator));
+				if (newIterator->hasNext())
+				{
+					wordBuildingStack.push(std::move(newIterator));
+				}
+				else
+				{
+					incrementStack(wordBuildingStack);
+				}
 			}
 			else
 			{
 				std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
 
-				wordBuildingStack.push(std::move(newIterator));
+				if (newIterator->hasNext())
+				{
+					wordBuildingStack.push(std::move(newIterator));
+				}
+				else
+				{
+					incrementStack(wordBuildingStack);
+				}
 			}
 
-		}
-
-		while (wordBuildingStack.top().hasNext())
-		{
-			std::cout << wordBuildingStack.generateString() << std::endl;
-			++(wordBuildingStack.top());
-		}
-
-		do 
-		{
-			wordBuildingStack.pop();
-
-			++(wordBuildingStack.top());
-		} while (!wordBuildingStack.top().hasNext());
-
-	} while (wordBuildingStack.size() > 0);
-
-	/*
-	while (wordBuildingStack.top().hasNext())
-	{
-
-		Overhang overhang = wordBuildingStack.getOverhang();
-		if (overhang.side == Side::Left)
-		{
-			std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
-
-			wordBuildingStack.push(std::move(newIterator));
-		}
-		else
-		{
-			std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
-
-			wordBuildingStack.push(std::move(newIterator));
-		}
-
-		
-		
-		while (wordBuildingStack.top().hasNext())
-		{
-
-			Overhang newOverhang = wordBuildingStack.getOverhang();
-			if (newOverhang.side == Side::Left)
+			if (wordBuildingStack.empty())
 			{
-				std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(reverseString(newOverhang.overhangText), reverseOrdering));
-
-				wordBuildingStack.push(std::move(newIterator));
-			}
-			else
-			{
-				std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(reverseString(newOverhang.overhangText), forwardOrdering));
-
-				wordBuildingStack.push(std::move(newIterator));
+				break;
 			}
 
-			while (wordBuildingStack.top().hasNext())
-			{
-				std::cout << wordBuildingStack.generateString() << std::endl;
-				++(wordBuildingStack.top());
-			}
-
-			wordBuildingStack.pop();
-
-			++(wordBuildingStack.top());
 		}
 
-		wordBuildingStack.pop();
+		// Fix double loop break outs
+		if (wordBuildingStack.empty())
+		{
+			break;
+		}
 
-		++(wordBuildingStack.top());
+		std::cout << wordBuildingStack.generateString() << std::endl;
 
-	}
-	*/
+		incrementStack(wordBuildingStack);
+
+	} while (!wordBuildingStack.empty());
 
 	return 0;
 }

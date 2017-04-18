@@ -70,7 +70,6 @@ Overhang WordBuildingStack::getOverhang() const
 		overlapCharPosition = (*sideStack[overlapIndex])->size() - (accumulatedChars - numMatchingCharacters);
 	}
 
-
 	if (toReturn.side == Side::Left)
 	{
 		// Deal with overlapping word
@@ -143,4 +142,9 @@ std::string WordBuildingStack::generateString() const
 	toReturn.pop_back();
 
 	return toReturn;
+}
+
+bool WordBuildingStack::empty() const
+{
+	return (size() == 0);
 }
