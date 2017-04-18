@@ -123,13 +123,19 @@ void WordBuildingStack::pop()
 	candidateStack.pop();
 }
 
-std::string WordBuildingStack::generateString() const
+std::string WordBuildingStack::generateString(std::string middleString) const
 {
 	std::string toReturn;
 
 	for (int i = 0; i < leftIterators.size(); i++)
 	{
 		toReturn += **leftIterators[i];
+		toReturn += ' ';
+	}
+
+	if (middleString != "")
+	{
+		toReturn += middleString;
 		toReturn += ' ';
 	}
 

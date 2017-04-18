@@ -36,7 +36,7 @@ class WordBuildingStack
 
 		bool empty() const;
 		
-		std::string generateString() const;
+		std::string generateString(std::string middleString = "") const;
 
 	private:
 

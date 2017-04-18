@@ -15,6 +15,8 @@ bool isPalindrome(const std::string& first)
 			return false;
 		}
 
+		++forwardItr;
+		++reverseItr;
 	}
 	return true;	
 }
