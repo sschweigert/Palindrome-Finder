@@ -19,32 +19,32 @@ bool isPalindrome(const std::string& first)
 	return true;	
 }
 
-std::string incrementWord(std::string toIncrement)
+boost::optional<std::string> incrementWord(std::string toIncrement)
 {
-	int i = toIncrement.size() - 1;
+	std::string toReturn = toIncrement;
+	int i = toReturn.size() - 1;
 
 	// Remove all z characters except the first one
 	// in the case of string of z's (ie "zzzzzzz")
-	while (toIncrement[i] == 'z' && i > 0)
+	while (toReturn[i] == 'z' && i > 0)
 	{
-		toIncrement[i] = 'a';
+		toReturn[i] = 'a';
 		--i;
 	}
 
 	// First character is a z
-	if (toIncrement[i] == 'z')
+	if (toReturn[i] == 'z')
 	{
-		// Last 'z' is special because string length is increased
-		toIncrement[i] = 'a';
-		toIncrement = 'a' + toIncrement;
+		// All characters were z, so no way to icnrement
+		return boost::none;
 	}
 	else
 	{
 		// Normal increment (most cases will just do this to the
 		// last letter)
-		toIncrement[i] = toIncrement[i] + (char)1;
+		toReturn[i] = toReturn[i] + (char)1;
 	}
-	return toIncrement;
+	return toReturn;
 }
 
 std::string reverseString(const std::string& toReverse)

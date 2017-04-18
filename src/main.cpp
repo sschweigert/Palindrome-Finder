@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 {
 
 	std::fstream fileStream;
-	fileStream.open("/home/sebastian/bOb-Programming-Problem/words_subset.txt", std::fstream::in);
+	fileStream.open("/home/sebastian/bOb-Programming-Problem/words.txt", std::fstream::in);
 
 
 	if (fileStream.fail())
@@ -116,11 +116,18 @@ int main(int argc, char** argv)
 			break;
 		}
 
+		//palindromes.push_back(wordBuildingStack.generateString());
+
 		std::cout << wordBuildingStack.generateString() << std::endl;
 
 		incrementStack(wordBuildingStack);
 
 	} while (!wordBuildingStack.empty());
+
+	for (const auto& palindrome : palindromes)
+	{
+		std::cout << palindrome << std::endl;
+	}
 
 	return 0;
 }

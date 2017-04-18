@@ -3,6 +3,8 @@
 #include <palindrome_tools.h>
 #include <algorithm>
 
+#include <iostream>
+
 ForwardSuperwordIterator::ForwardSuperwordIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch) :
 	mCurrentValue(wordsToSearch.upper_bound(wordToMatch)),
 	mUpperBounds(calculateUpperBounds(wordToMatch, wordsToSearch))
@@ -28,8 +30,16 @@ IWordCandidateIterator& ForwardSuperwordIterator::operator++()
 
 ForwardStringSet::const_iterator ForwardSuperwordIterator::calculateUpperBounds(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch)
 {
-	std::string incrementedWord = incrementWord(wordToMatch);
-	return wordsToSearch.lower_bound(incrementedWord);
+	boost::optional<std::string> incrementedWord = incrementWord(wordToMatch);
+	if (incrementedWord)
+	{
+		return wordsToSearch.lower_bound(*incrementedWord);
+	}
+	else
+	{
+		// Special case where word is all 'z'
+		return wordsToSearch.end();
+	}
 }
 
 ReverseSuperwordIterator::ReverseSuperwordIterator(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch) :
@@ -60,8 +70,18 @@ ReverseStringSet::const_iterator ReverseSuperwordIterator::calculateUpperBounds(
 	std::string reverseTemp = wordToMatch;
 	reverse(reverseTemp.begin(), reverseTemp.end());
 
-	std::string incrementedWord = incrementWord(reverseTemp);
-	reverse(incrementedWord.begin(), incrementedWord.end());
+	boost::optional<std::string> incrementedWord = incrementWord(reverseTemp);
 
-	return wordsToSearch.lower_bound(incrementedWord);
+	if (incrementedWord)
+	{
+		reverseTemp = *incrementedWord;
+		reverse(reverseTemp.begin(), reverseTemp.end());
+
+		return wordsToSearch.lower_bound(reverseTemp);
+	}
+	else
+	{
+		// Special case where word is all 'z'
+		return wordsToSearch.end();
+	}
 }
