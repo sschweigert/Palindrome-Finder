@@ -71,7 +71,7 @@ int main(int argc, char** argv)
 {
 
 	std::fstream fileStream;
-	fileStream.open("/home/sebastian/bOb-Programming-Problem/words.txt", std::fstream::in);
+	fileStream.open("/home/sebastian/bOb-Programming-Problem/google_words.txt", std::fstream::in);
 
 
 	if (fileStream.fail())
@@ -99,7 +99,7 @@ int main(int argc, char** argv)
 
 	std::cout << "Words loaded into data structures" << std::endl;
 
-	int numberOfWords = 2;
+	int numberOfWords = 6;
 
 	std::vector<std::string> palindromes;
 
@@ -110,8 +110,11 @@ int main(int argc, char** argv)
 	int count = 0;
 	auto counter = [&]
 	{
+		const float percentStep = 0.5;
+		const int countStep = ((float)percentStep / 100.0) * (float)forwardOrdering.size();
+
 		++count;
-		if (count % 10000 == 0)
+		if (count % countStep == 0)
 		{
 			float fraction = (float)count / (float)forwardOrdering.size();
 			std::cout << (fraction * 100.0) << "% done" << std::endl;
@@ -122,6 +125,9 @@ int main(int argc, char** argv)
 	std::unique_ptr<IForwardWordCandidateIterator> seedIterator(new IteratorWrapper<decltype(counter)>(entireSetOrdering, counter));
 
 	wordBuildingStack.push(std::move(seedIterator));
+
+	const float minAverageWordLength = 4;
+	const int minPalindromeLength = ((minAverageWordLength + 1) * numberOfWords) - 1;
 
 	do
 	{
@@ -180,7 +186,11 @@ int main(int argc, char** argv)
 				std::string potentialPalindrome = overhang.overhangText + **newIterator;
 				if (isPalindrome(potentialPalindrome))
 				{
-					palindromes.push_back(wordBuildingStack.generateString(**newIterator));
+					std::string palindromeText = wordBuildingStack.generateString(**newIterator);
+					if (palindromeText.size() >= minPalindromeLength)
+					{
+						palindromes.push_back(palindromeText);
+					}
 				}
 
 				++(*newIterator);
@@ -195,7 +205,11 @@ int main(int argc, char** argv)
 				std::string potentialPalindrome = **newIterator + overhang.overhangText;
 				if (isPalindrome(potentialPalindrome))
 				{
-					palindromes.push_back(wordBuildingStack.generateString(**newIterator));
+					std::string palindromeText = wordBuildingStack.generateString(**newIterator);
+					if (palindromeText.size() >= minPalindromeLength)
+					{
+						palindromes.push_back(palindromeText);
+					}
 				}
 				
 				++(*newIterator);
@@ -210,6 +224,8 @@ int main(int argc, char** argv)
 
 	std::fstream palindromeStream;
 	palindromeStream.open("/home/sebastian/generated_palindromes.txt", std::fstream::out);
+
+	std::cout << "Found " << palindromes.size() << " words. Now saving. " << std::endl;
 
 	for (const auto& palindrome : palindromes)
 	{
