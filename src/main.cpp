@@ -6,6 +6,7 @@
 #include <functional>
 #include <stack>
 #include <memory>
+#include <chrono>
 
 #include <string_set.h>
 #include <palindrome_tools.h>
@@ -67,11 +68,40 @@ class IteratorWrapper : public IForwardWordCandidateIterator
 
 };
 
+class Timer
+{
+
+	public:
+
+		Timer() 
+		{
+			start();
+		}
+
+		void start()
+		{
+			time = std::chrono::high_resolution_clock::now();
+		}
+
+		float secondsElapsed() const
+		{
+			auto currentTime = std::chrono::high_resolution_clock::now();
+			return std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - time).count(); 
+
+		}
+
+	private:
+
+		decltype(std::chrono::high_resolution_clock::now()) time;
+
+};
+
 int main(int argc, char** argv)
 {
 
 	std::fstream fileStream;
-	fileStream.open("/home/sebastian/bOb-Programming-Problem/google_words.txt", std::fstream::in);
+	fileStream.open("/home/sebastian/bOb-Programming-Problem/words.txt", std::fstream::in);
+	//fileStream.open("/home/sebastian/bOb-Programming-Problem/google_words.txt", std::fstream::in);
 
 
 	if (fileStream.fail())
@@ -80,9 +110,11 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
+
 	ForwardStringSet forwardOrdering;
 	ReverseStringSet reverseOrdering;
 
+	Timer timer;
 	while (!fileStream.eof())
 	{
 		std::string line;
@@ -95,143 +127,148 @@ int main(int argc, char** argv)
 		}
 	}
 
+	std::cout << "Loading words took: " << timer.secondsElapsed() << std::endl;
+
 	fileStream.close();
 
-	std::cout << "Words loaded into data structures" << std::endl;
+	/*
 
-	int numberOfWords = 6;
+	   std::cout << "Words loaded into data structures" << std::endl;
 
-	std::vector<std::string> palindromes;
+	   int numberOfWords = 6;
 
-	WordBuildingStack wordBuildingStack;
+	   std::vector<std::string> palindromes;
 
-	EntireSetIterator<ForwardStringSet, IForwardWordCandidateIterator> entireSetOrdering(forwardOrdering);
+	   WordBuildingStack wordBuildingStack;
 
-	int count = 0;
-	auto counter = [&]
+	   EntireSetIterator<ForwardStringSet, IForwardWordCandidateIterator> entireSetOrdering(forwardOrdering);
+
+	   int count = 0;
+	   auto counter = [&]
+	   {
+	   const float percentStep = 0.5;
+	   const int countStep = ((float)percentStep / 100.0) * (float)forwardOrdering.size();
+
+	   ++count;
+	   if (count % countStep == 0)
+	   {
+	   float fraction = (float)count / (float)forwardOrdering.size();
+	   std::cout << (fraction * 100.0) << "% done" << std::endl;
+
+	   }
+	   };
+
+	   std::unique_ptr<IForwardWordCandidateIterator> seedIterator(new IteratorWrapper<decltype(counter)>(entireSetOrdering, counter));
+
+	   wordBuildingStack.push(std::move(seedIterator));
+
+	   const float minAverageWordLength = 4;
+	   const int minPalindromeLength = ((minAverageWordLength + 1) * numberOfWords) - 1;
+
+	   do
+	   {
+
+	// Refill the stack to numberOfWords size
+	while (wordBuildingStack.size() < numberOfWords - 1)
 	{
-		const float percentStep = 0.5;
-		const int countStep = ((float)percentStep / 100.0) * (float)forwardOrdering.size();
-
-		++count;
-		if (count % countStep == 0)
-		{
-			float fraction = (float)count / (float)forwardOrdering.size();
-			std::cout << (fraction * 100.0) << "% done" << std::endl;
-
-		}
-	};
-
-	std::unique_ptr<IForwardWordCandidateIterator> seedIterator(new IteratorWrapper<decltype(counter)>(entireSetOrdering, counter));
-
-	wordBuildingStack.push(std::move(seedIterator));
-
-	const float minAverageWordLength = 4;
-	const int minPalindromeLength = ((minAverageWordLength + 1) * numberOfWords) - 1;
-
-	do
+	Overhang overhang = wordBuildingStack.getOverhang();
+	if (overhang.side == Side::Left)
 	{
+	std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
 
-		// Refill the stack to numberOfWords size
-		while (wordBuildingStack.size() < numberOfWords - 1)
-		{
-			Overhang overhang = wordBuildingStack.getOverhang();
-			if (overhang.side == Side::Left)
-			{
-				std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
-
-				if (newIterator->hasNext())
-				{
-					wordBuildingStack.push(std::move(newIterator));
-				}
-				else
-				{
-					incrementStack(wordBuildingStack);
-				}
-			}
-			else
-			{
-				std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
-
-				if (newIterator->hasNext())
-				{
-					wordBuildingStack.push(std::move(newIterator));
-				}
-				else
-				{
-					incrementStack(wordBuildingStack);
-				}
-			}
-
-			if (wordBuildingStack.empty())
-			{
-				break;
-			}
-
-		}
-
-		// Fix double loop break outs
-		if (wordBuildingStack.empty())
-		{
-			break;
-		}
-
-		Overhang overhang = wordBuildingStack.getOverhang();
-		if (overhang.side == Side::Left)
-		{
-			std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
-
-			while ((*newIterator).hasNext())
-			{
-				std::string potentialPalindrome = overhang.overhangText + **newIterator;
-				if (isPalindrome(potentialPalindrome))
-				{
-					std::string palindromeText = wordBuildingStack.generateString(**newIterator);
-					if (palindromeText.size() >= minPalindromeLength)
-					{
-						palindromes.push_back(palindromeText);
-					}
-				}
-
-				++(*newIterator);
-			}
-		}
-		else
-		{
-			std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
-
-			while ((*newIterator).hasNext())
-			{
-				std::string potentialPalindrome = **newIterator + overhang.overhangText;
-				if (isPalindrome(potentialPalindrome))
-				{
-					std::string palindromeText = wordBuildingStack.generateString(**newIterator);
-					if (palindromeText.size() >= minPalindromeLength)
-					{
-						palindromes.push_back(palindromeText);
-					}
-				}
-				
-				++(*newIterator);
-			}
-		}
-
-		//std::cout << wordBuildingStack.generateString() << std::endl;
-
-		incrementStack(wordBuildingStack);
-
-	} while (!wordBuildingStack.empty());
-
-	std::fstream palindromeStream;
-	palindromeStream.open("/home/sebastian/generated_palindromes.txt", std::fstream::out);
-
-	std::cout << "Found " << palindromes.size() << " words. Now saving. " << std::endl;
-
-	for (const auto& palindrome : palindromes)
+	if (newIterator->hasNext())
 	{
-		palindromeStream << palindrome << std::endl;
+	wordBuildingStack.push(std::move(newIterator));
+	}
+	else
+	{
+	incrementStack(wordBuildingStack);
+	}
+	}
+	else
+	{
+	std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
+
+	if (newIterator->hasNext())
+	{
+	wordBuildingStack.push(std::move(newIterator));
+	}
+	else
+	{
+	incrementStack(wordBuildingStack);
+	}
 	}
 
+	if (wordBuildingStack.empty())
+	{
+	break;
+}
 
-	return 0;
+}
+
+// Fix double loop break outs
+if (wordBuildingStack.empty())
+{
+	break;
+}
+
+Overhang overhang = wordBuildingStack.getOverhang();
+if (overhang.side == Side::Left)
+{
+	std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
+
+	while ((*newIterator).hasNext())
+	{
+		std::string potentialPalindrome = overhang.overhangText + **newIterator;
+		if (isPalindrome(potentialPalindrome))
+		{
+			std::string palindromeText = wordBuildingStack.generateString(**newIterator);
+			if (palindromeText.size() >= minPalindromeLength)
+			{
+				palindromes.push_back(palindromeText);
+			}
+		}
+
+		++(*newIterator);
+	}
+}
+else
+{
+	std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
+
+	while ((*newIterator).hasNext())
+	{
+		std::string potentialPalindrome = **newIterator + overhang.overhangText;
+		if (isPalindrome(potentialPalindrome))
+		{
+			std::string palindromeText = wordBuildingStack.generateString(**newIterator);
+			if (palindromeText.size() >= minPalindromeLength)
+			{
+				palindromes.push_back(palindromeText);
+			}
+		}
+
+		++(*newIterator);
+	}
+}
+
+//std::cout << wordBuildingStack.generateString() << std::endl;
+
+incrementStack(wordBuildingStack);
+
+} while (!wordBuildingStack.empty());
+
+std::fstream palindromeStream;
+palindromeStream.open("/home/sebastian/generated_palindromes.txt", std::fstream::out);
+
+std::cout << "Found " << palindromes.size() << " words. Now saving. " << std::endl;
+
+for (const auto& palindrome : palindromes)
+{
+	palindromeStream << palindrome << std::endl;
+}
+*/
+
+
+return 0;
 }

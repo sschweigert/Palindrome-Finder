@@ -1,13 +1,29 @@
 #include <string_set.h>
 
-#include <algorithm>
-
 bool ReverseLess::operator()(const std::string& first, const std::string& second) const
 {
-	std::string reversedFirst = first;	
-	std::string reversedSecond = second;	
+	auto firstItr = first.rbegin();
+	auto secondItr = second.rbegin();
 
-	reverse(reversedFirst.begin(), reversedFirst.end());
-	reverse(reversedSecond.begin(), reversedSecond.end());
-	return reversedFirst < reversedSecond;
+	auto firstEnd = first.rend();
+	auto secondEnd = second.rend();
+
+	while (true)
+	{
+		if (secondItr == secondEnd)
+		{
+			// second <= first, therefore !(first < second)
+			return false;
+		}
+		else if (firstItr == firstEnd)
+		{
+			return true;
+		}
+		else if (*firstItr != *secondItr)
+		{
+			return *firstItr < *secondItr;
+		}
+		++firstItr;
+		++secondItr;
+	}
 }
