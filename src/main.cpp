@@ -100,8 +100,8 @@ int main(int argc, char** argv)
 {
 
 	std::fstream fileStream;
-	fileStream.open("/home/sebastian/bOb-Programming-Problem/words.txt", std::fstream::in);
-	//fileStream.open("/home/sebastian/bOb-Programming-Problem/google_words.txt", std::fstream::in);
+	//fileStream.open("/home/sebastian/bOb-Programming-Problem/words.txt", std::fstream::in);
+	fileStream.open("/home/sebastian/bOb-Programming-Problem/google_words.txt", std::fstream::in);
 
 
 	if (fileStream.fail())

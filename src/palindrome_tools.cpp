@@ -50,32 +50,32 @@ boost::optional<std::string> incrementWord(std::string toIncrement)
 }
 
 template <class IteratorType>
-boost::optional<std::string> incrementImpl(IteratorType begin, IteratorType end)
+bool incrementImpl(IteratorType rbegin, IteratorType rend)
 {
-	std::string toReturn = toIncrement;
-	int i = toReturn.size() - 1;
+	auto itr = rbegin;
+	auto secondLast = std::prev(rend);
 
 	// Remove all z characters except the first one
 	// in the case of string of z's (ie "zzzzzzz")
-	while (toReturn[i] == 'z' && i > 0)
+	while (*itr == 'z' && itr != secondLast)
 	{
-		toReturn[i] = 'a';
-		--i;
+		*itr = 'a';
+		++itr;
 	}
 
 	// First character is a z
-	if (toReturn[i] == 'z')
+	if (*itr == 'z')
 	{
 		// All characters were z, so no way to icnrement
-		return boost::none;
+		return false;
 	}
 	else
 	{
 		// Normal increment (most cases will just do this to the
 		// last letter)
-		toReturn[i] = toReturn[i] + (char)1;
+		*itr = *itr + (char)1;
 	}
-	return toReturn;
+	return true;
 }
 
 std::string reverseString(const std::string& toReverse)
