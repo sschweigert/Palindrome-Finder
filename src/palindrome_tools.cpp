@@ -21,7 +21,8 @@ bool isPalindrome(const std::string& first)
 	return true;	
 }
 
-boost::optional<std::string> incrementWord(std::string toIncrement)
+template <>
+boost::optional<std::string> incrementWord<Side::Left>(std::string toIncrement)
 {
 	std::string toReturn = toIncrement;
 	int i = toReturn.size() - 1;

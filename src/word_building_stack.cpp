@@ -12,7 +12,7 @@ void WordBuildingStack::push(std::unique_ptr<IReverseWordCandidateIterator> righ
 	candidateStack.push(std::move(rightIterator));
 }
 
-const std::vector<IWordCandidateIterator*>& WordBuildingStack::getSideStack(Side side) const
+const std::vector<IWordCandidateIterator*>& WordBuildingStack::getSideStack(Side::e side) const
 {
 	if (side == Side::Left)
 	{
@@ -24,7 +24,7 @@ const std::vector<IWordCandidateIterator*>& WordBuildingStack::getSideStack(Side
 	}
 }
 
-int WordBuildingStack::getSideLength(Side side) const
+int WordBuildingStack::getSideLength(Side::e side) const
 {
 	const std::vector<IWordCandidateIterator*>& sideStack = getSideStack(side);
 	int length = 0;

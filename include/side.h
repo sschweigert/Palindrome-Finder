@@ -1,13 +1,19 @@
 #ifndef _SIDE_
 #define _SIDE_
 
-enum class Side
+namespace Side
 {
 
-	Left,
+	enum e
+	{
 
-	Right
+		Left,
 
-};
+		Right
+
+	};
+
+
+}
 
 #endif

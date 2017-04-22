@@ -11,7 +11,7 @@
 struct Overhang
 {
 
-	Side side;
+	Side::e side;
 
 	std::string overhangText;
 
@@ -40,9 +40,9 @@ class WordBuildingStack
 
 	private:
 
-		const std::vector<IWordCandidateIterator*>& getSideStack(Side side) const;
+		const std::vector<IWordCandidateIterator*>& getSideStack(Side::e side) const;
 
-		int getSideLength(Side side) const;
+		int getSideLength(Side::e side) const;
 
 		std::stack<std::unique_ptr<IWordCandidateIterator>> candidateStack;
 
