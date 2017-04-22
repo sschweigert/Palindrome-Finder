@@ -9,6 +9,7 @@ add_library(programming_test
 	src/subword_iterator.cpp
 	src/superword_iterator.cpp
 	src/word_building_stack.cpp
+	src/timer.cpp
 )
 
 target_include_directories(programming_test

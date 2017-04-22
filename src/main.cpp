@@ -6,13 +6,13 @@
 #include <functional>
 #include <stack>
 #include <memory>
-#include <chrono>
 
 #include <string_set.h>
 #include <palindrome_tools.h>
 #include <word_candidate_iterator.h>
 #include <entire_set_iterator.h>
 #include <word_building_stack.h>
+#include <timer.h>
 
 void incrementStack(WordBuildingStack& wordBuildingStack)
 {
@@ -65,34 +65,6 @@ class IteratorWrapper : public IForwardWordCandidateIterator
 		IWordCandidateIterator& wordCandidateIterator;
 
 		Functor& functor;
-
-};
-
-class Timer
-{
-
-	public:
-
-		Timer() 
-		{
-			start();
-		}
-
-		void start()
-		{
-			time = std::chrono::high_resolution_clock::now();
-		}
-
-		float secondsElapsed() const
-		{
-			auto currentTime = std::chrono::high_resolution_clock::now();
-			return std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - time).count(); 
-
-		}
-
-	private:
-
-		decltype(std::chrono::high_resolution_clock::now()) time;
 
 };
 
