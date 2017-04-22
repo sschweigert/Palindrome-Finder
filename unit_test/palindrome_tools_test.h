@@ -15,27 +15,54 @@ class PalindromeToolsTest : public CxxTest::TestSuite
 
 		void testForwardWordIncrementation(void)
 		{
-			auto incrementResult = incrementWord("a");
+			auto incrementResult = incrementWord<Side::Left>("a");
 			
 			TS_ASSERT(incrementResult);
 			TS_ASSERT_EQUALS(*incrementResult, "b");
 
-			incrementResult = incrementWord("sebastian");
+			incrementResult = incrementWord<Side::Left>("sebastian");
 
 			TS_ASSERT(incrementResult);
 			TS_ASSERT_EQUALS(*incrementResult, "sebastiao");
 
-			incrementResult = incrementWord("pizazz");
+			incrementResult = incrementWord<Side::Left>("pizazz");
 
 			TS_ASSERT(incrementResult);
 			TS_ASSERT_EQUALS(*incrementResult, "pizbaa");
 
-			incrementResult = incrementWord("azzzzz");
+			incrementResult = incrementWord<Side::Left>("azzzzz");
 
 			TS_ASSERT(incrementResult);
 			TS_ASSERT_EQUALS(*incrementResult, "baaaaa");
 
-			incrementResult = incrementWord("zzzzzzz");
+			incrementResult = incrementWord<Side::Left>("zzzzzzz");
+
+			TS_ASSERT(!incrementResult);
+		}
+
+		void testReverseWordIncrementation(void)
+		{
+			auto incrementResult = incrementWord<Side::Right>("a");
+			
+			TS_ASSERT(incrementResult);
+			TS_ASSERT_EQUALS(*incrementResult, "b");
+
+			incrementResult = incrementWord<Side::Right>("nascent");
+
+			TS_ASSERT(incrementResult);
+			TS_ASSERT_EQUALS(*incrementResult, "oascent");
+
+			incrementResult = incrementWord<Side::Right>("zanny");
+
+			TS_ASSERT(incrementResult);
+			TS_ASSERT_EQUALS(*incrementResult, "abnny");
+
+			incrementResult = incrementWord<Side::Right>("zzzzza");
+
+			TS_ASSERT(incrementResult);
+			TS_ASSERT_EQUALS(*incrementResult, "aaaaab");
+
+			incrementResult = incrementWord<Side::Right>("zzzzzzz");
 
 			TS_ASSERT(!incrementResult);
 		}

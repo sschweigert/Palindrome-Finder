@@ -21,35 +21,6 @@ bool isPalindrome(const std::string& first)
 	return true;	
 }
 
-template <>
-boost::optional<std::string> incrementWord<Side::Left>(std::string toIncrement)
-{
-	std::string toReturn = toIncrement;
-	int i = toReturn.size() - 1;
-
-	// Remove all z characters except the first one
-	// in the case of string of z's (ie "zzzzzzz")
-	while (toReturn[i] == 'z' && i > 0)
-	{
-		toReturn[i] = 'a';
-		--i;
-	}
-
-	// First character is a z
-	if (toReturn[i] == 'z')
-	{
-		// All characters were z, so no way to icnrement
-		return boost::none;
-	}
-	else
-	{
-		// Normal increment (most cases will just do this to the
-		// last letter)
-		toReturn[i] = toReturn[i] + (char)1;
-	}
-	return toReturn;
-}
-
 template <class IteratorType>
 bool incrementImpl(IteratorType rbegin, IteratorType rend)
 {
@@ -77,6 +48,22 @@ bool incrementImpl(IteratorType rbegin, IteratorType rend)
 		*itr = *itr + (char)1;
 	}
 	return true;
+}
+
+template <>
+boost::optional<std::string> incrementWord<Side::Left>(std::string toIncrement)
+{
+	std::string toReturn = toIncrement;
+	incrementImpl(toReturn.rbegin(), toReturn.rend());
+	return toReturn;
+}
+
+template <>
+boost::optional<std::string> incrementWord<Side::Right>(std::string toIncrement)
+{
+	std::string toReturn = toIncrement;
+	incrementImpl(toReturn.begin(), toReturn.end());
+	return toReturn;
 }
 
 std::string reverseString(const std::string& toReverse)
