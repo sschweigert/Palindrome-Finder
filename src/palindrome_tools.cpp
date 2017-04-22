@@ -21,6 +21,7 @@ bool isPalindrome(const std::string& first)
 	return true;	
 }
 
+// Templated increment function which works in both directions
 template <class IteratorType>
 bool incrementImpl(IteratorType rbegin, IteratorType rend)
 {
