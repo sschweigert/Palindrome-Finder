@@ -39,6 +39,30 @@ bool isPalindrome(const std::string& first)
 	return true;	
 }
 
+
+template <>
+std::string buildWordFromIterators(std::string::const_iterator begin, std::string::const_iterator end)
+{
+	return std::string(begin, end);
+}
+
+template <>
+std::string buildWordFromIterators(std::string::const_reverse_iterator iterator, std::string::const_reverse_iterator end)
+{
+	size_t toReturnSize = std::distance(iterator, end);
+	std::string toReturn(toReturnSize, ' ');
+
+	std::string::reverse_iterator insertIterator = toReturn.rbegin();
+
+	do
+	{
+		*insertIterator = *iterator;
+		++iterator;
+		++insertIterator;
+	} while (iterator != end);
+	return toReturn;
+}
+
 template <>
 boost::optional<std::string> wordTailBounds<Side::Left>(const std::string& toIncrement)
 {
@@ -49,17 +73,7 @@ boost::optional<std::string> wordTailBounds<Side::Left>(const std::string& toInc
 	
 	if (iterator != end)
 	{
-		size_t toReturnSize = std::distance(iterator, end);
-		std::string toReturn(toReturnSize, ' ');
-
-		std::string::reverse_iterator insertIterator = toReturn.rbegin();
-
-		do
-		{
-			*insertIterator = *iterator;
-			++iterator;
-			++insertIterator;
-		} while (iterator != end);
+		std::string toReturn = buildWordFromIterators(iterator, end);
 
 		toReturn.back() = toReturn.back() + (char)1;
 
@@ -81,7 +95,7 @@ boost::optional<std::string> wordTailBounds<Side::Right>(const std::string& toIn
 	
 	if (iterator != end)
 	{
-		std::string toReturn(iterator, end);
+		std::string toReturn = buildWordFromIterators(iterator, end);
 
 		toReturn.front() = toReturn.front() + (char)1;
 
