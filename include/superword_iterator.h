@@ -43,7 +43,7 @@ class SuperwordIterator
 
 		typename Set::const_iterator calculateUpperBounds(const std::string& wordToMatch, const Set& wordsToSearch)
 		{
-			boost::optional<std::string> incrementedWord = incrementWord<side>(wordToMatch);
+			boost::optional<std::string> incrementedWord = wordTailBounds<side>(wordToMatch);
 
 			if (incrementedWord)
 			{

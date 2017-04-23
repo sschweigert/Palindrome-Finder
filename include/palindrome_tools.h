@@ -21,7 +21,7 @@ void incrementPastSpaces(Iterator& iterator);
 //! Thus, "zzz" -> "aaaa"
 //
 template <Side::e side>
-boost::optional<std::string> incrementWord(std::string toIncrement);
+boost::optional<std::string> wordTailBounds(std::string toIncrement);
 
 std::string reverseString(const std::string& toReverse);
 

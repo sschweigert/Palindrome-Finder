@@ -61,7 +61,7 @@ bool incrementImpl(IteratorType rbegin, IteratorType rend)
 }
 
 template <>
-boost::optional<std::string> incrementWord<Side::Left>(std::string toIncrement)
+boost::optional<std::string> wordTailBounds<Side::Left>(std::string toIncrement)
 {
 	std::string toReturn = toIncrement;
 	if (incrementImpl(toReturn.rbegin(), toReturn.rend()))
@@ -75,7 +75,7 @@ boost::optional<std::string> incrementWord<Side::Left>(std::string toIncrement)
 }
 
 template <>
-boost::optional<std::string> incrementWord<Side::Right>(std::string toIncrement)
+boost::optional<std::string> wordTailBounds<Side::Right>(std::string toIncrement)
 {
 	std::string toReturn = toIncrement;
 	if (incrementImpl(toReturn.begin(), toReturn.end()))
