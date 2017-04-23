@@ -40,10 +40,10 @@ bool isPalindrome(const std::string& first)
 }
 
 template <>
-boost::optional<std::string> wordTailBounds<Side::Left>(std::string toIncrement)
+boost::optional<std::string> wordTailBounds<Side::Left>(const std::string& toIncrement)
 {
-	std::string::reverse_iterator iterator = toIncrement.rbegin();
-	std::string::reverse_iterator end = toIncrement.rend();
+	std::string::const_reverse_iterator iterator = toIncrement.rbegin();
+	std::string::const_reverse_iterator end = toIncrement.rend();
 
 	incrementToFirstNotZ(iterator, end);
 	
@@ -72,10 +72,10 @@ boost::optional<std::string> wordTailBounds<Side::Left>(std::string toIncrement)
 }
 
 template <>
-boost::optional<std::string> wordTailBounds<Side::Right>(std::string toIncrement)
+boost::optional<std::string> wordTailBounds<Side::Right>(const std::string& toIncrement)
 {
-	std::string::iterator iterator = toIncrement.begin();
-	std::string::iterator end = toIncrement.end();
+	std::string::const_iterator iterator = toIncrement.begin();
+	std::string::const_iterator end = toIncrement.end();
 
 	incrementToFirstNotZ(iterator, end);
 	

@@ -24,7 +24,7 @@ void incrementToFirstNotZ(Iterator& iterator, Iterator end);
 //! Thus, "zzz" -> "aaaa"
 //
 template <Side::e side>
-boost::optional<std::string> wordTailBounds(std::string toIncrement);
+boost::optional<std::string> wordTailBounds(const std::string& toIncrement);
 
 std::string reverseString(const std::string& toReverse);
 
