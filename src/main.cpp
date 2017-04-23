@@ -6,6 +6,7 @@
 #include <functional>
 #include <stack>
 #include <memory>
+#include <unordered_map>
 
 #include <string_set.h>
 #include <palindrome_tools.h>
@@ -14,13 +15,25 @@
 #include <word_building_stack.h>
 #include <timer.h>
 
+std::stack<WordCandidateIterator<Side::Right>> concreteRightIterators;
+std::stack<WordCandidateIterator<Side::Left>> concreteLeftIterators;
+
 void incrementStack(WordBuildingStack& wordBuildingStack)
 {
 	wordBuildingStack.incrementTop();
 
 	while (!wordBuildingStack.empty() && !wordBuildingStack.topHasNext())
 	{
-		wordBuildingStack.pop();
+		Side::e poppedSide = wordBuildingStack.pop();
+
+		if (poppedSide == Side::Left)
+		{
+			concreteLeftIterators.pop();
+		}
+		else
+		{
+			concreteRightIterators.pop();
+		}
 
 		if (wordBuildingStack.empty())
 		{
@@ -82,6 +95,12 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
+	std::unordered_map<std::string, WordCandidateIterator<Side::Left>> leftCachedIterators;
+	std::unordered_map<std::string, WordCandidateIterator<Side::Right>> rightCachedIterators;
+	
+	leftCachedIterators.reserve(25000);
+	rightCachedIterators.reserve(25000);
+
 
 	ForwardStringSet forwardOrdering;
 	ReverseStringSet reverseOrdering;
@@ -128,14 +147,13 @@ int main(int argc, char** argv)
 			float fraction = (float)count / (float)forwardOrdering.size();
 			std::cout << (fraction * 100.0) << "% done" << std::endl;
 
-			done = fraction > 0.02;
-		
 		}
 	};
 
-	std::unique_ptr<IWordCandidateIterator<Side::Left>> seedIterator(new IteratorWrapper<decltype(counter), Side::Left>(entireSetOrdering, counter));
+	//std::unique_ptr<IWordCandidateIterator<Side::Left>> seedIterator(new IteratorWrapper<decltype(counter), Side::Left>(entireSetOrdering, counter));
+	IteratorWrapper<decltype(counter), Side::Left> wrappedItr(entireSetOrdering, counter);
 
-	wordBuildingStack.push(std::move(seedIterator));
+	wordBuildingStack.push(&wrappedItr);
 
 	const float minAverageWordLength = 4;
 	const int minPalindromeLength = ((minAverageWordLength + 1) * numberOfWords) - 1;
@@ -147,13 +165,22 @@ int main(int argc, char** argv)
 		while (wordBuildingStack.size() < numberOfWords - 1)
 		{
 			Overhang overhang = wordBuildingStack.getOverhang();
+
+			std::string reversedOverhang = reverseString(overhang.overhangText);
 			if (overhang.side == Side::Left)
 			{
-				std::unique_ptr<IWordCandidateIterator<Side::Right>> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
-
-				if (newIterator->hasNext())
+				//std::unique_ptr<IWordCandidateIterator<Side::Right>> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
+				if (rightCachedIterators.count(reversedOverhang) == 0)
 				{
-					wordBuildingStack.push(std::move(newIterator));
+					rightCachedIterators.insert(std::make_pair(reversedOverhang, WordCandidateIterator<Side::Right>(reversedOverhang, reverseOrdering)));
+				}
+
+				WordCandidateIterator<Side::Right> cachedIterator = rightCachedIterators.at(reversedOverhang);
+
+				if (cachedIterator.hasNext())
+				{
+					concreteRightIterators.push(cachedIterator);
+					wordBuildingStack.push(&concreteRightIterators.top());
 				}
 				else
 				{
@@ -162,11 +189,17 @@ int main(int argc, char** argv)
 			}
 			else
 			{
-				std::unique_ptr<IWordCandidateIterator<Side::Left>> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
-
-				if (newIterator->hasNext())
+				if (leftCachedIterators.count(reversedOverhang) == 0)
 				{
-					wordBuildingStack.push(std::move(newIterator));
+					leftCachedIterators.insert(std::make_pair(reversedOverhang, WordCandidateIterator<Side::Left>(reversedOverhang, forwardOrdering)));
+				}
+
+				WordCandidateIterator<Side::Left> cachedIterator = leftCachedIterators.at(reversedOverhang);
+
+				if (cachedIterator.hasNext())
+				{
+					concreteLeftIterators.push(cachedIterator);
+					wordBuildingStack.push(&concreteLeftIterators.top());
 				}
 				else
 				{
@@ -188,42 +221,45 @@ int main(int argc, char** argv)
 		}
 
 		Overhang overhang = wordBuildingStack.getOverhang();
+		std::string reversedOverhang(reverseString(overhang.overhangText));
 		if (overhang.side == Side::Left)
 		{
-			std::unique_ptr<IWordCandidateIterator<Side::Right>> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
+			//std::unique_ptr<IWordCandidateIterator<Side::Right>> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
+			WordCandidateIterator<Side::Right> newIterator(reversedOverhang, reverseOrdering);
 
-			while ((*newIterator).hasNext())
+			while (newIterator.hasNext())
 			{
-				std::string potentialPalindrome = overhang.overhangText + **newIterator;
+				std::string potentialPalindrome = overhang.overhangText + *newIterator;
 				if (isPalindrome(potentialPalindrome))
 				{
-					std::string palindromeText = wordBuildingStack.generateString(**newIterator);
+					std::string palindromeText = wordBuildingStack.generateString(*newIterator);
 					if (palindromeText.size() >= minPalindromeLength)
 					{
 						palindromes.push_back(palindromeText);
 					}
 				}
 
-				++(*newIterator);
+				++newIterator;
 			}
 		}
 		else
 		{
-			std::unique_ptr<IWordCandidateIterator<Side::Left>> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
+			//std::unique_ptr<IWordCandidateIterator<Side::Left>> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
+			WordCandidateIterator<Side::Left> newIterator(reversedOverhang, forwardOrdering);
 
-			while ((*newIterator).hasNext())
+			while (newIterator.hasNext())
 			{
-				std::string potentialPalindrome = **newIterator + overhang.overhangText;
+				std::string potentialPalindrome = *newIterator + overhang.overhangText;
 				if (isPalindrome(potentialPalindrome))
 				{
-					std::string palindromeText = wordBuildingStack.generateString(**newIterator);
+					std::string palindromeText = wordBuildingStack.generateString(*newIterator);
 					if (palindromeText.size() >= minPalindromeLength)
 					{
 						palindromes.push_back(palindromeText);
 					}
 				}
 
-				++(*newIterator);
+				++newIterator;
 			}
 		}
 

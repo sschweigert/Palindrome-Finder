@@ -1,25 +1,25 @@
 #include <word_building_stack.h>
 
 template <>
-const std::vector<std::unique_ptr<IWordCandidateIterator<Side::Left>>>& WordBuildingStack::getStack<Side::Left>() const
+const std::vector<IWordCandidateIterator<Side::Left>*>& WordBuildingStack::getStack<Side::Left>() const
 {
 	return leftIterators;
 }
 
 template <>
-const std::vector<std::unique_ptr<IWordCandidateIterator<Side::Right>>>& WordBuildingStack::getStack<Side::Right>() const
+const std::vector<IWordCandidateIterator<Side::Right>*>& WordBuildingStack::getStack<Side::Right>() const
 {
 	return rightIterators;
 }
 
 template <>
-std::vector<std::unique_ptr<IWordCandidateIterator<Side::Left>>>& WordBuildingStack::getStack<Side::Left>()
+std::vector<IWordCandidateIterator<Side::Left>*>& WordBuildingStack::getStack<Side::Left>()
 {
 	return leftIterators;
 }
 
 template <>
-std::vector<std::unique_ptr<IWordCandidateIterator<Side::Right>>>& WordBuildingStack::getStack<Side::Right>()
+std::vector<IWordCandidateIterator<Side::Right>*>& WordBuildingStack::getStack<Side::Right>()
 {
 	return rightIterators;
 }
@@ -78,9 +78,10 @@ int WordBuildingStack::size() const
 	return lastAddition.size();
 }
 
-void WordBuildingStack::pop()
+Side::e WordBuildingStack::pop()
 {
-	if (lastAddition.top() == Side::Left)
+	Side::e sideToPop = lastAddition.top();
+	if (sideToPop == Side::Left)
 	{
 		leftIterators.pop_back();
 	}
@@ -90,6 +91,7 @@ void WordBuildingStack::pop()
 	}
 
 	lastAddition.pop();
+	return sideToPop;
 }
 
 std::string WordBuildingStack::generateString(std::string middleString) const

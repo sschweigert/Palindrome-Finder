@@ -16,11 +16,6 @@ class IWordCandidateIterator
 
 		virtual IWordCandidateIterator<side>& operator++() = 0;
 
-		const std::string* operator->() const
-		{
-			return &(this->operator*());
-		}
-
 		virtual ~IWordCandidateIterator()
 		{}
 

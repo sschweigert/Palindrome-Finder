@@ -23,9 +23,9 @@ class WordBuildingStack
 	public:
 
 		template <Side::e side>
-			void push(std::unique_ptr<IWordCandidateIterator<side>> newIterator)
+			void push(IWordCandidateIterator<side>* newIterator)
 			{
-				getStack<side>().push_back(std::move(newIterator));
+				getStack<side>().push_back(newIterator);
 				lastAddition.push(side);
 			}
 
@@ -37,17 +37,17 @@ class WordBuildingStack
 
 		bool topHasNext();
 
-		void pop();
+		Side::e pop();
 
 		bool empty() const;
 
 		std::string generateString(std::string middleString = "") const;
 
 		template <Side::e side>
-			const std::vector<std::unique_ptr<IWordCandidateIterator<side>>>& getStack() const;
+			const std::vector<IWordCandidateIterator<side>*>& getStack() const;
 
 		template <Side::e side>
-			std::vector<std::unique_ptr<IWordCandidateIterator<side>>>& getStack();
+			std::vector<IWordCandidateIterator<side>*>& getStack();
 
 		template <Side::e side>
 			int getSideLength() const
@@ -56,7 +56,7 @@ class WordBuildingStack
 				int length = 0;
 				for (auto& side : sideStack)
 				{
-					length += (*side)->size();	
+					length += (**side).size();	
 				}
 				return length;
 			}
@@ -73,7 +73,7 @@ class WordBuildingStack
 				int index = sideStack.size() - 1;
 				for (; index >= 0 && accumulatedChars < numMatchingCharacters; --index)
 				{
-					accumulatedChars += (*sideStack[index])->size();	
+					accumulatedChars += (**sideStack[index]).size();	
 				}
 
 				int overlapIndex = index + 1;
@@ -86,13 +86,13 @@ class WordBuildingStack
 				}
 				else
 				{
-					overlapCharPosition = (*sideStack[overlapIndex])->size() - (accumulatedChars - numMatchingCharacters);
+					overlapCharPosition = (**sideStack[overlapIndex]).size() - (accumulatedChars - numMatchingCharacters);
 				}
 
 				if (side == Side::Left)
 				{
 					// Deal with overlapping word
-					toReturn = (*sideStack[overlapIndex])->substr(overlapCharPosition);
+					toReturn = (**sideStack[overlapIndex]).substr(overlapCharPosition);
 
 					for (int appendingIndex = overlapIndex + 1; 
 							appendingIndex < sideStack.size() - 1; ++appendingIndex)
@@ -109,7 +109,7 @@ class WordBuildingStack
 					}
 
 					// Deal with overlapping word
-					toReturn += (*sideStack[overlapIndex])->substr(0, overlapCharPosition);
+					toReturn += (**sideStack[overlapIndex]).substr(0, overlapCharPosition);
 				}
 
 				return toReturn;
@@ -120,9 +120,9 @@ class WordBuildingStack
 
 		std::stack<Side::e> lastAddition;
 
-		std::vector<std::unique_ptr<IWordCandidateIterator<Side::Left>>> leftIterators;
+		std::vector<IWordCandidateIterator<Side::Left>*> leftIterators;
 
-		std::vector<std::unique_ptr<IWordCandidateIterator<Side::Right>>> rightIterators;
+		std::vector<IWordCandidateIterator<Side::Right>*> rightIterators;
 
 };
 
