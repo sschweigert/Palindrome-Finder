@@ -15,6 +15,9 @@ bool isPalindrome(const std::string& first);
 template <class Iterator>
 void incrementPastSpaces(Iterator& iterator);
 
+template <class Iterator>
+void incrementToFirstNotZ(Iterator& iterator, Iterator end);
+
 //! Add to a word as if it were a base-26 number. For example "aabbcc" -> "aabbcd"
 //! This function will fail (return boost::none) if the function is all 'z' characters.
 //! In such a case the number "rolls-over" in a scenario analogous to 999 -> 1000.

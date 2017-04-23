@@ -9,6 +9,15 @@ void incrementPastSpaces(Iterator& iterator)
 	}
 }
 
+template <class Iterator>
+void incrementToFirstNotZ(Iterator& iterator, Iterator end)
+{
+	while (iterator != end && *iterator == 'z')
+	{
+		++iterator;
+	}
+}
+
 bool isPalindrome(const std::string& first)
 {
 	auto forwardItr = first.begin();
@@ -30,42 +39,30 @@ bool isPalindrome(const std::string& first)
 	return true;	
 }
 
-// Templated increment function which works in both directions
-template <class IteratorType>
-bool incrementImpl(IteratorType rbegin, IteratorType rend)
-{
-	auto itr = rbegin;
-	auto secondLast = std::prev(rend);
-
-	// Remove all z characters except the first one
-	// in the case of string of z's (ie "zzzzzzz")
-	while (*itr == 'z' && itr != secondLast)
-	{
-		*itr = 'a';
-		++itr;
-	}
-
-	// First character is a z
-	if (*itr == 'z')
-	{
-		// All characters were z, so no way to icnrement
-		return false;
-	}
-	else
-	{
-		// Normal increment (most cases will just do this to the
-		// last letter)
-		*itr = *itr + (char)1;
-	}
-	return true;
-}
-
 template <>
 boost::optional<std::string> wordTailBounds<Side::Left>(std::string toIncrement)
 {
-	std::string toReturn = toIncrement;
-	if (incrementImpl(toReturn.rbegin(), toReturn.rend()))
+	std::string::reverse_iterator iterator = toIncrement.rbegin();
+	std::string::reverse_iterator end = toIncrement.rend();
+
+	incrementToFirstNotZ(iterator, end);
+	
+	if (iterator != end)
 	{
+		size_t toReturnSize = std::distance(iterator, end);
+		std::string toReturn(toReturnSize, ' ');
+
+		std::string::reverse_iterator insertIterator = toReturn.rbegin();
+
+		do
+		{
+			*insertIterator = *iterator;
+			++iterator;
+			++insertIterator;
+		} while (iterator != end);
+
+		toReturn.back() = toReturn.back() + (char)1;
+
 		return toReturn;
 	}
 	else
@@ -77,9 +74,17 @@ boost::optional<std::string> wordTailBounds<Side::Left>(std::string toIncrement)
 template <>
 boost::optional<std::string> wordTailBounds<Side::Right>(std::string toIncrement)
 {
-	std::string toReturn = toIncrement;
-	if (incrementImpl(toReturn.begin(), toReturn.end()))
+	std::string::iterator iterator = toIncrement.begin();
+	std::string::iterator end = toIncrement.end();
+
+	incrementToFirstNotZ(iterator, end);
+	
+	if (iterator != end)
 	{
+		std::string toReturn(iterator, end);
+
+		toReturn.front() = toReturn.front() + (char)1;
+
 		return toReturn;
 	}
 	else

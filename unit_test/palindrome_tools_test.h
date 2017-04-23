@@ -28,12 +28,12 @@ class PalindromeToolsTest : public CxxTest::TestSuite
 			incrementResult = wordTailBounds<Side::Left>("pizazz");
 
 			TS_ASSERT(incrementResult);
-			TS_ASSERT_EQUALS(*incrementResult, "pizbaa");
+			TS_ASSERT_EQUALS(*incrementResult, "pizb");
 
 			incrementResult = wordTailBounds<Side::Left>("azzzzz");
 
 			TS_ASSERT(incrementResult);
-			TS_ASSERT_EQUALS(*incrementResult, "baaaaa");
+			TS_ASSERT_EQUALS(*incrementResult, "b");
 
 			incrementResult = wordTailBounds<Side::Left>("zzzzzzz");
 
@@ -55,12 +55,12 @@ class PalindromeToolsTest : public CxxTest::TestSuite
 			incrementResult = wordTailBounds<Side::Right>("zanny");
 
 			TS_ASSERT(incrementResult);
-			TS_ASSERT_EQUALS(*incrementResult, "abnny");
+			TS_ASSERT_EQUALS(*incrementResult, "bnny");
 
 			incrementResult = wordTailBounds<Side::Right>("zzzzza");
 
 			TS_ASSERT(incrementResult);
-			TS_ASSERT_EQUALS(*incrementResult, "aaaaab");
+			TS_ASSERT_EQUALS(*incrementResult, "b");
 
 			incrementResult = wordTailBounds<Side::Right>("zzzzzzz");
 
