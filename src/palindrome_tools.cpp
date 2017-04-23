@@ -1,5 +1,14 @@
 #include <palindrome_tools.h>
 
+template <class Iterator>
+void incrementPastSpaces(Iterator& iterator)
+{
+	while (*iterator == ' ')
+	{
+		++iterator;
+	}
+}
+
 bool isPalindrome(const std::string& first)
 {
 	auto forwardItr = first.begin();
