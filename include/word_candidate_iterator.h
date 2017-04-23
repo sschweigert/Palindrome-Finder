@@ -83,7 +83,7 @@ class WordCandidateIterator : public Interface
 
 };
 
-typedef WordCandidateIterator<ForwardSubwordIterator, ForwardSuperwordIterator, ForwardStringSet, IForwardWordCandidateIterator> ForwardCandidateIterator;
-typedef WordCandidateIterator<ReverseSubwordIterator, ReverseSuperwordIterator, ReverseStringSet, IReverseWordCandidateIterator> ReverseCandidateIterator;
+typedef WordCandidateIterator<SubwordIterator<Side::Left>, ForwardSuperwordIterator, ForwardStringSet, IForwardWordCandidateIterator> ForwardCandidateIterator;
+typedef WordCandidateIterator<SubwordIterator<Side::Right>, ReverseSuperwordIterator, ReverseStringSet, IReverseWordCandidateIterator> ReverseCandidateIterator;
 
 #endif

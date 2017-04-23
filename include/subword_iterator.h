@@ -23,13 +23,13 @@ class ForwardSubwordIterator : public IWordCandidateIterator
 		bool mHasNext;
 
 		int mIndex;
-		
+
 		const std::string& mWordToMatch;
 
 		const ForwardStringSet& mWordsToSearch;
 
 		std::string mSubWord;
-		
+
 };
 
 
@@ -51,13 +51,13 @@ class ReverseSubwordIterator : public IWordCandidateIterator
 		bool mHasNext;
 
 		int mIndex;
-		
+
 		const std::string& mWordToMatch;
 
 		const ReverseStringSet& mWordsToSearch;
 
 		std::string mSubWord;
-		
+
 };
 
 template <Side::e side>
@@ -101,52 +101,58 @@ template <Side::e side>
 class SubwordIterator
 {
 
-	SubwordIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch) :
-		iterator(wordToMatch),
-		mHasNext(iterator.current < iterator.end),
-		mWordToMatch(wordToMatch),	
-		mWordsToSearch(wordsToSearch),
-		mSubWord(mHasNext ? *(iterator.current) : "")
-	{}
+	public:
 
-	const std::string& operator*() const 
-	{
-		return mSubWord;	
-	}
+		typedef typename TypeTraits<side>::Set Set;
 
-	bool hasNext()
-	{
-		return mHasNext;
-	}
+		SubwordIterator(const std::string& wordToMatch, const Set& wordsToSearch) :
+			iterator(wordToMatch),
+			mHasNext(iterator.current < iterator.end),
+			mWordToMatch(wordToMatch),	
+			mWordsToSearch(wordsToSearch),
+			mSubWord(mHasNext ? std::string(1, *(iterator.current)) : "")
+			{}
 
-	IWordCandidateIterator& operator++()
-	{
-		// Note we ignore the case of the full word
-		while (++iterator.current < iterator.end)
+		const std::string& operator*() const 
 		{
-			mSubWord += ++iterator.current;
-			if (mWordsToSearch.count(mSubWord) == 1)
-			{
-				// Subword is valid, so break out of loop
-				return *this;
-			}	
+			return mSubWord;	
 		}
 
-		// Reached end of word so there is nothing new to add
-		mHasNext = false;
+		bool hasNext()
+		{
+			return mHasNext;
+		}
 
-		return *this;
-	}	
+		auto operator++() -> decltype(*this)&
+		{
+			// Note we ignore the case of the full word
+			while (++iterator.current < iterator.end)
+			{
+				mSubWord += *(iterator.current);
+				if (mWordsToSearch.count(mSubWord) == 1)
+				{
+					// Subword is valid, so break out of loop
+					return *this;
+				}	
+			}
 
-	SubwordStringIterator<side> iterator;
+			// Reached end of word so there is nothing new to add
+			mHasNext = false;
 
-	bool mHasNext;
+			return *this;
+		}	
 
-	const std::string& mWordToMatch;
+	private:
 
-	const ReverseStringSet& mWordsToSearch;
+		SubwordStringIterator<side> iterator;
 
-	std::string mSubWord;
+		bool mHasNext;
+
+		const std::string& mWordToMatch;
+
+		const Set& mWordsToSearch;
+
+		std::string mSubWord;
 
 };
 
