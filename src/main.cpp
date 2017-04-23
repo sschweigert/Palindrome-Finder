@@ -95,11 +95,13 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
+	/*
 	std::unordered_map<std::string, WordCandidateIterator<Side::Left>> leftCachedIterators;
 	std::unordered_map<std::string, WordCandidateIterator<Side::Right>> rightCachedIterators;
 	
 	leftCachedIterators.reserve(25000);
 	rightCachedIterators.reserve(25000);
+	*/
 
 
 	ForwardStringSet forwardOrdering;
@@ -146,8 +148,15 @@ int main(int argc, char** argv)
 		{
 			float fraction = (float)count / (float)forwardOrdering.size();
 			std::cout << (fraction * 100.0) << "% done" << std::endl;
+			
+			if (fraction > 0.1)
+			{
+				std::cout << "Processing to 10% took: " << timer.secondsElapsed() << std::endl;
+				done = true;
+			}
 
 		}
+
 	};
 
 	//std::unique_ptr<IWordCandidateIterator<Side::Left>> seedIterator(new IteratorWrapper<decltype(counter), Side::Left>(entireSetOrdering, counter));
@@ -170,16 +179,18 @@ int main(int argc, char** argv)
 			if (overhang.side == Side::Left)
 			{
 				//std::unique_ptr<IWordCandidateIterator<Side::Right>> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
+				/*
 				if (rightCachedIterators.count(reversedOverhang) == 0)
 				{
 					rightCachedIterators.insert(std::make_pair(reversedOverhang, WordCandidateIterator<Side::Right>(reversedOverhang, reverseOrdering)));
 				}
 
 				WordCandidateIterator<Side::Right> cachedIterator = rightCachedIterators.at(reversedOverhang);
+				*/
 
-				if (cachedIterator.hasNext())
+				concreteRightIterators.push(WordCandidateIterator<Side::Right>(reversedOverhang, reverseOrdering));
+				if (concreteRightIterators.top().hasNext())
 				{
-					concreteRightIterators.push(cachedIterator);
 					wordBuildingStack.push(&concreteRightIterators.top());
 				}
 				else
@@ -189,16 +200,19 @@ int main(int argc, char** argv)
 			}
 			else
 			{
+				/*
 				if (leftCachedIterators.count(reversedOverhang) == 0)
 				{
 					leftCachedIterators.insert(std::make_pair(reversedOverhang, WordCandidateIterator<Side::Left>(reversedOverhang, forwardOrdering)));
 				}
 
 				WordCandidateIterator<Side::Left> cachedIterator = leftCachedIterators.at(reversedOverhang);
+				*/
 
-				if (cachedIterator.hasNext())
+				concreteLeftIterators.push(WordCandidateIterator<Side::Left>(reversedOverhang, forwardOrdering));
+
+				if (concreteLeftIterators.top().hasNext())
 				{
-					concreteLeftIterators.push(cachedIterator);
 					wordBuildingStack.push(&concreteLeftIterators.top());
 				}
 				else
