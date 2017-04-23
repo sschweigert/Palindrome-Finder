@@ -16,9 +16,9 @@
 
 void incrementStack(WordBuildingStack& wordBuildingStack)
 {
-	++(wordBuildingStack.top());
+	wordBuildingStack.incrementTop();
 
-	while (!wordBuildingStack.empty() && !wordBuildingStack.top().hasNext())
+	while (!wordBuildingStack.empty() && !wordBuildingStack.topHasNext())
 	{
 		wordBuildingStack.pop();
 
@@ -27,17 +27,17 @@ void incrementStack(WordBuildingStack& wordBuildingStack)
 			break;
 		}
 
-		++(wordBuildingStack.top());
+		wordBuildingStack.incrementTop();
 	}
 }
 
-template <class Functor>
-class IteratorWrapper : public IForwardWordCandidateIterator
+template <class Functor, Side::e side>
+class IteratorWrapper : public IWordCandidateIterator<side>
 {
 
 	public:
 
-		IteratorWrapper(IWordCandidateIterator& wordCandidateIterator, Functor& functor) :
+		IteratorWrapper(IWordCandidateIterator<side>& wordCandidateIterator, Functor& functor) :
 			wordCandidateIterator(wordCandidateIterator),
 			functor(functor)
 	{}
@@ -52,7 +52,7 @@ class IteratorWrapper : public IForwardWordCandidateIterator
 			return wordCandidateIterator.hasNext();
 		}
 
-		virtual IWordCandidateIterator& operator++()
+		virtual IWordCandidateIterator<side>& operator++()
 		{
 			functor();
 			++wordCandidateIterator;
@@ -62,7 +62,7 @@ class IteratorWrapper : public IForwardWordCandidateIterator
 
 	private:
 
-		IWordCandidateIterator& wordCandidateIterator;
+		IWordCandidateIterator<side>& wordCandidateIterator;
 
 		Functor& functor;
 
@@ -112,7 +112,7 @@ int main(int argc, char** argv)
 
 	WordBuildingStack wordBuildingStack;
 
-	EntireSetIterator<ForwardStringSet, IForwardWordCandidateIterator> entireSetOrdering(forwardOrdering);
+	EntireSetIterator<Side::Left> entireSetOrdering(forwardOrdering);
 
 	bool done = false;
 
@@ -133,7 +133,7 @@ int main(int argc, char** argv)
 		}
 	};
 
-	std::unique_ptr<IForwardWordCandidateIterator> seedIterator(new IteratorWrapper<decltype(counter)>(entireSetOrdering, counter));
+	std::unique_ptr<IWordCandidateIterator<Side::Left>> seedIterator(new IteratorWrapper<decltype(counter), Side::Left>(entireSetOrdering, counter));
 
 	wordBuildingStack.push(std::move(seedIterator));
 
@@ -149,7 +149,7 @@ int main(int argc, char** argv)
 			Overhang overhang = wordBuildingStack.getOverhang();
 			if (overhang.side == Side::Left)
 			{
-				std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
+				std::unique_ptr<IWordCandidateIterator<Side::Right>> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
 
 				if (newIterator->hasNext())
 				{
@@ -162,7 +162,7 @@ int main(int argc, char** argv)
 			}
 			else
 			{
-				std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
+				std::unique_ptr<IWordCandidateIterator<Side::Left>> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
 
 				if (newIterator->hasNext())
 				{
@@ -190,7 +190,7 @@ int main(int argc, char** argv)
 		Overhang overhang = wordBuildingStack.getOverhang();
 		if (overhang.side == Side::Left)
 		{
-			std::unique_ptr<IReverseWordCandidateIterator> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
+			std::unique_ptr<IWordCandidateIterator<Side::Right>> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
 
 			while ((*newIterator).hasNext())
 			{
@@ -209,7 +209,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			std::unique_ptr<IForwardWordCandidateIterator> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
+			std::unique_ptr<IWordCandidateIterator<Side::Left>> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
 
 			while ((*newIterator).hasNext())
 			{

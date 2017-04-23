@@ -3,9 +3,14 @@
 
 #include <iword_candidate_iterator.h>
 
-template <class SetType, class Interface>
-class EntireSetIterator : public Interface 
+#include <string_set.h>
+#include <side.h>
+
+template <Side::e side>
+class EntireSetIterator : public IWordCandidateIterator<side>
 {
+
+		typedef typename TypeTraits<side>::Set SetType;
 
 	public:
 
@@ -24,7 +29,7 @@ class EntireSetIterator : public Interface
 			return mCurrentPos != mData.end();
 		}
 
-		virtual IWordCandidateIterator& operator++()
+		virtual IWordCandidateIterator<side>& operator++()
 		{
 			++mCurrentPos;
 			return *this;

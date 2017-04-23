@@ -2,7 +2,9 @@
 #define _IWORD_CANDIDATE_ITERATOR_
 
 #include <string>
+#include <side.h>
 
+template <Side::e side>
 class IWordCandidateIterator
 {
 
@@ -12,7 +14,7 @@ class IWordCandidateIterator
 
 		virtual bool hasNext() = 0;
 
-		virtual IWordCandidateIterator& operator++() = 0;
+		virtual IWordCandidateIterator<side>& operator++() = 0;
 
 		const std::string* operator->() const
 		{
@@ -23,16 +25,5 @@ class IWordCandidateIterator
 		{}
 
 };
-
-class IForwardWordCandidateIterator : public IWordCandidateIterator
-{
-
-};
-
-class IReverseWordCandidateIterator : public IWordCandidateIterator
-{
-
-};
-
 
 #endif

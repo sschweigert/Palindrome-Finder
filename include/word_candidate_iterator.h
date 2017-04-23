@@ -7,13 +7,18 @@
 
 #include <iostream>
 
-template <class SubwordType, class SuperwordType, class StringSetType, class Interface>
-class WordCandidateIterator : public Interface 
+#include <side.h>
+#include <string_set.h>
+
+template <Side::e side>
+class WordCandidateIterator : public IWordCandidateIterator<side>
 {
+
+	typedef typename TypeTraits<side>::Set Set;
 
 	public:
 
-		WordCandidateIterator(std::string wordToMatch, const StringSetType& wordsToSearch) :
+		WordCandidateIterator(std::string wordToMatch, const Set& wordsToSearch) :
 			mWordToMatch(wordToMatch),
 			mSubwordIterator(mWordToMatch, wordsToSearch),
 			mSuperwordIterator(mWordToMatch, wordsToSearch),
@@ -45,7 +50,7 @@ class WordCandidateIterator : public Interface
 			}
 		}
 
-		virtual IWordCandidateIterator& operator++()
+		virtual IWordCandidateIterator<side>& operator++()
 		{
 			if (mCurrentState == State::SubWord)
 			{
@@ -75,15 +80,15 @@ class WordCandidateIterator : public Interface
 
 		std::string mWordToMatch;
 
-		SubwordType mSubwordIterator;
+		SubwordIterator<side> mSubwordIterator;
 
-		SuperwordType mSuperwordIterator;
+		SuperwordIterator<side> mSuperwordIterator;
 
 		State mCurrentState;
 
 };
 
-typedef WordCandidateIterator<SubwordIterator<Side::Left>, SuperwordIterator<Side::Left>, ForwardStringSet, IForwardWordCandidateIterator> ForwardCandidateIterator;
-typedef WordCandidateIterator<SubwordIterator<Side::Right>, SuperwordIterator<Side::Right>, ReverseStringSet, IReverseWordCandidateIterator> ReverseCandidateIterator;
+typedef WordCandidateIterator<Side::Left> ForwardCandidateIterator;
+typedef WordCandidateIterator<Side::Right> ReverseCandidateIterator;
 
 #endif
