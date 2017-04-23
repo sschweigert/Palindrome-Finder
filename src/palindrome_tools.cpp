@@ -55,16 +55,28 @@ template <>
 boost::optional<std::string> incrementWord<Side::Left>(std::string toIncrement)
 {
 	std::string toReturn = toIncrement;
-	incrementImpl(toReturn.rbegin(), toReturn.rend());
-	return toReturn;
+	if (incrementImpl(toReturn.rbegin(), toReturn.rend()))
+	{
+		return toReturn;
+	}
+	else
+	{
+		return boost::none;
+	}
 }
 
 template <>
 boost::optional<std::string> incrementWord<Side::Right>(std::string toIncrement)
 {
 	std::string toReturn = toIncrement;
-	incrementImpl(toReturn.begin(), toReturn.end());
-	return toReturn;
+	if (incrementImpl(toReturn.begin(), toReturn.end()))
+	{
+		return toReturn;
+	}
+	else
+	{
+		return boost::none;
+	}
 }
 
 std::string reverseString(const std::string& toReverse)
