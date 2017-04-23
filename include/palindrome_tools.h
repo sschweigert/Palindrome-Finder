@@ -21,6 +21,26 @@ void incrementToFirstNotZ(Iterator& iterator, Iterator end);
 template <class Iterator>
 std::string buildWordFromIterators(Iterator begin, Iterator end);
 
+template <Side::e side>
+struct BackwardsRange;
+
+template <>
+struct BackwardsRange<Side::Left>
+{
+	std::string::const_reverse_iterator iterator;
+	std::string::const_reverse_iterator end;
+};
+
+template <>
+struct BackwardsRange<Side::Right>
+{
+	std::string::const_iterator iterator;
+	std::string::const_iterator end;
+};
+
+template <Side::e side>
+BackwardsRange<side> getBackwardsRange(const std::string& word);
+
 //! \brief Generate the next larger word that does not start with the same letters
 //! as the given word. For example if "app" was input then "apq" would be the next
 //! larger word that doesn't start with the same letters. "apple" would be in between

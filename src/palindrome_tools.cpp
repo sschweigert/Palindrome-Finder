@@ -64,16 +64,33 @@ std::string buildWordFromIterators(std::string::const_reverse_iterator iterator,
 }
 
 template <>
+BackwardsRange<Side::Left> getBackwardsRange<Side::Left>(const std::string& word)
+{
+	BackwardsRange<Side::Left> toReturn;
+	toReturn.iterator = word.rbegin();
+	toReturn.end = word.rend();
+	return toReturn;
+}
+
+template <>
+BackwardsRange<Side::Right> getBackwardsRange<Side::Right>(const std::string& word)
+{
+	BackwardsRange<Side::Right> toReturn;
+	toReturn.iterator = word.begin();
+	toReturn.end = word.end();
+	return toReturn;
+}
+
+template <>
 boost::optional<std::string> wordTailBounds<Side::Left>(const std::string& toIncrement)
 {
-	std::string::const_reverse_iterator iterator = toIncrement.rbegin();
-	std::string::const_reverse_iterator end = toIncrement.rend();
+	BackwardsRange<Side::Left> backwardsRange = getBackwardsRange<Side::Left>(toIncrement);
 
-	incrementToFirstNotZ(iterator, end);
+	incrementToFirstNotZ(backwardsRange.iterator, backwardsRange.end);
 	
-	if (iterator != end)
+	if (backwardsRange.iterator != backwardsRange.end)
 	{
-		std::string toReturn = buildWordFromIterators(iterator, end);
+		std::string toReturn = buildWordFromIterators(backwardsRange.iterator, backwardsRange.end);
 
 		toReturn.back() = toReturn.back() + (char)1;
 
@@ -88,14 +105,13 @@ boost::optional<std::string> wordTailBounds<Side::Left>(const std::string& toInc
 template <>
 boost::optional<std::string> wordTailBounds<Side::Right>(const std::string& toIncrement)
 {
-	std::string::const_iterator iterator = toIncrement.begin();
-	std::string::const_iterator end = toIncrement.end();
+	BackwardsRange<Side::Right> backwardsRange = getBackwardsRange<Side::Right>(toIncrement);
 
-	incrementToFirstNotZ(iterator, end);
+	incrementToFirstNotZ(backwardsRange.iterator, backwardsRange.end);
 	
-	if (iterator != end)
+	if (backwardsRange.iterator != backwardsRange.end)
 	{
-		std::string toReturn = buildWordFromIterators(iterator, end);
+		std::string toReturn = buildWordFromIterators(backwardsRange.iterator, backwardsRange.end);
 
 		toReturn.front() = toReturn.front() + (char)1;
 
@@ -106,6 +122,9 @@ boost::optional<std::string> wordTailBounds<Side::Right>(const std::string& toIn
 		return boost::none;
 	}
 }
+
+//template boost::optional<std::string> wordTailBounds<Side::Right>(const std::string& toIncrement);
+//template boost::optional<std::string> wordTailBounds<Side::Left>(const std::string& toIncrement);
 
 std::string reverseString(const std::string& toReverse)
 {
