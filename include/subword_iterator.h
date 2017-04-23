@@ -5,61 +5,6 @@
 #include <string_set.h>
 #include <side.h>
 
-class ForwardSubwordIterator : public IWordCandidateIterator
-{
-
-	public:
-
-		ForwardSubwordIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch);
-
-		virtual const std::string& operator*() const;
-
-		virtual bool hasNext();
-
-		virtual IWordCandidateIterator& operator++();
-
-	private:
-
-		bool mHasNext;
-
-		int mIndex;
-
-		const std::string& mWordToMatch;
-
-		const ForwardStringSet& mWordsToSearch;
-
-		std::string mSubWord;
-
-};
-
-
-class ReverseSubwordIterator : public IWordCandidateIterator
-{
-
-	public:
-
-		ReverseSubwordIterator(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch);
-
-		virtual const std::string& operator*() const;
-
-		virtual bool hasNext();
-
-		virtual IWordCandidateIterator& operator++();
-
-	private:
-
-		bool mHasNext;
-
-		int mIndex;
-
-		const std::string& mWordToMatch;
-
-		const ReverseStringSet& mWordsToSearch;
-
-		std::string mSubWord;
-
-};
-
 template <Side::e side>
 struct SubwordStringIterator;
 
@@ -73,6 +18,11 @@ struct SubwordStringIterator<Side::Left>
 	{}
 
 	typedef typename std::string::const_iterator iterator;
+
+	void buildOntoWord(std::string& word)
+	{
+		word += *current;
+	}
 
 	iterator current;
 
@@ -90,6 +40,11 @@ struct SubwordStringIterator<Side::Right>
 	{}
 
 	typedef typename std::string::const_reverse_iterator iterator;
+
+	void buildOntoWord(std::string& word)
+	{
+		word = *current + word;
+	}
 
 	iterator current;
 
@@ -128,7 +83,7 @@ class SubwordIterator
 			// Note we ignore the case of the full word
 			while (++iterator.current < iterator.end)
 			{
-				mSubWord += *(iterator.current);
+				iterator.buildOntoWord(mSubWord);
 				if (mWordsToSearch.count(mSubWord) == 1)
 				{
 					// Subword is valid, so break out of loop

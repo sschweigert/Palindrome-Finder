@@ -114,6 +114,8 @@ int main(int argc, char** argv)
 
 	EntireSetIterator<ForwardStringSet, IForwardWordCandidateIterator> entireSetOrdering(forwardOrdering);
 
+	bool done = false;
+
 	int count = 0;
 	auto counter = [&]
 	{
@@ -126,6 +128,8 @@ int main(int argc, char** argv)
 			float fraction = (float)count / (float)forwardOrdering.size();
 			std::cout << (fraction * 100.0) << "% done" << std::endl;
 
+			done = fraction > 0.02;
+		
 		}
 	};
 
@@ -227,7 +231,7 @@ int main(int argc, char** argv)
 
 		incrementStack(wordBuildingStack);
 
-	} while (!wordBuildingStack.empty());
+	} while (!wordBuildingStack.empty() && !done);
 
 	std::fstream palindromeStream;
 	palindromeStream.open("/home/sebastian/generated_palindromes.txt", std::fstream::out);
