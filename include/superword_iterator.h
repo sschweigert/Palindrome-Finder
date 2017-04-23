@@ -3,50 +3,62 @@
 
 #include <iword_candidate_iterator.h>
 #include <string_set.h>
+#include <side.h>
+#include <boost/optional.hpp>
+#include <palindrome_tools.h>
+#include <algorithm>
 
-class ForwardSuperwordIterator : public IWordCandidateIterator
+template <Side::e side>
+class SuperwordIterator
 {
+
+	typedef typename TypeTraits<side>::Set Set;
 
 	public:
 
-		ForwardSuperwordIterator(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch);
+		SuperwordIterator(const std::string& wordToMatch, const Set& wordsToSearch) :
+			mCurrentValue(wordsToSearch.upper_bound(wordToMatch)),
+			mUpperBounds(calculateUpperBounds(wordToMatch, wordsToSearch))
+	{
 
-		virtual const std::string& operator*() const;
+	}
 
-		virtual bool hasNext();
+		const std::string& operator*() const
+		{
+			return *mCurrentValue;	
+		}
 
-		virtual IWordCandidateIterator& operator++();
+		bool hasNext()
+		{
+			return mCurrentValue != mUpperBounds;
+		}
 
-	private:
-
-		ForwardStringSet::const_iterator calculateUpperBounds(const std::string& wordToMatch, const ForwardStringSet& wordsToSearch);
-
-		ForwardStringSet::const_iterator mCurrentValue;
-
-		const ForwardStringSet::const_iterator mUpperBounds;
-
-};
-
-class ReverseSuperwordIterator : public IWordCandidateIterator
-{
-
-	public:
-
-		ReverseSuperwordIterator(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch);
-
-		virtual const std::string& operator*() const;
-
-		virtual bool hasNext();
-
-		virtual IWordCandidateIterator& operator++();
+		auto operator++() -> decltype(*this)&
+		{
+			++mCurrentValue;
+			return *this;
+		}	
 
 	private:
 
-		ReverseStringSet::const_iterator calculateUpperBounds(const std::string& wordToMatch, const ReverseStringSet& wordsToSearch);
+		typename Set::const_iterator calculateUpperBounds(const std::string& wordToMatch, const Set& wordsToSearch)
+		{
+			boost::optional<std::string> incrementedWord = incrementWord<side>(wordToMatch);
 
-		ReverseStringSet::const_iterator mCurrentValue;
+			if (incrementedWord)
+			{
+				return wordsToSearch.lower_bound(*incrementedWord);
+			}
+			else
+			{
+				// Special case where word is all 'z'
+				return wordsToSearch.end();
+			}
+		}
 
-		const ReverseStringSet::const_iterator mUpperBounds;
+		typename Set::const_iterator mCurrentValue;
+
+		const typename Set::const_iterator mUpperBounds;
 
 };
 
