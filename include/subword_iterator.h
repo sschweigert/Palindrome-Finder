@@ -60,42 +60,13 @@ class SubwordIterator
 
 		typedef typename TypeTraits<side>::Set Set;
 
-		SubwordIterator(const std::string& wordToMatch, const Set& wordsToSearch) :
-			iterator(wordToMatch),
-			mHasNext(iterator.current < iterator.end),
-			mWordToMatch(wordToMatch),	
-			mWordsToSearch(wordsToSearch),
-			mSubWord(mHasNext ? std::string(1, *(iterator.current)) : "")
-			{}
+		SubwordIterator(const std::string& wordToMatch, const Set& wordsToSearch);
 
-		const std::string& operator*() const 
-		{
-			return mSubWord;	
-		}
+		const std::string& operator*() const;
 
-		bool hasNext()
-		{
-			return mHasNext;
-		}
+		bool hasNext();
 
-		auto operator++() -> decltype(*this)&
-		{
-			// Note we ignore the case of the full word
-			while (++iterator.current < iterator.end)
-			{
-				iterator.buildOntoWord(mSubWord);
-				if (mWordsToSearch.count(mSubWord) == 1)
-				{
-					// Subword is valid, so break out of loop
-					return *this;
-				}	
-			}
-
-			// Reached end of word so there is nothing new to add
-			mHasNext = false;
-
-			return *this;
-		}	
+		auto operator++() -> decltype(*this)&;
 
 	private:
 
