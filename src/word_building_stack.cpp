@@ -1,5 +1,82 @@
 #include <word_building_stack.h>
 
+template <Side::e side>
+void WordBuildingStack::push(IWordCandidateIterator<side>* newIterator)
+{
+	getStack<side>().push_back(newIterator);
+	lastAddition.push(side);
+}
+
+template <Side::e side>
+int WordBuildingStack::getSideLength() const
+{
+	const auto& sideStack = getStack<side>();
+	int length = 0;
+	for (auto& word : sideStack)
+	{
+		length += (**word).size();	
+	}
+	return length;
+}
+
+template <Side::e side>
+std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) const
+{
+	std::string toReturn;
+
+	int accumulatedChars = 0;
+
+	const auto& sideStack = getStack<side>();
+
+	int index = sideStack.size() - 1;
+	for (; index >= 0 && accumulatedChars < numMatchingCharacters; --index)
+	{
+		accumulatedChars += (**sideStack[index]).size();	
+	}
+
+	int overlapIndex = index + 1;
+
+	int overlapCharPosition;
+
+	if (side == Side::Left)
+	{
+		overlapCharPosition = accumulatedChars - numMatchingCharacters;
+	}
+	else
+	{
+		overlapCharPosition = (**sideStack[overlapIndex]).size() - (accumulatedChars - numMatchingCharacters);
+	}
+
+	if (side == Side::Left)
+	{
+		// Deal with overlapping word
+		toReturn = (**sideStack[overlapIndex]).substr(overlapCharPosition);
+
+		for (int appendingIndex = overlapIndex + 1; 
+				appendingIndex < sideStack.size() - 1; ++appendingIndex)
+		{
+			toReturn += **(sideStack[appendingIndex]);
+		}
+	}
+	else
+	{
+		for (int appendingIndex = sideStack.size() - 1; 
+				appendingIndex >= overlapIndex + 1; --appendingIndex)
+		{
+			toReturn += **(sideStack[appendingIndex]);
+		}
+
+		// Deal with overlapping word
+		toReturn += (**sideStack[overlapIndex]).substr(0, overlapCharPosition);
+	}
+
+	return toReturn;
+}
+
+// Explicitly extantiate public functions
+template void WordBuildingStack::push<Side::Left>(IWordCandidateIterator<Side::Left>* newIterator);
+template void WordBuildingStack::push<Side::Right>(IWordCandidateIterator<Side::Right>* newIterator);
+
 template <>
 const std::vector<IWordCandidateIterator<Side::Left>*>& WordBuildingStack::getStack<Side::Left>() const
 {
@@ -12,13 +89,13 @@ const std::vector<IWordCandidateIterator<Side::Right>*>& WordBuildingStack::getS
 	return rightIterators;
 }
 
-template <>
+	template <>
 std::vector<IWordCandidateIterator<Side::Left>*>& WordBuildingStack::getStack<Side::Left>()
 {
 	return leftIterators;
 }
 
-template <>
+	template <>
 std::vector<IWordCandidateIterator<Side::Right>*>& WordBuildingStack::getStack<Side::Right>()
 {
 	return rightIterators;
@@ -98,7 +175,7 @@ std::string WordBuildingStack::generateString(std::string middleString) const
 {
 	std::string toReturn;
 
-	for (int i = 0; i < leftIterators.size(); i++)
+	for (unsigned int i = 0; i < leftIterators.size(); i++)
 	{
 		toReturn += **leftIterators[i];
 		toReturn += ' ';
