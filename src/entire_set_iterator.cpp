@@ -2,8 +2,8 @@
 
 template <Side::e side>
 EntireSetIterator<side>::EntireSetIterator(const SetType& set) :
-mData(set),
-mCurrentPos(set.begin())
+mCurrentPos(set.begin()),
+mData(set)
 {}
 
 template <Side::e side>
