@@ -9,41 +9,6 @@
 //! \brief Check if a word is a palindrome. This treats spaces as characters.
 bool isPalindrome(const std::string& first);
 
-//! \brief Helper function for isPalindrome. Increments an iterator past the 
-//! leading spaces. This is a template to allow handling of both forward
-//! and reverse iterators.
-template <class Iterator>
-void incrementPastSpaces(Iterator& iterator);
-
-template <class Iterator>
-void incrementToFirstNotZ(Iterator& iterator, Iterator end);
-
-template <class Iterator>
-std::string buildWordFromIterators(Iterator begin, Iterator end);
-
-template <Side::e side>
-struct BackwardsRange;
-
-template <>
-struct BackwardsRange<Side::Left>
-{
-	std::string::const_reverse_iterator iterator;
-	std::string::const_reverse_iterator end;
-};
-
-template <>
-struct BackwardsRange<Side::Right>
-{
-	std::string::const_iterator iterator;
-	std::string::const_iterator end;
-};
-
-template <Side::e side>
-char& endOfWord(std::string& word);
-
-template <Side::e side>
-BackwardsRange<side> getBackwardsRange(const std::string& word);
-
 //! \brief Generate the next larger word that does not start with the same letters
 //! as the given word. For example if "app" was input then "apq" would be the next
 //! larger word that doesn't start with the same letters. "apple" would be in between
@@ -64,5 +29,46 @@ template <Side::e side>
 boost::optional<std::string> wordTailBounds(const std::string& toIncrement);
 
 std::string reverseString(const std::string& toReverse);
+
+//! \brief Helper function for isPalindrome. Increments an iterator past the 
+//! leading spaces. This is a template to allow handling of both forward
+//! and reverse iterators.
+template <class Iterator>
+void incrementPastSpaces(Iterator& iterator);
+
+//! \brief Helper function for wordTailBounds. This will increment an iterator to the
+//! first character that is not 'z'. It will also stop if it reaches end.
+template <class Iterator>
+void incrementToFirstNotZ(Iterator& iterator, Iterator end);
+
+//! \brief Helper function for wordTailBounds. A word will be built from iterators.
+//! If they are reverse iterators, the word will be built in reverse.
+template <class Iterator>
+std::string buildWordFromIterators(Iterator begin, Iterator end);
+
+//! \brief A class that defines a range of a word in reverse.
+template <Side::e side>
+struct BackwardsRange;
+
+template <>
+struct BackwardsRange<Side::Left>
+{
+	std::string::const_reverse_iterator iterator;
+	std::string::const_reverse_iterator end;
+};
+
+template <>
+struct BackwardsRange<Side::Right>
+{
+	std::string::const_iterator iterator;
+	std::string::const_iterator end;
+};
+
+//! \brief Get a reference to the last character in a word.
+template <Side::e side>
+char& endOfWord(std::string& word);
+
+template <Side::e side>
+BackwardsRange<side> getBackwardsRange(const std::string& word);
 
 #endif
