@@ -39,6 +39,9 @@ struct BackwardsRange<Side::Right>
 };
 
 template <Side::e side>
+char& endOfWord(std::string& word);
+
+template <Side::e side>
 BackwardsRange<side> getBackwardsRange(const std::string& word);
 
 //! \brief Generate the next larger word that does not start with the same letters
