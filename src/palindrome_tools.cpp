@@ -1,7 +1,8 @@
 #include <palindrome_tools.h>
 
-template <class Iterator>
-void incrementPastSpaces(Iterator& iterator)
+#include <iostream>
+
+void incrementPastSpaces(std::string::const_iterator& iterator)
 {
 	while (*iterator == ' ')
 	{
@@ -9,8 +10,16 @@ void incrementPastSpaces(Iterator& iterator)
 	}
 }
 
+void decrementPastSpaces(std::string::const_iterator& iterator)
+{
+	while (*iterator == ' ')
+	{
+		--iterator;
+	}
+}
+
 template <class Iterator>
-void incrementToFirstNotZ(Iterator& iterator, Iterator end)
+void incrementToFirstNotZ(Iterator& iterator, const Iterator& end)
 {
 	while (iterator != end && *iterator == 'z')
 	{
@@ -18,27 +27,52 @@ void incrementToFirstNotZ(Iterator& iterator, Iterator end)
 	}
 }
 
+bool isSpacedPalindrome(const std::string& first)
+{
+	auto forwardItr = first.begin();
+	auto reverseItr = std::prev(first.end());
+
+	while (forwardItr <= reverseItr)
+	{
+		incrementPastSpaces(forwardItr);
+		decrementPastSpaces(reverseItr);
+
+		// The iterators overlapped each other while
+		// going over a space.
+		if (forwardItr > reverseItr)
+		{
+			return true;
+		}
+
+		if (*forwardItr != *reverseItr)
+		{
+			// Characters don't match
+			return false;
+		}
+
+		++forwardItr;
+		--reverseItr;
+	}
+	return true;	
+}
+
 bool isPalindrome(const std::string& first)
 {
 	auto forwardItr = first.begin();
-	auto reverseItr = first.rbegin();
+	auto reverseItr = std::prev(first.end());
 
 	while (forwardItr != first.end())
 	{
-		incrementPastSpaces(forwardItr);
-		incrementPastSpaces(reverseItr);
-
 		if (*forwardItr != *reverseItr)
 		{
 			return false;
 		}
 
 		++forwardItr;
-		++reverseItr;
+		--reverseItr;
 	}
 	return true;	
 }
-
 
 template <>
 std::string buildWordFromIterators(std::string::const_iterator begin, std::string::const_iterator end)

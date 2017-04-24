@@ -86,8 +86,8 @@ int main(int argc, char** argv)
 
 	std::fstream fileStream;
 	//fileStream.open("/home/sebastian/bOb-Programming-Problem/words.txt", std::fstream::in);
-	//fileStream.open("/home/sebastian/bOb-Programming-Problem/google_words.txt", std::fstream::in);
-	fileStream.open("/home/sebastian/bOb-Programming-Problem/words_subset.txt", std::fstream::in);
+	fileStream.open("/home/sebastian/bOb-Programming-Problem/google_words.txt", std::fstream::in);
+	//fileStream.open("/home/sebastian/bOb-Programming-Problem/words_subset.txt", std::fstream::in);
 
 
 	if (fileStream.fail())
@@ -273,8 +273,6 @@ int main(int argc, char** argv)
 
 	std::cout << "Processing to 10% took: " << timer.secondsElapsed() << std::endl;
 
-
-	/*
 	std::fstream palindromeStream;
 	palindromeStream.open("/home/sebastian/generated_palindromes.txt", std::fstream::out);
 
@@ -284,7 +282,6 @@ int main(int argc, char** argv)
 	{
 		palindromeStream << palindrome << std::endl;
 	}
-	*/
 
 
 	return 0;

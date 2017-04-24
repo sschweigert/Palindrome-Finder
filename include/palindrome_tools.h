@@ -9,6 +9,9 @@
 //! \brief Check if a word is a palindrome. This treats spaces as characters.
 bool isPalindrome(const std::string& first);
 
+//! \brief Check if a word is a palindrome. Spaces are ignored.
+bool isSpacedPalindrome(const std::string& first);
+
 //! \brief Generate the next larger word that does not start with the same letters
 //! as the given word. For example if "app" was input then "apq" would be the next
 //! larger word that doesn't start with the same letters. "apple" would be in between
@@ -31,15 +34,15 @@ boost::optional<std::string> wordTailBounds(const std::string& toIncrement);
 std::string reverseString(const std::string& toReverse);
 
 //! \brief Helper function for isPalindrome. Increments an iterator past the 
-//! leading spaces. This is a template to allow handling of both forward
-//! and reverse iterators.
-template <class Iterator>
-void incrementPastSpaces(Iterator& iterator);
+//! leading spaces. 
+void incrementPastSpaces(std::string::const_iterator& iterator);
+
+void decrementPastSpaces(std::string::const_iterator& iterator);
 
 //! \brief Helper function for wordTailBounds. This will increment an iterator to the
 //! first character that is not 'z'. It will also stop if it reaches end.
 template <class Iterator>
-void incrementToFirstNotZ(Iterator& iterator, Iterator end);
+void incrementToFirstNotZ(Iterator& iterator, const Iterator& end);
 
 //! \brief Helper function for wordTailBounds. A word will be built from iterators.
 //! If they are reverse iterators, the word will be built in reverse.
