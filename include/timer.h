@@ -21,7 +21,7 @@ class Timer
 
 	private:
 
-		decltype(std::chrono::high_resolution_clock::now()) time;
+		std::chrono::time_point<std::chrono::high_resolution_clock> time;
 
 };
 
