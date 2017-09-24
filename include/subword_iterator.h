@@ -14,7 +14,7 @@ struct SubwordStringIterator<Side::Left>
 
 	SubwordStringIterator(const std::string& wordToMatch) :
 		current(wordToMatch.begin()),
-		end(std::prev(wordToMatch.end()))
+		end(wordToMatch.end())
 	{}
 
 	typedef typename std::string::const_iterator iterator;
@@ -36,7 +36,7 @@ struct SubwordStringIterator<Side::Right>
 
 	SubwordStringIterator(const std::string& wordToMatch) :
 		current(wordToMatch.rbegin()),
-		end(std::prev(wordToMatch.rend()))
+		end(wordToMatch.rend())
 	{}
 
 	typedef typename std::string::const_reverse_iterator iterator;

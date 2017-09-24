@@ -29,7 +29,7 @@ std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) c
 	const auto& sideStack = getStack<side>();
 
 	int index = sideStack.size() - 1;
-	for (; index >= 0 && accumulatedChars < numMatchingCharacters; --index)
+	for (; index >= 0 && accumulatedChars <= numMatchingCharacters; --index)
 	{
 		accumulatedChars += (**sideStack[index]).size();	
 	}

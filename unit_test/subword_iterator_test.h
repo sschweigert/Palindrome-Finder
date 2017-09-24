@@ -14,6 +14,7 @@ class SubwordIteratorTest : public CxxTest::TestSuite
 			
 			set.insert("a");
 			set.insert("app");
+			set.insert("apple");
 
 	
 			std::string wordToMatch = "apple";
@@ -29,6 +30,7 @@ class SubwordIteratorTest : public CxxTest::TestSuite
 			TS_ASSERT(subwordIterator.hasNext());
 			TS_ASSERT_EQUALS(*subwordIterator, "app");
 
+			++subwordIterator;
 			++subwordIterator;
 
 			TS_ASSERT(!subwordIterator.hasNext());
@@ -53,6 +55,26 @@ class SubwordIteratorTest : public CxxTest::TestSuite
 
 			TS_ASSERT(subwordIterator.hasNext());
 			TS_ASSERT_EQUALS(*subwordIterator, "ple");
+
+			++subwordIterator;
+			++subwordIterator;
+
+			TS_ASSERT(!subwordIterator.hasNext());
+		}
+
+		void testSingleLetterTest(void)
+		{
+			typename TypeTraits<Side::Left>::Set set;
+			
+			set.insert("a");
+
+			std::string wordToMatch = "a";
+
+			SubwordIterator<Side::Left> subwordIterator(wordToMatch, set);
+			//ForwardSubwordIterator subwordIterator(wordToMatch, set);
+			
+			TS_ASSERT(subwordIterator.hasNext());
+			TS_ASSERT_EQUALS(*subwordIterator, "a");
 
 			++subwordIterator;
 

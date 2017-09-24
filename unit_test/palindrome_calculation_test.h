@@ -24,14 +24,12 @@ class PalindromeCalculationTest : public CxxTest::TestSuite
 				"a a a"
 			};
 
-			std::cout << "Found: " << result.size() << " palindromes" << std::endl;
-			//TS_ASSERT(expectedResult.size() == result.size());
+			TS_ASSERT(expectedResult.size() == result.size());
 
 			for (const auto& resultString : result)
 			{
 				bool matchesExpected = (expectedResult.count(resultString) == 1);
-				std::cout << resultString << std::endl;
-				//TS_ASSERT(matchesExpected);
+				TS_ASSERT(matchesExpected);
 			}
 		}
 
