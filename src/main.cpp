@@ -96,17 +96,9 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
-	std::unordered_map<std::string, WordCandidateIterator<Side::Left>> leftCachedIterators;
-	std::unordered_map<std::string, WordCandidateIterator<Side::Right>> rightCachedIterators;
-	
-	leftCachedIterators.reserve(25000);
-	rightCachedIterators.reserve(25000);
-
-
 	ForwardStringSet forwardOrdering;
 	ReverseStringSet reverseOrdering;
 
-	Timer timer;
 	while (!fileStream.eof())
 	{
 		std::string line;
@@ -118,19 +110,22 @@ int main(int argc, char** argv)
 			reverseOrdering.insert(line);
 		}
 	}
-
-	std::cout << "Loading words took: " << timer.secondsElapsed() << std::endl;
-
 	fileStream.close();
-
-
 	std::cout << "Words loaded into data structures" << std::endl;
 
-	int numberOfWords = 6;
 
+	std::unordered_map<std::string, WordCandidateIterator<Side::Left>> leftCachedIterators;
+	std::unordered_map<std::string, WordCandidateIterator<Side::Right>> rightCachedIterators;
+	
+	leftCachedIterators.reserve(25000);
+	rightCachedIterators.reserve(25000);
+
+	// Length of palindrome
+	const int numberOfWords = 6;
+
+	// Output
 	std::vector<std::string> palindromes;
 
-	WordBuildingStack wordBuildingStack;
 
 	EntireSetIterator<Side::Left> entireSetOrdering(forwardOrdering);
 
@@ -152,13 +147,15 @@ int main(int argc, char** argv)
 
 	};
 
-	//std::unique_ptr<IWordCandidateIterator<Side::Left>> seedIterator(new IteratorWrapper<decltype(counter), Side::Left>(entireSetOrdering, counter));
 	IteratorWrapper<decltype(counter), Side::Left> wrappedItr(entireSetOrdering, counter);
 
+	WordBuildingStack wordBuildingStack;
 	wordBuildingStack.push(&wrappedItr);
 
 	const float minAverageWordLength = 4;
 	const int minPalindromeLength = ((minAverageWordLength + 1) * numberOfWords) - 1;
+
+	Timer timer;
 
 	do
 	{
@@ -171,7 +168,6 @@ int main(int argc, char** argv)
 			std::string reversedOverhang = reverseString(overhang.overhangText);
 			if (overhang.side == Side::Left)
 			{
-				//std::unique_ptr<IWordCandidateIterator<Side::Right>> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
 				if (rightCachedIterators.count(reversedOverhang) == 0)
 				{
 					rightCachedIterators.insert(std::make_pair(reversedOverhang, WordCandidateIterator<Side::Right>(reversedOverhang, reverseOrdering)));
@@ -226,7 +222,6 @@ int main(int argc, char** argv)
 		std::string reversedOverhang(reverseString(overhang.overhangText));
 		if (overhang.side == Side::Left)
 		{
-			//std::unique_ptr<IWordCandidateIterator<Side::Right>> newIterator(new ReverseCandidateIterator(reverseString(overhang.overhangText), reverseOrdering));
 			WordCandidateIterator<Side::Right> newIterator(reversedOverhang, reverseOrdering);
 
 			while (newIterator.hasNext())
@@ -246,7 +241,6 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			//std::unique_ptr<IWordCandidateIterator<Side::Left>> newIterator(new ForwardCandidateIterator(reverseString(overhang.overhangText), forwardOrdering));
 			WordCandidateIterator<Side::Left> newIterator(reversedOverhang, forwardOrdering);
 
 			while (newIterator.hasNext())
