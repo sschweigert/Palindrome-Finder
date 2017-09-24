@@ -26,10 +26,12 @@ target_link_libraries(main
 find_package(CxxTest)
 
 if(CXXTEST_FOUND)
-    include_directories(${CXXTEST_INCLUDE_DIR})
-    enable_testing()
-    CXXTEST_ADD_TEST(palindrome_unit_test unit_tests.cc
-                      ${CMAKE_CURRENT_SOURCE_DIR}/unit_test/palindrome_tools_test.h
-		${CMAKE_CURRENT_SOURCE_DIR}/unit_test/subword_iterator_test.h	)
-    target_link_libraries(palindrome_unit_test palindrome_generator)
+	include_directories(${CXXTEST_INCLUDE_DIR})
+	enable_testing()
+	CXXTEST_ADD_TEST(palindrome_unit_test unit_tests.cc
+		${CMAKE_CURRENT_SOURCE_DIR}/unit_test/palindrome_tools_test.h
+		${CMAKE_CURRENT_SOURCE_DIR}/unit_test/subword_iterator_test.h	
+		${CMAKE_CURRENT_SOURCE_DIR}/unit_test/palindrome_calculation_test.h	
+	)
+	target_link_libraries(palindrome_unit_test palindrome_generator)
 endif()

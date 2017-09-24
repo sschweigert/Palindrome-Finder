@@ -61,7 +61,8 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 	auto counter = [&]
 	{
 		const float percentStep = 0.5;
-		const int countStep = ((float)percentStep / 100.0) * (float)forwardOrdering.size();
+		int countStep = ((float)percentStep / 100.0) * (float)forwardOrdering.size();
+		countStep = std::max(1, countStep);
 
 		++count;
 		if (count % countStep == 0)
@@ -77,9 +78,6 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 
 	WordBuildingStack wordBuildingStack;
 	wordBuildingStack.push(&wrappedItr);
-
-	const float minAverageWordLength = 4;
-	const int minPalindromeLength = ((minAverageWordLength + 1) * numberOfWords) - 1;
 
 	do
 	{
@@ -154,10 +152,7 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 				if (isPalindrome(potentialPalindrome))
 				{
 					std::string palindromeText = wordBuildingStack.generateString(*newIterator);
-					if (palindromeText.size() >= minPalindromeLength)
-					{
-						palindromes.push_back(palindromeText);
-					}
+					palindromes.push_back(palindromeText);
 				}
 
 				++newIterator;
@@ -173,10 +168,7 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 				if (isPalindrome(potentialPalindrome))
 				{
 					std::string palindromeText = wordBuildingStack.generateString(*newIterator);
-					if (palindromeText.size() >= minPalindromeLength)
-					{
-						palindromes.push_back(palindromeText);
-					}
+					palindromes.push_back(palindromeText);
 				}
 
 				++newIterator;
