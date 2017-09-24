@@ -19,7 +19,7 @@ typedef std::set<std::string, std::less<std::string>> ForwardStringSet;
 typedef std::set<std::string, ReverseLess> ReverseStringSet;
 
 
-template <Side::e side>
+template <Side side>
 struct TypeTraits;
 
 template <>

@@ -11,7 +11,7 @@
 struct Overhang
 {
 
-	Side::e side;
+	Side side;
 
 	std::string overhangText;
 
@@ -30,30 +30,30 @@ class WordBuildingStack
 
 		bool topHasNext();
 
-		Side::e pop();
+		Side pop();
 
 		bool empty() const;
 
 		std::string generateString(std::string middleString = "") const;
 
-		template <Side::e side>
+		template <Side side>
 			void push(IWordCandidateIterator<side>* newIterator);
 
 	private:
 
-		template <Side::e side>
+		template <Side side>
 			std::vector<IWordCandidateIterator<side>*>& getStack();
 
-		template <Side::e side>
+		template <Side side>
 			const std::vector<IWordCandidateIterator<side>*>& getStack() const;
 
-		template <Side::e side>
+		template <Side side>
 			int getSideLength() const;
 
-		template <Side::e side>
+		template <Side side>
 			std::string generateOverhangText(int numMatchingCharacters) const;
 
-		std::stack<Side::e> lastAddition;
+		std::stack<Side> lastAddition;
 
 		std::vector<IWordCandidateIterator<Side::Left>*> leftIterators;
 

@@ -24,7 +24,7 @@ void incrementStack(WordBuildingStack& wordBuildingStack)
 
 	while (!wordBuildingStack.empty() && !wordBuildingStack.topHasNext())
 	{
-		Side::e poppedSide = wordBuildingStack.pop();
+		Side poppedSide = wordBuildingStack.pop();
 
 		if (wordBuildingStack.empty())
 		{
@@ -44,7 +44,7 @@ void incrementStack(WordBuildingStack& wordBuildingStack)
 	}
 }
 
-template <class Functor, Side::e side>
+template <class Functor, Side side>
 class IteratorWrapper : public IWordCandidateIterator<side>
 {
 

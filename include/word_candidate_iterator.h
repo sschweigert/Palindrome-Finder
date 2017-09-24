@@ -10,7 +10,7 @@
 #include <side.h>
 #include <string_set.h>
 
-template <Side::e side>
+template <Side side>
 class WordCandidateIterator : public IWordCandidateIterator<side>
 {
 

@@ -1,24 +1,24 @@
 #include <entire_set_iterator.h>
 
-template <Side::e side>
+template <Side side>
 EntireSetIterator<side>::EntireSetIterator(const SetType& set) :
 mCurrentPos(set.begin()),
 mData(set)
 {}
 
-template <Side::e side>
+template <Side side>
 const std::string& EntireSetIterator<side>::operator*() const
 {
 	return *mCurrentPos;
 }
 
-template <Side::e side>
+template <Side side>
 bool EntireSetIterator<side>::hasNext()
 {
 	return mCurrentPos != mData.end();
 }
 
-template <Side::e side>
+template <Side side>
 IWordCandidateIterator<side>& EntireSetIterator<side>::operator++()
 {
 	++mCurrentPos;

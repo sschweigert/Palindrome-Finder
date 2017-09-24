@@ -1,13 +1,13 @@
 #include <word_building_stack.h>
 
-template <Side::e side>
+template <Side side>
 void WordBuildingStack::push(IWordCandidateIterator<side>* newIterator)
 {
 	getStack<side>().push_back(newIterator);
 	lastAddition.push(side);
 }
 
-template <Side::e side>
+template <Side side>
 int WordBuildingStack::getSideLength() const
 {
 	const auto& sideStack = getStack<side>();
@@ -19,7 +19,7 @@ int WordBuildingStack::getSideLength() const
 	return length;
 }
 
-template <Side::e side>
+template <Side side>
 std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) const
 {
 	std::string toReturn;
@@ -155,9 +155,9 @@ int WordBuildingStack::size() const
 	return lastAddition.size();
 }
 
-Side::e WordBuildingStack::pop()
+Side WordBuildingStack::pop()
 {
-	Side::e sideToPop = lastAddition.top();
+	Side sideToPop = lastAddition.top();
 	if (sideToPop == Side::Left)
 	{
 		leftIterators.pop_back();

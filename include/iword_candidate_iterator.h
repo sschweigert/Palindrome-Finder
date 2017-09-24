@@ -7,7 +7,7 @@
 //! \brief Interface for an iterator that returns a set of words determind by 
 //! an algorithm. Implementations of these iterators are used to search through
 //! sets of words for ones that can be used to generate palindromes.
-template <Side::e side>
+template <Side side>
 class IWordCandidateIterator
 {
 

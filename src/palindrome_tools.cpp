@@ -135,7 +135,7 @@ char& endOfWord<Side::Right>(std::string& word)
 	return word.front();
 }
 
-template <Side::e side>
+template <Side side>
 boost::optional<std::string> wordTailBounds(const std::string& toIncrement)
 {
 	BackwardsRange<side> backwardsRange = getBackwardsRange<side>(toIncrement);

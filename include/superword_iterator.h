@@ -8,7 +8,7 @@
 #include <palindrome_tools.h>
 #include <algorithm>
 
-template <Side::e side>
+template <Side side>
 class SuperwordIterator
 {
 

@@ -28,7 +28,7 @@ bool isSpacedPalindrome(const std::string& first);
 //! \return The next larger word that doesn't start with the same letters. If the input
 //! is entire 'z', then boost::none will be returned (because there is no larger word
 //! in that case.
-template <Side::e side>
+template <Side side>
 boost::optional<std::string> wordTailBounds(const std::string& toIncrement);
 
 std::string reverseString(const std::string& toReverse);
@@ -50,7 +50,7 @@ template <class Iterator>
 std::string buildWordFromIterators(Iterator begin, Iterator end);
 
 //! \brief A class that defines a range of a word in reverse.
-template <Side::e side>
+template <Side side>
 struct BackwardsRange;
 
 template <>
@@ -68,10 +68,10 @@ struct BackwardsRange<Side::Right>
 };
 
 //! \brief Get a reference to the last character in a word.
-template <Side::e side>
+template <Side side>
 char& endOfWord(std::string& word);
 
-template <Side::e side>
+template <Side side>
 BackwardsRange<side> getBackwardsRange(const std::string& word);
 
 #endif

@@ -8,7 +8,7 @@
 //! \brief Class which iterates over an entire set.
 //! This is basically a wrapper for begin() and end() so
 //! that it implements IWordCandidateIterator interface.
-template <Side::e side>
+template <Side side>
 class EntireSetIterator : public IWordCandidateIterator<side>
 {
 

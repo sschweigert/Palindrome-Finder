@@ -5,7 +5,7 @@
 #include <string_set.h>
 #include <side.h>
 
-template <Side::e side>
+template <Side side>
 struct SubwordStringIterator;
 
 template <>
@@ -52,7 +52,7 @@ struct SubwordStringIterator<Side::Right>
 
 };
 
-template <Side::e side>
+template <Side side>
 class SubwordIterator
 {
 

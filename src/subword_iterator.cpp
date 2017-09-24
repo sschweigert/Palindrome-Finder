@@ -1,6 +1,6 @@
 #include <subword_iterator.h>
 
-template <Side::e side>
+template <Side side>
 SubwordIterator<side>::SubwordIterator(const std::string& wordToMatch, const Set& wordsToSearch) :
 	iterator(wordToMatch),
 	mHasNext(iterator.current < iterator.end),
@@ -9,19 +9,19 @@ SubwordIterator<side>::SubwordIterator(const std::string& wordToMatch, const Set
 	mSubWord(mHasNext ? std::string(1, *(iterator.current)) : "")
 {}
 
-template <Side::e side>
+template <Side side>
 const std::string& SubwordIterator<side>::operator*() const 
 {
 	return mSubWord;	
 }
 
-	template <Side::e side>
+	template <Side side>
 bool SubwordIterator<side>::hasNext()
 {
 	return mHasNext;
 }
 
-template <Side::e side>
+template <Side side>
 auto SubwordIterator<side>::operator++() -> decltype(*this)&
 {
 	// Note we ignore the case of the full word
