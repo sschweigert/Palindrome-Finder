@@ -99,4 +99,36 @@ class PalindromeCalculationTest : public CxxTest::TestSuite
 			verifyPalindrome(seedWords, palindromeLength, expectedResult);
 		}
 
+		// Make sure palindromes are found in the extreme case of a, aaa, z and zzz.
+		// These have caused problems before where they were skipped or caused hanging/crashes.
+		void testLongerPhrases(void)
+		{
+			std::vector<std::string> seedWords =
+			{
+				"no",
+				"worm",
+				"star",
+				"live",
+				"emit",
+				"time",
+				"on",
+				"evil",
+				"my",
+				"metal",
+				"owl",
+				"ate",
+				"rats"
+			};
+
+			const int palindromeLength = 6;
+
+			std::unordered_set<std::string> expectedResult =
+			{
+				"rats live on no evil star",
+				"live on time emit no evil",
+				"my owl ate my metal worm"
+			};
+
+		}
+
 };
