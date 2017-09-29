@@ -19,11 +19,6 @@ struct SubwordStringIterator<Side::Left>
 
 	typedef typename std::string::const_iterator iterator;
 
-	void buildOntoWord(std::string& word)
-	{
-		word += *current;
-	}
-
 	iterator current;
 
 	iterator end;
@@ -41,11 +36,6 @@ struct SubwordStringIterator<Side::Right>
 
 	typedef typename std::string::const_reverse_iterator iterator;
 
-	void buildOntoWord(std::string& word)
-	{
-		word = *current + word;
-	}
-
 	iterator current;
 
 	iterator end;
@@ -53,13 +43,13 @@ struct SubwordStringIterator<Side::Right>
 };
 
 template <Side side>
-void buildOntoWord(std::string& word);
+std::string buildOntoWord(std::string word, char toAdd);
 
 template <>
-void buildOntoWord<Side::Left>(std::string& word);
+std::string buildOntoWord<Side::Left>(std::string word, char toAdd);
 
 template <>
-void buildOntoWord<Side::Right>(std::string& word);
+std::string buildOntoWord<Side::Right>(std::string word, char toAdd);
 
 template <Side side>
 class SubwordIterator

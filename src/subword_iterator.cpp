@@ -1,18 +1,16 @@
 #include <subword_iterator.h>
 
-/*
 template <>
-void buildOntoWord<Side::Left>(std::string& word)
+std::string buildOntoWord<Side::Left>(std::string word, char toAdd)
 {
-	word += *current;
+	return (word + toAdd);
 }
 
 template <>
-void buildOntoWord<Side::Right>(std::string& word)
+std::string buildOntoWord<Side::Right>(std::string word, char toAdd)
 {
-	word = *current + word;
+	return (toAdd + word);
 }
-*/
 
 template <Side side>
 SubwordIterator<side>::SubwordIterator(const std::string& wordToMatch, const Set& wordsToSearch) :
@@ -40,7 +38,8 @@ SubwordIterator<side>& SubwordIterator<side>::operator++()
 	// Note we ignore the case of the full word
 	while (++iterator.current < iterator.end)
 	{
-		iterator.buildOntoWord(mSubWord);
+		mSubWord = buildOntoWord<side>(mSubWord, *(iterator.current));
+
 		if (mWordsToSearch.count(mSubWord) == 1)
 		{
 			// Subword is valid, so break out of loop
