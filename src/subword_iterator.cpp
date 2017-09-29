@@ -26,7 +26,7 @@ SubStringIterator<Side::Right> iteratorAtFirstLetter<Side::Right>(const std::str
 
 template <Side side>
 SubwordIterator<side>::SubwordIterator(const std::string& wordToMatch, const Set& wordsToSearch) :
-	iterator(wordToMatch),
+	iterator(iteratorAtFirstLetter<side>(wordToMatch)),
 	mHasNext(iterator.current != iterator.end),
 	mWordsToSearch(wordsToSearch),
 	mSubWord(mHasNext ? std::string(1, *(iterator.current)) : "")

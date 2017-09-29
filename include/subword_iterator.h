@@ -12,16 +12,7 @@ template <>
 struct SubwordStringIterator<Side::Left>
 {
 
-	SubwordStringIterator(const std::string& wordToMatch) :
-		current(wordToMatch.begin()),
-		end(wordToMatch.end())
-	{}
-
 	typedef typename std::string::const_iterator iterator;
-
-	iterator current;
-
-	iterator end;
 
 };
 
@@ -29,16 +20,7 @@ template <>
 struct SubwordStringIterator<Side::Right>
 {
 
-	SubwordStringIterator(const std::string& wordToMatch) :
-		current(wordToMatch.rbegin()),
-		end(wordToMatch.rend())
-	{}
-
 	typedef typename std::string::const_reverse_iterator iterator;
-
-	iterator current;
-
-	iterator end;
 
 };
 
@@ -82,7 +64,7 @@ class SubwordIterator
 
 	private:
 
-		SubwordStringIterator<side> iterator;
+		SubStringIterator<side> iterator;
 
 		bool mHasNext;
 
