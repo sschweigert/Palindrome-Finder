@@ -133,4 +133,27 @@ class PalindromeCalculationTest : public CxxTest::TestSuite
 
 		}
 
+		void testLongerWord(void)
+		{
+			std::vector<std::string> seedWords =
+			{
+				"evil",
+				"live",
+				"rats",
+				"star"
+			};
+
+			const int palindromeLength = 2;
+
+			std::unordered_set<std::string> expectedResult =
+			{
+				"evil live",
+				"live evil",
+				"star rats",
+				"rats star"
+			};
+
+			verifyPalindrome(seedWords, palindromeLength, expectedResult);
+		}
+
 };

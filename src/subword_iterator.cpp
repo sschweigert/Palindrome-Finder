@@ -1,5 +1,19 @@
 #include <subword_iterator.h>
 
+/*
+template <>
+void buildOntoWord<Side::Left>(std::string& word)
+{
+	word += *current;
+}
+
+template <>
+void buildOntoWord<Side::Right>(std::string& word)
+{
+	word = *current + word;
+}
+*/
+
 template <Side side>
 SubwordIterator<side>::SubwordIterator(const std::string& wordToMatch, const Set& wordsToSearch) :
 	iterator(wordToMatch),

@@ -53,6 +53,15 @@ struct SubwordStringIterator<Side::Right>
 };
 
 template <Side side>
+void buildOntoWord(std::string& word);
+
+template <>
+void buildOntoWord<Side::Left>(std::string& word);
+
+template <>
+void buildOntoWord<Side::Right>(std::string& word);
+
+template <Side side>
 class SubwordIterator
 {
 
