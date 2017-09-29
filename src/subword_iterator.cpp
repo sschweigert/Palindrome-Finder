@@ -1,5 +1,7 @@
 #include <subword_iterator.h>
 
+#include <iostream>
+
 template <>
 std::string buildOntoWord<Side::Left>(std::string word, char toAdd)
 {
@@ -47,8 +49,10 @@ bool SubwordIterator<side>::hasNext()
 template <Side side>
 SubwordIterator<side>& SubwordIterator<side>::operator++()
 {
-	// Note we ignore the case of the full word
-	while (++iterator.current < iterator.end)
+	++(iterator.current);
+
+	// Should be (iterator.current != iterator.end), but this doesn't work for some reason
+	while (iterator.current < iterator.end)
 	{
 		mSubWord = buildOntoWord<side>(mSubWord, *(iterator.current));
 
@@ -57,6 +61,10 @@ SubwordIterator<side>& SubwordIterator<side>::operator++()
 			// Subword is valid, so break out of loop
 			return *this;
 		}	
+		else
+		{
+			++(iterator.current);
+		}
 	}
 
 	// Reached end of word so there is nothing new to add
