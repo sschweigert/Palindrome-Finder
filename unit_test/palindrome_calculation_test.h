@@ -129,6 +129,8 @@ class PalindromeCalculationTest : public CxxTest::TestSuite
 				"my owl ate my metal worm"
 			};
 
+			// TODO: Add test
+
 		}
 
 };

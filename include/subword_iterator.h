@@ -66,15 +66,13 @@ class SubwordIterator
 
 		bool hasNext();
 
-		auto operator++() -> decltype(*this)&;
+		SubwordIterator<side>& operator++();
 
 	private:
 
 		SubwordStringIterator<side> iterator;
 
 		bool mHasNext;
-
-		const std::string& mWordToMatch;
 
 		const Set& mWordsToSearch;
 
