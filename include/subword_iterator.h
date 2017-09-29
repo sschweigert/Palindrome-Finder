@@ -42,14 +42,27 @@ struct SubwordStringIterator<Side::Right>
 
 };
 
+template <class Iterator>
+struct IteratorPair
+{
+
+	Iterator current;
+
+	Iterator end;
+
+};
+
 template <Side side>
-std::string buildOntoWord(std::string word, char toAdd);
+using SubStringIterator = IteratorPair< typename SubwordStringIterator<side>::iterator >;
+
+template <Side side>
+SubStringIterator<side> iteratorAtFirstLetter(const std::string& wordToMatch);
 
 template <>
-std::string buildOntoWord<Side::Left>(std::string word, char toAdd);
+SubStringIterator<Side::Left> iteratorAtFirstLetter<Side::Left>(const std::string& wordToMatch);
 
 template <>
-std::string buildOntoWord<Side::Right>(std::string word, char toAdd);
+SubStringIterator<Side::Right> iteratorAtFirstLetter<Side::Right>(const std::string& wordToMatch);
 
 template <Side side>
 class SubwordIterator
@@ -78,5 +91,15 @@ class SubwordIterator
 		std::string mSubWord;
 
 };
+
+template <Side side>
+std::string buildOntoWord(std::string word, char toAdd);
+
+template <>
+std::string buildOntoWord<Side::Left>(std::string word, char toAdd);
+
+template <>
+std::string buildOntoWord<Side::Right>(std::string word, char toAdd);
+
 
 #endif

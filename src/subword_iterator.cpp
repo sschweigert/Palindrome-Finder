@@ -12,6 +12,18 @@ std::string buildOntoWord<Side::Right>(std::string word, char toAdd)
 	return (toAdd + word);
 }
 
+template <>
+SubStringIterator<Side::Left> iteratorAtFirstLetter<Side::Left>(const std::string& wordToMatch)
+{
+	return { wordToMatch.begin(), wordToMatch.end() };
+}
+
+template <>
+SubStringIterator<Side::Right> iteratorAtFirstLetter<Side::Right>(const std::string& wordToMatch)
+{
+	return { wordToMatch.rbegin(), wordToMatch.rend() };
+}
+
 template <Side side>
 SubwordIterator<side>::SubwordIterator(const std::string& wordToMatch, const Set& wordsToSearch) :
 	iterator(wordToMatch),
