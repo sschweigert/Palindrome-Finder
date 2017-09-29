@@ -6,10 +6,10 @@
 #include <side.h>
 
 template <Side side>
-struct SubwordStringIterator;
+struct SubIteratorTypeTraits;
 
 template <>
-struct SubwordStringIterator<Side::Left>
+struct SubIteratorTypeTraits<Side::Left>
 {
 
 	typedef typename std::string::const_iterator iterator;
@@ -17,7 +17,7 @@ struct SubwordStringIterator<Side::Left>
 };
 
 template <>
-struct SubwordStringIterator<Side::Right>
+struct SubIteratorTypeTraits<Side::Right>
 {
 
 	typedef typename std::string::const_reverse_iterator iterator;
@@ -35,7 +35,7 @@ struct IteratorPair
 };
 
 template <Side side>
-using SubStringIterator = IteratorPair< typename SubwordStringIterator<side>::iterator >;
+using SubStringIterator = IteratorPair< typename SubIteratorTypeTraits<side>::iterator >;
 
 template <Side side>
 SubStringIterator<side> iteratorAtFirstLetter(const std::string& wordToMatch);
