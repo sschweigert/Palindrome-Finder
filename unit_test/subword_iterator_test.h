@@ -10,17 +10,17 @@ class SubwordIteratorTest : public CxxTest::TestSuite
 
 		void testForwardSubwordIterator(void)
 		{
-			typename TypeTraits<Side::Left>::Set set;
-			
-			set.insert("a");
-			set.insert("app");
-			set.insert("apple");
+			TypeTraits<Side::Left>::Set set =
+			{
+				"a",
+				"app",
+				"apple"
+			};
 
 	
 			std::string wordToMatch = "apple";
 
 			SubwordIterator<Side::Left> subwordIterator(wordToMatch, set);
-			//ForwardSubwordIterator subwordIterator(wordToMatch, set);
 			
 			TS_ASSERT(subwordIterator.hasNext());
 			TS_ASSERT_EQUALS(*subwordIterator, "a");
@@ -31,19 +31,39 @@ class SubwordIteratorTest : public CxxTest::TestSuite
 			TS_ASSERT_EQUALS(*subwordIterator, "app");
 
 			++subwordIterator;
+
+			TS_ASSERT(subwordIterator.hasNext());
+			TS_ASSERT_EQUALS(*subwordIterator, "apple");
+
 			++subwordIterator;
 
 			TS_ASSERT(!subwordIterator.hasNext());
 		}
 
-		void testReverseSubwordIterator(void)
+		void testForwardNoFind(void)
 		{
-			typename TypeTraits<Side::Right>::Set set;
-			
-			set.insert("e");
-			set.insert("ple");
+			TypeTraits<Side::Left>::Set set =
+			{
+				"unrelated",
+				"no_match"
+			};
 
 	
+			std::string wordToMatch = "apple";
+
+			SubwordIterator<Side::Left> subwordIterator(wordToMatch, set);
+			
+			TS_ASSERT(!subwordIterator.hasNext());
+		}
+
+		void testReverseSubwordIterator(void)
+		{
+			TypeTraits<Side::Right>::Set set =
+			{
+				"e",
+				"ple"
+			};
+
 			std::string wordToMatch = "apple";
 
 			SubwordIterator<Side::Right> subwordIterator(wordToMatch, set);
@@ -57,21 +77,20 @@ class SubwordIteratorTest : public CxxTest::TestSuite
 			TS_ASSERT_EQUALS(*subwordIterator, "ple");
 
 			++subwordIterator;
-			++subwordIterator;
 
 			TS_ASSERT(!subwordIterator.hasNext());
 		}
 
 		void testSingleLetterTest(void)
 		{
-			typename TypeTraits<Side::Left>::Set set;
-			
-			set.insert("a");
+			TypeTraits<Side::Left>::Set set =
+			{
+				"a"
+			};
 
 			std::string wordToMatch = "a";
 
 			SubwordIterator<Side::Left> subwordIterator(wordToMatch, set);
-			//ForwardSubwordIterator subwordIterator(wordToMatch, set);
 			
 			TS_ASSERT(subwordIterator.hasNext());
 			TS_ASSERT_EQUALS(*subwordIterator, "a");

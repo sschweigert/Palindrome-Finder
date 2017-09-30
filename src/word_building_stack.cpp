@@ -52,7 +52,7 @@ std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) c
 		// Deal with overlapping word
 		toReturn = (**sideStack[overlapIndex]).substr(overlapCharPosition);
 
-		for (int appendingIndex = overlapIndex + 1; 
+		for (unsigned int appendingIndex = overlapIndex + 1; 
 				appendingIndex < sideStack.size() - 1; ++appendingIndex)
 		{
 			toReturn += **(sideStack[appendingIndex]);
@@ -138,7 +138,7 @@ Overhang WordBuildingStack::getOverhang() const
 	int numMatchingCharacters = std::abs(rightSideLength - leftSideLength);
 
 	if (toReturn.side == Side::Right)
-	{
+	{	
 		toReturn.overhangText = generateOverhangText<Side::Right>(numMatchingCharacters);
 	}
 	else

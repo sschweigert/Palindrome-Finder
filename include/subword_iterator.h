@@ -64,9 +64,9 @@ class SubwordIterator
 
 	private:
 
-		SubStringIterator<side> iterator;
+		void next();
 
-		bool mHasNext;
+		SubStringIterator<side> iterator;
 
 		const Set& mWordsToSearch;
 
