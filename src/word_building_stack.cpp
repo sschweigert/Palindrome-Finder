@@ -19,9 +19,24 @@ int WordBuildingStack::getSideLength() const
 	return length;
 }
 
-OverhangSplitProperties WordBuildingStack::findSplitProperties(Side side, int numMatchingCharacters) const
+template <>
+int WordBuildingStack::calculateOverlapPosition<Side::Left>(int overlapIndex, int indexOffset) const
 {
-	const auto& sideStack = getStackDynamic(side);
+	return indexOffset;
+}
+
+template <>
+int WordBuildingStack::calculateOverlapPosition<Side::Right>(int overlapIndex, int indexOffset) const
+{
+	const auto& sideStack = getStackStatic<Side::Right>();
+	int stringLength = (**sideStack[overlapIndex]).size();
+	return (stringLength - indexOffset);
+}
+
+template <Side side>
+OverhangSplitProperties WordBuildingStack::findSplitProperties(int numMatchingCharacters) const
+{
+	const auto& sideStack = getStackStatic<side>();
 	OverhangSplitProperties splitProperties;
 
 	int accumulatedChars = 0;
@@ -36,14 +51,10 @@ OverhangSplitProperties WordBuildingStack::findSplitProperties(Side side, int nu
 
 	splitProperties.overlapIndex = index + 1;
 
-	if (side == Side::Left)
-	{
-		splitProperties.overlapCharPosition = accumulatedChars - numMatchingCharacters;
-	}
-	else
-	{
-		splitProperties.overlapCharPosition = (**sideStack[splitProperties.overlapIndex]).size() - (accumulatedChars - numMatchingCharacters);
-	}
+	int indexInWord = accumulatedChars - numMatchingCharacters;
+	
+	splitProperties.overlapCharPosition = calculateOverlapPosition<side>(splitProperties.overlapIndex, indexInWord);
+
 	return splitProperties;
 }
 
@@ -79,7 +90,7 @@ std::string WordBuildingStack::generateTextFromSplit(Side side, OverhangSplitPro
 template <Side side>
 std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) const
 {
-	OverhangSplitProperties splitProperties = findSplitProperties(side, numMatchingCharacters);
+	OverhangSplitProperties splitProperties = findSplitProperties<side>(numMatchingCharacters);
 
 	return generateTextFromSplit(side, splitProperties);
 }

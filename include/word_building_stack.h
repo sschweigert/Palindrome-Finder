@@ -53,7 +53,8 @@ class WordBuildingStack
 
 	private:
 
-		OverhangSplitProperties findSplitProperties(Side side, int numMatchingCharacters) const;
+		template <Side side>
+		OverhangSplitProperties findSplitProperties(int numMatchingCharacters) const;
 
 		std::string generateTextFromSplit(Side side, OverhangSplitProperties splitProperties) const;
 
@@ -63,6 +64,9 @@ class WordBuildingStack
 
 		template <Side side>
 			const std::vector<IWordIterator*>& getStackStatic() const;
+
+		template <Side side>
+		int calculateOverlapPosition(int overlapIndex, int indexOffset) const;
 
 		std::vector<IWordIterator*>& getStackDynamic(Side side);
 
@@ -87,5 +91,23 @@ class WordBuildingStack
 		std::vector<IWordIterator*> rightIterators;
 
 };
+
+template <>
+int WordBuildingStack::calculateOverlapPosition<Side::Left>(int overlapIndex, int indexOffset) const;
+
+template <>
+int WordBuildingStack::calculateOverlapPosition<Side::Right>(int overlapIndex, int indexOffset) const;
+
+template <>
+std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Left>();
+
+template <>
+std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Right>();
+
+template <>
+const std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Left>() const;
+
+template <>
+const std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Right>() const;
 
 #endif
