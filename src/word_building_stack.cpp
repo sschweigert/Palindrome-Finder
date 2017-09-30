@@ -19,8 +19,9 @@ int WordBuildingStack::getSideLength() const
 	return length;
 }
 
-OverhangSplitProperties WordBuildingStack::findSplitProperties(Side side, const std::vector<IWordIterator*>& sideStack, int numMatchingCharacters) const
+OverhangSplitProperties WordBuildingStack::findSplitProperties(Side side, int numMatchingCharacters) const
 {
+	const auto& sideStack = getStackDynamic(side);
 	OverhangSplitProperties splitProperties;
 
 	int accumulatedChars = 0;
@@ -46,16 +47,10 @@ OverhangSplitProperties WordBuildingStack::findSplitProperties(Side side, const 
 	return splitProperties;
 }
 
-template <Side side>
-std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) const
+std::string WordBuildingStack::generateTextFromSplit(Side side, OverhangSplitProperties splitProperties) const
 {
+	const auto& sideStack = getStackDynamic(side);
 	std::string toReturn;
-
-
-	const auto& sideStack = getStackStatic<side>();
-
-	OverhangSplitProperties splitProperties = findSplitProperties(side, sideStack, numMatchingCharacters);
-
 	if (side == Side::Left)
 	{
 		// Deal with overlapping word
@@ -78,8 +73,15 @@ std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) c
 		// Deal with overlapping word
 		toReturn += (**sideStack[splitProperties.overlapIndex]).substr(0, splitProperties.overlapCharPosition);
 	}
-
 	return toReturn;
+}
+
+template <Side side>
+std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) const
+{
+	OverhangSplitProperties splitProperties = findSplitProperties(side, numMatchingCharacters);
+
+	return generateTextFromSplit(side, splitProperties);
 }
 
 // Explicitly extantiate public functions
