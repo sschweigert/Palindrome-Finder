@@ -19,14 +19,11 @@ int WordBuildingStack::getSideLength() const
 	return length;
 }
 
-template <Side side>
-std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) const
+OverhangSplitProperties WordBuildingStack::findSplitProperties(Side side, const std::vector<IWordIterator*>& sideStack, int numMatchingCharacters) const
 {
-	std::string toReturn;
+	OverhangSplitProperties splitProperties;
 
 	int accumulatedChars = 0;
-
-	const auto& sideStack = getStackStatic<side>();
 
 	int index = sideStack.size() - 1;
 	while (index >= 0 && accumulatedChars <= numMatchingCharacters)
@@ -36,25 +33,35 @@ std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) c
 		 --index;
 	}
 
-	int overlapIndex = index + 1;
-
-	int overlapCharPosition;
+	splitProperties.overlapIndex = index + 1;
 
 	if (side == Side::Left)
 	{
-		overlapCharPosition = accumulatedChars - numMatchingCharacters;
+		splitProperties.overlapCharPosition = accumulatedChars - numMatchingCharacters;
 	}
 	else
 	{
-		overlapCharPosition = (**sideStack[overlapIndex]).size() - (accumulatedChars - numMatchingCharacters);
+		splitProperties.overlapCharPosition = (**sideStack[splitProperties.overlapIndex]).size() - (accumulatedChars - numMatchingCharacters);
 	}
+	return splitProperties;
+}
+
+template <Side side>
+std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) const
+{
+	std::string toReturn;
+
+
+	const auto& sideStack = getStackStatic<side>();
+
+	OverhangSplitProperties splitProperties = findSplitProperties(side, sideStack, numMatchingCharacters);
 
 	if (side == Side::Left)
 	{
 		// Deal with overlapping word
-		toReturn = (**sideStack[overlapIndex]).substr(overlapCharPosition);
+		toReturn = (**sideStack[splitProperties.overlapIndex]).substr(splitProperties.overlapCharPosition);
 
-		for (unsigned int appendingIndex = overlapIndex + 1; 
+		for (unsigned int appendingIndex = splitProperties.overlapIndex + 1; 
 				appendingIndex < sideStack.size() - 1; ++appendingIndex)
 		{
 			toReturn += **(sideStack[appendingIndex]);
@@ -63,13 +70,13 @@ std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) c
 	else
 	{
 		for (int appendingIndex = sideStack.size() - 1; 
-				appendingIndex >= overlapIndex + 1; --appendingIndex)
+				appendingIndex >= splitProperties.overlapIndex + 1; --appendingIndex)
 		{
 			toReturn += **(sideStack[appendingIndex]);
 		}
 
 		// Deal with overlapping word
-		toReturn += (**sideStack[overlapIndex]).substr(0, overlapCharPosition);
+		toReturn += (**sideStack[splitProperties.overlapIndex]).substr(0, splitProperties.overlapCharPosition);
 	}
 
 	return toReturn;

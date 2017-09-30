@@ -9,6 +9,15 @@
 #include <side.h>
 #include <overhang.h>
 
+struct OverhangSplitProperties
+{
+	
+	int overlapCharPosition;
+
+	int overlapIndex;
+
+};
+
 class WordBuildingStack
 {
 
@@ -43,6 +52,8 @@ class WordBuildingStack
 			void push(IWordCandidateIterator<side>* newIterator);
 
 	private:
+
+		OverhangSplitProperties findSplitProperties(Side side, const std::vector<IWordIterator*>& sideStack, int numMatchingCharacters) const;
 
 		//! \brief Get a reference to the desired stack.
 		template <Side side>
