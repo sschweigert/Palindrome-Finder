@@ -56,7 +56,8 @@ class WordBuildingStack
 		template <Side side>
 		OverhangSplitProperties findSplitProperties(int numMatchingCharacters) const;
 
-		std::string generateTextFromSplit(Side side, OverhangSplitProperties splitProperties) const;
+		template <Side side>
+		std::string generateTextFromSplit(OverhangSplitProperties splitProperties) const;
 
 		//! \brief Get a reference to the desired stack.
 		template <Side side>
@@ -109,5 +110,11 @@ const std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Left>
 
 template <>
 const std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Right>() const;
+
+template <>
+std::string WordBuildingStack::generateTextFromSplit<Side::Left>(OverhangSplitProperties splitProperties) const;
+
+template <>
+std::string WordBuildingStack::generateTextFromSplit<Side::Right>(OverhangSplitProperties splitProperties) const;
 
 #endif
