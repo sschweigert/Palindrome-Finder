@@ -58,5 +58,6 @@ void SubwordIterator<side>::buildUntilMatch()
 	}
 }
 
+// Explicit instantiations
 template class SubwordIterator<Side::Left>;
 template class SubwordIterator<Side::Right>;
