@@ -2,14 +2,12 @@
 
 #include <iostream>
 
-template <>
-std::string buildOntoWord<Side::Left>(std::string word, char toAdd)
+std::string SpecializedSubwordBehaviors<Side::Left>::buildOntoWord(std::string word, char toAdd)
 {
 	return (word + toAdd);
 }
 
-template <>
-std::string buildOntoWord<Side::Right>(std::string word, char toAdd)
+std::string SpecializedSubwordBehaviors<Side::Right>::buildOntoWord(std::string word, char toAdd)
 {
 	return (toAdd + word);
 }
@@ -67,7 +65,7 @@ void SubwordIterator<side>::next()
 	// Should be (iterator.current != iterator.end), but this doesn't work for some reason
 	while (iterator.current < iterator.end)
 	{
-		mSubWord = buildOntoWord<side>(mSubWord, *(iterator.current));
+		mSubWord = SpecializedSubwordBehaviors<side>::buildOntoWord(mSubWord, *(iterator.current));
 
 		if (mWordsToSearch.count(mSubWord) == 1)
 		{

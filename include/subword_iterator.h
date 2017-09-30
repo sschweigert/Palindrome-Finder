@@ -6,21 +6,29 @@
 #include <side.h>
 
 template <Side side>
-struct SubIteratorTypeTraits;
+class SpecializedSubwordBehaviors;
 
 template <>
-struct SubIteratorTypeTraits<Side::Left>
+class SpecializedSubwordBehaviors<Side::Left>
 {
 
-	typedef typename std::string::const_iterator iterator;
+	public:
+
+		typedef std::string::const_iterator iterator;
+
+		static std::string buildOntoWord(std::string word, char toAdd);
 
 };
 
 template <>
-struct SubIteratorTypeTraits<Side::Right>
+class SpecializedSubwordBehaviors<Side::Right>
 {
 
-	typedef typename std::string::const_reverse_iterator iterator;
+	public:
+
+		typedef std::string::const_reverse_iterator iterator;
+
+		static std::string buildOntoWord(std::string word, char toAdd);
 
 };
 
@@ -35,7 +43,7 @@ struct IteratorPair
 };
 
 template <Side side>
-using SubStringIterator = IteratorPair< typename SubIteratorTypeTraits<side>::iterator >;
+using SubStringIterator = IteratorPair< typename SpecializedSubwordBehaviors<side>::iterator >;
 
 template <Side side>
 SubStringIterator<side> iteratorAtFirstLetter(const std::string& wordToMatch);
@@ -73,15 +81,6 @@ class SubwordIterator
 		std::string mSubWord;
 
 };
-
-template <Side side>
-std::string buildOntoWord(std::string word, char toAdd);
-
-template <>
-std::string buildOntoWord<Side::Left>(std::string word, char toAdd);
-
-template <>
-std::string buildOntoWord<Side::Right>(std::string word, char toAdd);
 
 
 #endif
