@@ -4,9 +4,11 @@
 #include <string_set.h>
 #include <side.h>
 
+//! \brief A fully specialized class that generalizes functions used in SubwordIterator<Side side>
 template <Side side>
 class SpecializedSubwordBehaviors;
 
+//! \brief Left generalized functions used to build the string from the left side to the right
 template <>
 class SpecializedSubwordBehaviors<Side::Left>
 {
@@ -23,6 +25,7 @@ class SpecializedSubwordBehaviors<Side::Left>
 
 };
 
+//! \brief Right generalized functions used to build the string from the right side to the left
 template <>
 class SpecializedSubwordBehaviors<Side::Right>
 {

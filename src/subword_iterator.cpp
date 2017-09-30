@@ -9,7 +9,7 @@ SubwordIterator<side>::SubwordIterator(const std::string& wordToMatch, const Set
 {
 	// Add characters to the word, moving iterator to first position or to end if
 	// no match in set
-	next();
+	buildUntilMatch();
 }
 
 template <Side side>
@@ -31,13 +31,13 @@ SubwordIterator<side>& SubwordIterator<side>::operator++()
 	++current;
 
 	// Keep adding characters until reach a word in the set
-	next();
+	buildUntilMatch();
 
 	return *this;
 }	
 
 template <Side side>
-void SubwordIterator<side>::next()
+void SubwordIterator<side>::buildUntilMatch()
 {
 	// Should be (iterator.current != iterator.end), but this doesn't work for some reason
 	while (current < end)
