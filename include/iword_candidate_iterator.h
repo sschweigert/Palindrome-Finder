@@ -5,7 +5,7 @@
 #include <side.h>
 
 
-//! \brief Interface for an iterator that returns a set of words determind by 
+//! \brief Interface for an iterator that generates a series of words determined by 
 //! an algorithm. Implementations of these iterators are used to search through
 //! sets of words for ones that can be used to generate palindromes.
 class IWordIterator
@@ -27,6 +27,10 @@ class IWordIterator
 
 };
 
+//! \brief A sub-interface of IWordIterator which is side-specific.
+//! This is useful because it allows compile-time checking of an iterator's side.
+//! It allows template functions to be created which take in IWordCandidateIterator<side>
+//! instead of just IWordIterator, and these can be handled differently.
 template <Side side>
 class IWordCandidateIterator : public IWordIterator
 {};

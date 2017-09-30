@@ -29,9 +29,11 @@ std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) c
 	const auto& sideStack = getStackStatic<side>();
 
 	int index = sideStack.size() - 1;
-	for (; index >= 0 && accumulatedChars <= numMatchingCharacters; --index)
+	while (index >= 0 && accumulatedChars <= numMatchingCharacters)
 	{
 		accumulatedChars += (**sideStack[index]).size();	
+
+		 --index;
 	}
 
 	int overlapIndex = index + 1;
@@ -144,14 +146,7 @@ int WordBuildingStack::size() const
 Side WordBuildingStack::pop()
 {
 	Side sideToPop = lastAddition.top();
-	if (sideToPop == Side::Left)
-	{
-		leftIterators.pop_back();
-	}
-	else
-	{
-		rightIterators.pop_back();
-	}
+	getStackDynamic(sideToPop).pop_back();
 
 	lastAddition.pop();
 	return sideToPop;
@@ -192,13 +187,23 @@ IWordIterator& WordBuildingStack::getTop()
 const IWordIterator& WordBuildingStack::getTop() const
 {
 	Side sideToPop = lastAddition.top();
-	if (sideToPop == Side::Left)
+	return *(getStackDynamic(sideToPop).back());
+}
+
+std::vector<IWordIterator*>& WordBuildingStack::getStackDynamic(Side side)
+{
+	return const_cast<std::vector<IWordIterator*>&>(static_cast<const WordBuildingStack*>(this)->getStackDynamic(side));
+}
+
+const std::vector<IWordIterator*>& WordBuildingStack::getStackDynamic(Side side) const
+{
+	if (side == Side::Left)
 	{
-		return *(leftIterators.back());
+		return leftIterators;
 	}
 	else
 	{
-		return *(rightIterators.back());
+		return rightIterators;
 	}
 }
 

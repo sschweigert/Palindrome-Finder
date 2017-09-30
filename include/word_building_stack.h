@@ -44,16 +44,23 @@ class WordBuildingStack
 
 	private:
 
+		//! \brief Get a reference to the desired stack.
 		template <Side side>
 			std::vector<IWordIterator*>& getStackStatic();
 
 		template <Side side>
 			const std::vector<IWordIterator*>& getStackStatic() const;
 
-			IWordIterator& getTop();
+		std::vector<IWordIterator*>& getStackDynamic(Side side);
 
-			const IWordIterator& getTop() const;
+		const std::vector<IWordIterator*>& getStackDynamic(Side side) const;
 
+		//! \brief Get the top iterator, regardless of which stack it belongs to
+		IWordIterator& getTop();
+
+		const IWordIterator& getTop() const;
+
+		//! \brief Calculate the length of a specific side of iterators
 		template <Side side>
 			int getSideLength() const;
 
