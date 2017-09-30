@@ -40,6 +40,26 @@ class SubwordIteratorTest : public CxxTest::TestSuite
 			TS_ASSERT(!subwordIterator.hasNext());
 		}
 
+		void testInitialIncrement(void)
+		{
+			TypeTraits<Side::Left>::Set set =
+			{
+				"abc"
+			};
+
+	
+			std::string wordToMatch = "abcde";
+
+			SubwordIterator<Side::Left> subwordIterator(wordToMatch, set);
+			
+			TS_ASSERT(subwordIterator.hasNext());
+			TS_ASSERT_EQUALS(*subwordIterator, "abc");
+
+			++subwordIterator;	
+
+			TS_ASSERT(!subwordIterator.hasNext());
+		}
+
 		void testForwardNoFind(void)
 		{
 			TypeTraits<Side::Left>::Set set =
