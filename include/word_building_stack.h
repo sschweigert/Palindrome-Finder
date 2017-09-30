@@ -18,6 +18,8 @@ struct OverhangSplitProperties
 
 };
 
+//! \bring A data structure that facilitates the building of strings of words separated by spaces.
+//! The strings of words are built from either side (left or right) using IWordCandidateIterator objects.
 class WordBuildingStack
 {
 
