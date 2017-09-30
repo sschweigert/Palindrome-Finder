@@ -2,26 +2,26 @@
 
 template <Side side>
 EntireSetIterator<side>::EntireSetIterator(const SortedStringSet<side>& set) :
-mCurrentPos(set.begin()),
-mData(set)
+mCurrent(set.begin()),
+mEnd(set.end())
 {}
 
 template <Side side>
 const std::string& EntireSetIterator<side>::operator*() const
 {
-	return *mCurrentPos;
+	return *mCurrent;
 }
 
 template <Side side>
 bool EntireSetIterator<side>::hasNext()
 {
-	return mCurrentPos != mData.end();
+	return mCurrent != mEnd;
 }
 
 template <Side side>
 IWordCandidateIterator<side>& EntireSetIterator<side>::operator++()
 {
-	++mCurrentPos;
+	++mCurrent;
 	return *this;
 }
 

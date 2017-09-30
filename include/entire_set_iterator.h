@@ -24,9 +24,9 @@ class EntireSetIterator : public IWordCandidateIterator<side>
 
 	private:
 
-		typename SortedStringSet<side>::const_iterator mCurrentPos;
+		typename SortedStringSet<side>::const_iterator mCurrent;
 
-		const SortedStringSet<side>& mData;
+		typename SortedStringSet<side>::const_iterator mEnd;
 
 };
 
