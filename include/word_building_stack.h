@@ -93,6 +93,7 @@ class WordBuildingStack
 
 };
 
+// Full specializations that act as compile-time switches for templated functions:
 template <>
 int WordBuildingStack::calculateOverlapPosition<Side::Left>(int overlapIndex, int indexOffset) const;
 

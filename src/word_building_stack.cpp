@@ -181,9 +181,9 @@ std::string WordBuildingStack::generateString(std::string middleString) const
 {
 	std::string toReturn;
 
-	for (unsigned int i = 0; i < leftIterators.size(); i++)
+	for (const auto* leftIterator : leftIterators)
 	{
-		toReturn += **leftIterators[i];
+		toReturn += **leftIterator;
 		toReturn += ' ';
 	}
 
@@ -191,6 +191,8 @@ std::string WordBuildingStack::generateString(std::string middleString) const
 	toReturn += ' ';
 
 	// Note: Have to go backwards over right iterators to create the word in correct order
+	// I'd like to use make_reverse_iterator, but it's not found in gcc 14 for some reason.
+	// Perhaps update is necessary.
 	for (int i = rightIterators.size() - 1; i >= 0; i--)
 	{
 		toReturn += **rightIterators[i];
