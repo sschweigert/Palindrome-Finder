@@ -16,54 +16,13 @@ class WordCandidateIterator : public IWordCandidateIterator<side>
 
 	public:
 
-		WordCandidateIterator(std::string wordToMatch, const SortedStringSet<side>& wordsToSearch) :
-			mWordToMatch(wordToMatch),
-			mSubwordIterator(mWordToMatch, wordsToSearch),
-			mSuperwordIterator(mWordToMatch, wordsToSearch),
-			mCurrentState(mSubwordIterator.hasNext() ? State::SubWord : State::Superword)
-			{
-			}
+		WordCandidateIterator(std::string wordToMatch, const SortedStringSet<side>& wordsToSearch);
 
-		virtual const std::string& operator*() const
-		{
-			if (mCurrentState == State::SubWord)
-			{
-				return *mSubwordIterator;	
-			}
-			else
-			{
-				return *mSuperwordIterator;
-			}
-		}
+		virtual const std::string& operator*() const;
 
-		virtual bool hasNext()
-		{
-			if (mCurrentState == State::SubWord)
-			{
-				return true;		
-			}
-			else
-			{
-				return mSuperwordIterator.hasNext();
-			}
-		}
+		virtual bool hasNext();
 
-		virtual IWordCandidateIterator<side>& operator++()
-		{
-			if (mCurrentState == State::SubWord)
-			{
-				++mSubwordIterator;
-				if (!mSubwordIterator.hasNext())
-				{
-					mCurrentState = State::Superword;
-				}				
-			}
-			else
-			{
-				++mSuperwordIterator;
-			}
-			return *this;
-		}
+		virtual IWordCandidateIterator<side>& operator++();
 
 	private:
 

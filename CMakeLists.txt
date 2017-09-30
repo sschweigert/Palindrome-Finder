@@ -13,6 +13,7 @@ add_library(palindrome_generator
 	src/timer.cpp
 	src/entire_set_iterator.cpp
 	src/palindrome_calculation.cpp
+	src/word_candidate_iterator.cpp
 )
 
 target_include_directories(palindrome_generator
