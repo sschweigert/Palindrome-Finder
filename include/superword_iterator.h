@@ -12,7 +12,7 @@ template <Side side>
 class SuperwordIterator
 {
 
-	typedef typename TypeTraits<side>::Set Set;
+	typedef SortedStringSet<side> Set;
 
 	public:
 

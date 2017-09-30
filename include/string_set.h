@@ -6,32 +6,40 @@
 
 #include <side.h>
 
-// Sorts from right to left instead of left to right
-// Equivalent to if std::less was called with both strings reversed
+//! Binary operator used to sort strings from right to left instead of left to right.
+//! Equivalent to if std::less was called with both strings reversed.
 struct ReverseLess
 {
 
-		bool operator()(const std::string& first, const std::string& second) const;
+	bool operator()(const std::string& first, const std::string& second) const;
 
 };
 
+//! Ordered set with strings forward sorted
 typedef std::set<std::string, std::less<std::string>> ForwardStringSet;
+
+//! Ordered set with strings reverse sorted
 typedef std::set<std::string, ReverseLess> ReverseStringSet;
 
-
+//! Helper class necessary for full specialization of using template alias
 template <Side side>
-struct TypeTraits;
+struct SetSpecializationHelper;
 
 template <>
-struct TypeTraits<Side::Left>
+struct SetSpecializationHelper<Side::Left>
 {
 	typedef ForwardStringSet Set;
 };
 
 template <>
-struct TypeTraits<Side::Right>
+struct SetSpecializationHelper<Side::Right>
 {
 	typedef ReverseStringSet Set;
 };
+
+//! Generalized version of sorted string set which is ForwardStringSet for Side::Left and
+//! ReverseStringSet for Side::Right
+template <Side side>
+using SortedStringSet = typename SetSpecializationHelper<side>::Set;
 
 #endif

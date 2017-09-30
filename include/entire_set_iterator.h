@@ -12,11 +12,9 @@ template <Side side>
 class EntireSetIterator : public IWordCandidateIterator<side>
 {
 
-		typedef typename TypeTraits<side>::Set SetType;
-
 	public:
 
-		EntireSetIterator(const SetType& set);
+		EntireSetIterator(const SortedStringSet<side>& set);
 
 		virtual const std::string& operator*() const;
 
@@ -26,9 +24,9 @@ class EntireSetIterator : public IWordCandidateIterator<side>
 
 	private:
 
-		typename SetType::const_iterator mCurrentPos;
+		typename SortedStringSet<side>::const_iterator mCurrentPos;
 
-		const SetType& mData;
+		const SortedStringSet<side>& mData;
 
 };
 

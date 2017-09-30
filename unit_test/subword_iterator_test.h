@@ -10,7 +10,7 @@ class SubwordIteratorTest : public CxxTest::TestSuite
 
 		void testForwardSubwordIterator(void)
 		{
-			TypeTraits<Side::Left>::Set set =
+			SortedStringSet<Side::Left> set =
 			{
 				"a",
 				"app",
@@ -42,7 +42,7 @@ class SubwordIteratorTest : public CxxTest::TestSuite
 
 		void testInitialIncrement(void)
 		{
-			TypeTraits<Side::Left>::Set set =
+			SortedStringSet<Side::Left> set =
 			{
 				"abc"
 			};
@@ -62,7 +62,7 @@ class SubwordIteratorTest : public CxxTest::TestSuite
 
 		void testForwardNoFind(void)
 		{
-			TypeTraits<Side::Left>::Set set =
+			SortedStringSet<Side::Left> set =
 			{
 				"unrelated",
 				"no_match"
@@ -78,7 +78,7 @@ class SubwordIteratorTest : public CxxTest::TestSuite
 
 		void testReverseSubwordIterator(void)
 		{
-			TypeTraits<Side::Right>::Set set =
+			SortedStringSet<Side::Right> set =
 			{
 				"e",
 				"ple"
@@ -103,7 +103,7 @@ class SubwordIteratorTest : public CxxTest::TestSuite
 
 		void testSingleLetterTest(void)
 		{
-			TypeTraits<Side::Left>::Set set =
+			SortedStringSet<Side::Left> set =
 			{
 				"a"
 			};

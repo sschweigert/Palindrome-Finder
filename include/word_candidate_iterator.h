@@ -14,11 +14,9 @@ template <Side side>
 class WordCandidateIterator : public IWordCandidateIterator<side>
 {
 
-	typedef typename TypeTraits<side>::Set Set;
-
 	public:
 
-		WordCandidateIterator(std::string wordToMatch, const Set& wordsToSearch) :
+		WordCandidateIterator(std::string wordToMatch, const SortedStringSet<side>& wordsToSearch) :
 			mWordToMatch(wordToMatch),
 			mSubwordIterator(mWordToMatch, wordsToSearch),
 			mSuperwordIterator(mWordToMatch, wordsToSearch),

@@ -1,7 +1,7 @@
 #include <entire_set_iterator.h>
 
 template <Side side>
-EntireSetIterator<side>::EntireSetIterator(const SetType& set) :
+EntireSetIterator<side>::EntireSetIterator(const SortedStringSet<side>& set) :
 mCurrentPos(set.begin()),
 mData(set)
 {}

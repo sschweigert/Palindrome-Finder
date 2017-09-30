@@ -21,9 +21,7 @@ class SubwordIterator
 
 	public:
 
-		typedef typename TypeTraits<side>::Set Set;
-
-		SubwordIterator(const std::string& wordToMatch, const Set& wordsToSearch);
+		SubwordIterator(const std::string& wordToMatch, const SortedStringSet<side>& wordsToSearch);
 
 		const std::string& operator*() const;
 
@@ -45,7 +43,7 @@ class SubwordIterator
 		typename SpecializedSubwordBehaviors<side>::iterator end;
 
 		//! Local reference to the set of words over which to search
-		const Set& mWordsToSearch;
+		const SortedStringSet<side>& mWordsToSearch;
 
 		// Incrementally built word which is returned via operator*
 		std::string mSubWord;

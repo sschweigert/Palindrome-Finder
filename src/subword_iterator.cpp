@@ -1,7 +1,7 @@
 #include <subword_iterator.h>
 
 template <Side side>
-SubwordIterator<side>::SubwordIterator(const std::string& wordToMatch, const Set& wordsToSearch) :
+SubwordIterator<side>::SubwordIterator(const std::string& wordToMatch, const SortedStringSet<side>& wordsToSearch) :
 	current(SpecializedSubwordBehaviors<side>::begin(wordToMatch)),
 	end(SpecializedSubwordBehaviors<side>::end(wordToMatch)),
 	mWordsToSearch(wordsToSearch),
