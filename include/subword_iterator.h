@@ -18,6 +18,10 @@ class SpecializedSubwordBehaviors<Side::Left>
 
 		static std::string buildOntoWord(std::string word, char toAdd);
 
+		static iterator begin(const std::string& toIterate);
+
+		static iterator end(const std::string& toIterate);
+
 };
 
 template <>
@@ -30,29 +34,11 @@ class SpecializedSubwordBehaviors<Side::Right>
 
 		static std::string buildOntoWord(std::string word, char toAdd);
 
-};
+		static iterator begin(const std::string& toIterate);
 
-template <class Iterator>
-struct IteratorPair
-{
-
-	Iterator current;
-
-	Iterator end;
+		static iterator end(const std::string& toIterate);
 
 };
-
-template <Side side>
-using SubStringIterator = IteratorPair< typename SpecializedSubwordBehaviors<side>::iterator >;
-
-template <Side side>
-SubStringIterator<side> iteratorAtFirstLetter(const std::string& wordToMatch);
-
-template <>
-SubStringIterator<Side::Left> iteratorAtFirstLetter<Side::Left>(const std::string& wordToMatch);
-
-template <>
-SubStringIterator<Side::Right> iteratorAtFirstLetter<Side::Right>(const std::string& wordToMatch);
 
 template <Side side>
 class SubwordIterator
@@ -74,7 +60,9 @@ class SubwordIterator
 
 		void next();
 
-		SubStringIterator<side> iterator;
+		typename SpecializedSubwordBehaviors<side>::iterator current;
+
+		typename SpecializedSubwordBehaviors<side>::iterator end;
 
 		const Set& mWordsToSearch;
 

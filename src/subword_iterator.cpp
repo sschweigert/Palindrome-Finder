@@ -12,21 +12,30 @@ std::string SpecializedSubwordBehaviors<Side::Right>::buildOntoWord(std::string 
 	return (toAdd + word);
 }
 
-template <>
-SubStringIterator<Side::Left> iteratorAtFirstLetter<Side::Left>(const std::string& wordToMatch)
+typename SpecializedSubwordBehaviors<Side::Left>::iterator SpecializedSubwordBehaviors<Side::Left>::begin(const std::string& toIterate)
 {
-	return { wordToMatch.begin(), wordToMatch.end() };
+	return toIterate.begin();
 }
 
-template <>
-SubStringIterator<Side::Right> iteratorAtFirstLetter<Side::Right>(const std::string& wordToMatch)
+typename SpecializedSubwordBehaviors<Side::Left>::iterator SpecializedSubwordBehaviors<Side::Left>::end(const std::string& toIterate)
 {
-	return { wordToMatch.rbegin(), wordToMatch.rend() };
+	return toIterate.end();
+}
+
+typename SpecializedSubwordBehaviors<Side::Right>::iterator SpecializedSubwordBehaviors<Side::Right>::begin(const std::string& toIterate)
+{
+	return toIterate.rbegin();
+}
+
+typename SpecializedSubwordBehaviors<Side::Right>::iterator SpecializedSubwordBehaviors<Side::Right>::end(const std::string& toIterate)
+{
+	return toIterate.rend();
 }
 
 template <Side side>
 SubwordIterator<side>::SubwordIterator(const std::string& wordToMatch, const Set& wordsToSearch) :
-	iterator(iteratorAtFirstLetter<side>(wordToMatch)),
+	current(SpecializedSubwordBehaviors<side>::begin(wordToMatch)),
+	end(SpecializedSubwordBehaviors<side>::end(wordToMatch)),
 	mWordsToSearch(wordsToSearch),
 	mSubWord("")
 {
@@ -44,14 +53,14 @@ const std::string& SubwordIterator<side>::operator*() const
 template <Side side>
 bool SubwordIterator<side>::hasNext()
 {
-	return (iterator.current != iterator.end);
+	return (current != end);
 }
 
 template <Side side>
 SubwordIterator<side>& SubwordIterator<side>::operator++()
 {
 	// Start checking from next character
-	++(iterator.current);
+	++current;
 
 	// Keep adding characters until reach a word in the set
 	next();
@@ -63,9 +72,9 @@ template <Side side>
 void SubwordIterator<side>::next()
 {
 	// Should be (iterator.current != iterator.end), but this doesn't work for some reason
-	while (iterator.current < iterator.end)
+	while (current < end)
 	{
-		mSubWord = SpecializedSubwordBehaviors<side>::buildOntoWord(mSubWord, *(iterator.current));
+		mSubWord = SpecializedSubwordBehaviors<side>::buildOntoWord(mSubWord, *current);
 
 		if (mWordsToSearch.count(mSubWord) == 1)
 		{
@@ -76,7 +85,7 @@ void SubwordIterator<side>::next()
 		{
 
 			// If the word wasn't in set, increment and try with next character
-			++(iterator.current);
+			++current;
 		}
 	}
 }
