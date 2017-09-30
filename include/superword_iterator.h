@@ -12,11 +12,9 @@ template <Side side>
 class SuperwordIterator
 {
 
-	typedef SortedStringSet<side> Set;
-
 	public:
 
-		SuperwordIterator(const std::string& wordToMatch, const Set& wordsToSearch);
+		SuperwordIterator(const std::string& wordToMatch, const SortedStringSet<side>& wordsToSearch);
 
 		const std::string& operator*() const;
 
@@ -26,11 +24,11 @@ class SuperwordIterator
 
 	private:
 
-		typename Set::const_iterator calculateUpperBounds(const std::string& wordToMatch, const Set& wordsToSearch);
+		typename SortedStringSet<side>::const_iterator calculateUpperBounds(const std::string& wordToMatch, const SortedStringSet<side>& wordsToSearch);
 
-		typename Set::const_iterator mCurrentValue;
+		typename SortedStringSet<side>::const_iterator mCurrentValue;
 
-		const typename Set::const_iterator mUpperBounds;
+		const typename SortedStringSet<side>::const_iterator mUpperBounds;
 
 };
 

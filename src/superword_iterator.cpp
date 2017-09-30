@@ -3,10 +3,8 @@
 #include <palindrome_tools.h>
 #include <algorithm>
 
-#include <iostream>
-
 template <Side side>
-SuperwordIterator<side>::SuperwordIterator(const std::string& wordToMatch, const Set& wordsToSearch) :
+SuperwordIterator<side>::SuperwordIterator(const std::string& wordToMatch, const SortedStringSet<side>& wordsToSearch) :
 	mCurrentValue(wordsToSearch.upper_bound(wordToMatch)),
 	mUpperBounds(calculateUpperBounds(wordToMatch, wordsToSearch))
 {
@@ -33,7 +31,7 @@ SuperwordIterator<side>& SuperwordIterator<side>::operator++()
 }	
 
 template <Side side>
-typename SuperwordIterator<side>::Set::const_iterator SuperwordIterator<side>::calculateUpperBounds(const std::string& wordToMatch, const Set& wordsToSearch)
+typename SortedStringSet<side>::const_iterator SuperwordIterator<side>::calculateUpperBounds(const std::string& wordToMatch, const SortedStringSet<side>& wordsToSearch)
 {
 	boost::optional<std::string> incrementedWord = wordTailBounds<side>(wordToMatch);
 
