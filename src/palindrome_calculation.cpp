@@ -43,12 +43,6 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 	std::cout << "Words loaded into data structures" << std::endl;
 
 
-	std::unordered_map<std::string, WordCandidateIterator<Side::Left>> leftCachedIterators;
-	std::unordered_map<std::string, WordCandidateIterator<Side::Right>> rightCachedIterators;
-	
-	leftCachedIterators.reserve(25000);
-	rightCachedIterators.reserve(25000);
-
 	// Output
 	std::vector<std::string> palindromes;
 
@@ -90,12 +84,7 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 			std::string reversedOverhang = reverseString(overhang.overhangText);
 			if (overhang.side == Side::Left)
 			{
-				if (rightCachedIterators.count(reversedOverhang) == 0)
-				{
-					rightCachedIterators.insert(std::make_pair(reversedOverhang, WordCandidateIterator<Side::Right>(reversedOverhang, reverseOrdering)));
-				}
-
-				WordCandidateIterator<Side::Right> cachedIterator = rightCachedIterators.at(reversedOverhang);
+				WordCandidateIterator<Side::Right> cachedIterator(reversedOverhang, reverseOrdering);
 
 				if (cachedIterator.hasNext())
 				{
@@ -109,12 +98,7 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 			}
 			else
 			{
-				if (leftCachedIterators.count(reversedOverhang) == 0)
-				{
-					leftCachedIterators.insert(std::make_pair(reversedOverhang, WordCandidateIterator<Side::Left>(reversedOverhang, forwardOrdering)));
-				}
-
-				WordCandidateIterator<Side::Left> cachedIterator = leftCachedIterators.at(reversedOverhang);
+				WordCandidateIterator<Side::Left> cachedIterator(reversedOverhang, forwardOrdering);
 
 				if (cachedIterator.hasNext())
 				{
