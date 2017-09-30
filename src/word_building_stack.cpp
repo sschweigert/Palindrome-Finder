@@ -78,51 +78,37 @@ template void WordBuildingStack::push<Side::Left>(IWordCandidateIterator<Side::L
 template void WordBuildingStack::push<Side::Right>(IWordCandidateIterator<Side::Right>* newIterator);
 
 template <>
-const std::vector<IWordCandidateIterator<Side::Left>*>& WordBuildingStack::getStackStatic<Side::Left>() const
+const std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Left>() const
 {
 	return leftIterators;
 }
 
 template <>
-const std::vector<IWordCandidateIterator<Side::Right>*>& WordBuildingStack::getStackStatic<Side::Right>() const
+const std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Right>() const
 {
 	return rightIterators;
 }
 
-	template <>
-std::vector<IWordCandidateIterator<Side::Left>*>& WordBuildingStack::getStackStatic<Side::Left>()
+template <>
+std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Left>()
 {
 	return leftIterators;
 }
 
-	template <>
-std::vector<IWordCandidateIterator<Side::Right>*>& WordBuildingStack::getStackStatic<Side::Right>()
+template <>
+std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Right>()
 {
 	return rightIterators;
 }
 
 void WordBuildingStack::incrementTop()
 {
-	if (lastAddition.top() == Side::Left)
-	{
-		++(*(getStackStatic<Side::Left>().back()));
-	}
-	else
-	{
-		++(*(getStackStatic<Side::Right>().back()));
-	}
+	++(getTop());
 }
 
-bool WordBuildingStack::topHasNext()
+bool WordBuildingStack::topHasNext() const
 {
-	if (lastAddition.top() == Side::Left)
-	{
-		return getStackStatic<Side::Left>().back()->hasNext();
-	}
-	else
-	{
-		return getStackStatic<Side::Right>().back()->hasNext();
-	}
+	return getTop().hasNext();
 }
 
 Overhang WordBuildingStack::getOverhang() const
@@ -196,6 +182,24 @@ std::string WordBuildingStack::generateString(std::string middleString) const
 	toReturn.pop_back();
 
 	return toReturn;
+}
+
+IWordIterator& WordBuildingStack::getTop()
+{
+	return const_cast<IWordIterator&>(static_cast<const WordBuildingStack*>(this)->getTop());
+}
+
+const IWordIterator& WordBuildingStack::getTop() const
+{
+	Side sideToPop = lastAddition.top();
+	if (sideToPop == Side::Left)
+	{
+		return *(leftIterators.back());
+	}
+	else
+	{
+		return *(rightIterators.back());
+	}
 }
 
 bool WordBuildingStack::empty() const

@@ -17,7 +17,7 @@ class IWordIterator
 		virtual const std::string& operator*() const = 0;
 
 		//! \brief Check if there are any more words that can be generated
-		virtual bool hasNext() = 0;
+		virtual bool hasNext() const = 0;
 
 		//! \brief Generate and cache the next word
 		virtual IWordIterator& operator++() = 0;

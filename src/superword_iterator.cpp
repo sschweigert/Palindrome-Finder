@@ -18,7 +18,7 @@ const std::string& SuperwordIterator<side>::operator*() const
 }
 
 template <Side side>
-bool SuperwordIterator<side>::hasNext()
+bool SuperwordIterator<side>::hasNext() const
 {
 	return mCurrentValue != mUpperBounds;
 }

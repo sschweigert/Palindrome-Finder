@@ -36,7 +36,7 @@ class WordBuildingStack
 		void incrementTop();
 
 		//! \brief Check if the top iterator is pointing to a valid state.
-		bool topHasNext();
+		bool topHasNext() const;
 
 		//! \brief Add a new iterator to the stack.
 		template <Side side>
@@ -45,10 +45,14 @@ class WordBuildingStack
 	private:
 
 		template <Side side>
-			std::vector<IWordCandidateIterator<side>*>& getStackStatic();
+			std::vector<IWordIterator*>& getStackStatic();
 
 		template <Side side>
-			const std::vector<IWordCandidateIterator<side>*>& getStackStatic() const;
+			const std::vector<IWordIterator*>& getStackStatic() const;
+
+			IWordIterator& getTop();
+
+			const IWordIterator& getTop() const;
 
 		template <Side side>
 			int getSideLength() const;
@@ -58,9 +62,9 @@ class WordBuildingStack
 
 		std::stack<Side> lastAddition;
 
-		std::vector<IWordCandidateIterator<Side::Left>*> leftIterators;
+		std::vector<IWordIterator*> leftIterators;
 
-		std::vector<IWordCandidateIterator<Side::Right>*> rightIterators;
+		std::vector<IWordIterator*> rightIterators;
 
 };
 

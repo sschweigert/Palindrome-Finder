@@ -39,7 +39,7 @@ class IteratorWrapper : public IWordCandidateIterator<side>
 			return *wordCandidateIterator;
 		}
 
-		virtual bool hasNext()
+		virtual bool hasNext() const
 		{
 			return wordCandidateIterator.hasNext();
 		}

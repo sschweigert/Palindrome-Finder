@@ -19,7 +19,7 @@ const std::string& SubwordIterator<side>::operator*() const
 }
 
 template <Side side>
-bool SubwordIterator<side>::hasNext()
+bool SubwordIterator<side>::hasNext() const
 {
 	return (current != end);
 }

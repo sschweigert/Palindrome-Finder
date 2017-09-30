@@ -21,7 +21,7 @@ const std::string& WordCandidateIterator<side>::operator*() const
 }
 
 template <Side side>
-bool WordCandidateIterator<side>::hasNext()
+bool WordCandidateIterator<side>::hasNext() const
 {
 	if (mCurrentState == State::SubWord)
 	{

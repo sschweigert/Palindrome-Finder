@@ -13,7 +13,7 @@ const std::string& EntireSetIterator<side>::operator*() const
 }
 
 template <Side side>
-bool EntireSetIterator<side>::hasNext()
+bool EntireSetIterator<side>::hasNext() const
 {
 	return mCurrent != mEnd;
 }

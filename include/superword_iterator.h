@@ -18,7 +18,7 @@ class SuperwordIterator
 
 		const std::string& operator*() const;
 
-		bool hasNext();
+		bool hasNext() const;
 
 		SuperwordIterator<side>& operator++();
 

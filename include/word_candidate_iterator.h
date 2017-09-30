@@ -18,7 +18,7 @@ class WordCandidateIterator : public IWordCandidateIterator<side>
 
 		virtual const std::string& operator*() const;
 
-		virtual bool hasNext();
+		virtual bool hasNext() const; 
 
 		virtual IWordIterator& operator++();
 

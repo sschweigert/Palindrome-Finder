@@ -25,7 +25,7 @@ class SubwordIterator
 
 		const std::string& operator*() const;
 
-		bool hasNext();
+		bool hasNext() const;
 
 		SubwordIterator<side>& operator++();
 
