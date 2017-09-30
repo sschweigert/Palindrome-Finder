@@ -16,7 +16,7 @@ class WordCandidateIterator : public IWordCandidateIterator<side>
 
 	public:
 
-		WordCandidateIterator(std::string wordToMatch, const SortedStringSet<side>& wordsToSearch);
+		WordCandidateIterator(const std::string& wordToMatch, const SortedStringSet<side>& wordsToSearch);
 
 		virtual const std::string& operator*() const;
 
@@ -34,8 +34,6 @@ class WordCandidateIterator : public IWordCandidateIterator<side>
 			Superword			
 
 		};
-
-		std::string mWordToMatch;
 
 		SubwordIterator<side> mSubwordIterator;
 

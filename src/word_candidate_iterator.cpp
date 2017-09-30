@@ -1,13 +1,11 @@
 #include <word_candidate_iterator.h>
 
 template <Side side>
-WordCandidateIterator<side>::WordCandidateIterator(std::string wordToMatch, const SortedStringSet<side>& wordsToSearch) :
-	mWordToMatch(wordToMatch),
-	mSubwordIterator(mWordToMatch, wordsToSearch),
-	mSuperwordIterator(mWordToMatch, wordsToSearch),
+WordCandidateIterator<side>::WordCandidateIterator(const std::string& wordToMatch, const SortedStringSet<side>& wordsToSearch) :
+	mSubwordIterator(wordToMatch, wordsToSearch),
+	mSuperwordIterator(wordToMatch, wordsToSearch),
 	mCurrentState(mSubwordIterator.hasNext() ? State::SubWord : State::Superword)
-{
-}
+{}
 
 template <Side side>
 const std::string& WordCandidateIterator<side>::operator*() const
@@ -27,6 +25,9 @@ bool WordCandidateIterator<side>::hasNext()
 {
 	if (mCurrentState == State::SubWord)
 	{
+		// If the subword iterator is done, the class will switch states.
+		// Therefore, being in subword state implies that subword iterator is
+		// not done.
 		return true;		
 	}
 	else
