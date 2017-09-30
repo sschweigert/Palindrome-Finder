@@ -49,11 +49,15 @@ class WordBuildingStack
 		//! \brief Check if the top iterator is pointing to a valid state.
 		bool topHasNext() const;
 
-		//! \brief Add a new iterator to the stack.
-		template <Side side>
-			void push(IWordCandidateIterator<side>* newIterator);
+		void push(std::unique_ptr<IWordCandidateIterator<Side::Left>> newIterator);
+
+		void push(std::unique_ptr<IWordCandidateIterator<Side::Right>> newIterator);
 
 	private:
+
+		//! \brief Helper function for push(...). Originally this was a template, but that didn't work with template deduction.
+		template <Side side>
+			void pushHelper(std::unique_ptr<IWordCandidateIterator<side>> newIterator);
 
 		template <Side side>
 		OverhangSplitProperties findSplitProperties(int numMatchingCharacters) const;
@@ -63,17 +67,17 @@ class WordBuildingStack
 
 		//! \brief Get a reference to the desired stack.
 		template <Side side>
-			std::vector<IWordIterator*>& getStackStatic();
+			std::vector<std::unique_ptr<IWordIterator>>& getStackStatic();
 
 		template <Side side>
-			const std::vector<IWordIterator*>& getStackStatic() const;
+			const std::vector<std::unique_ptr<IWordIterator>>& getStackStatic() const;
 
 		template <Side side>
 		int calculateOverlapPosition(int overlapIndex, int indexOffset) const;
 
-		std::vector<IWordIterator*>& getStackDynamic(Side side);
+		std::vector<std::unique_ptr<IWordIterator>>& getStackDynamic(Side side);
 
-		const std::vector<IWordIterator*>& getStackDynamic(Side side) const;
+		const std::vector<std::unique_ptr<IWordIterator>>& getStackDynamic(Side side) const;
 
 		//! \brief Get the top iterator, regardless of which stack it belongs to
 		IWordIterator& getTop();
@@ -89,9 +93,9 @@ class WordBuildingStack
 
 		std::stack<Side> lastAddition;
 
-		std::vector<IWordIterator*> leftIterators;
+		std::vector<std::unique_ptr<IWordIterator>> leftIterators;
 
-		std::vector<IWordIterator*> rightIterators;
+		std::vector<std::unique_ptr<IWordIterator>> rightIterators;
 
 };
 
@@ -103,16 +107,16 @@ template <>
 int WordBuildingStack::calculateOverlapPosition<Side::Right>(int overlapIndex, int indexOffset) const;
 
 template <>
-std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Left>();
+std::vector<std::unique_ptr<IWordIterator>>& WordBuildingStack::getStackStatic<Side::Left>();
 
 template <>
-std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Right>();
+std::vector<std::unique_ptr<IWordIterator>>& WordBuildingStack::getStackStatic<Side::Right>();
 
 template <>
-const std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Left>() const;
+const std::vector<std::unique_ptr<IWordIterator>>& WordBuildingStack::getStackStatic<Side::Left>() const;
 
 template <>
-const std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Right>() const;
+const std::vector<std::unique_ptr<IWordIterator>>& WordBuildingStack::getStackStatic<Side::Right>() const;
 
 template <>
 std::string WordBuildingStack::generateTextFromSplit<Side::Left>(OverhangSplitProperties splitProperties) const;

@@ -1,10 +1,20 @@
 #include <word_building_stack.h>
 
 template <Side side>
-void WordBuildingStack::push(IWordCandidateIterator<side>* newIterator)
+void WordBuildingStack::pushHelper(std::unique_ptr<IWordCandidateIterator<side>> newIterator)
 {
-	getStackStatic<side>().push_back(newIterator);
+	getStackStatic<side>().push_back(std::move(newIterator));
 	lastAddition.push(side);
+}
+
+void WordBuildingStack::push(std::unique_ptr<IWordCandidateIterator<Side::Left>> newIterator)
+{
+	pushHelper<Side::Left>(std::move(newIterator));
+}
+
+void WordBuildingStack::push(std::unique_ptr<IWordCandidateIterator<Side::Right>> newIterator)
+{
+	pushHelper<Side::Right>(std::move(newIterator));
 }
 
 template <Side side>
@@ -105,25 +115,25 @@ std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) c
 }
 
 template <>
-const std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Left>() const
+const std::vector<std::unique_ptr<IWordIterator>>& WordBuildingStack::getStackStatic<Side::Left>() const
 {
 	return leftIterators;
 }
 
 template <>
-const std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Right>() const
+const std::vector<std::unique_ptr<IWordIterator>>& WordBuildingStack::getStackStatic<Side::Right>() const
 {
 	return rightIterators;
 }
 
 template <>
-std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Left>()
+std::vector<std::unique_ptr<IWordIterator>>& WordBuildingStack::getStackStatic<Side::Left>()
 {
 	return leftIterators;
 }
 
 template <>
-std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Right>()
+std::vector<std::unique_ptr<IWordIterator>>& WordBuildingStack::getStackStatic<Side::Right>()
 {
 	return rightIterators;
 }
@@ -181,7 +191,7 @@ std::string WordBuildingStack::generateString(std::string middleString) const
 {
 	std::string toReturn;
 
-	for (const auto* leftIterator : leftIterators)
+	for (const auto& leftIterator : leftIterators)
 	{
 		toReturn += **leftIterator;
 		toReturn += ' ';
@@ -216,12 +226,12 @@ const IWordIterator& WordBuildingStack::getTop() const
 	return *(getStackDynamic(sideToPop).back());
 }
 
-std::vector<IWordIterator*>& WordBuildingStack::getStackDynamic(Side side)
+std::vector<std::unique_ptr<IWordIterator>>& WordBuildingStack::getStackDynamic(Side side)
 {
-	return const_cast<std::vector<IWordIterator*>&>(static_cast<const WordBuildingStack*>(this)->getStackDynamic(side));
+	return const_cast<std::vector<std::unique_ptr<IWordIterator>>&>(static_cast<const WordBuildingStack*>(this)->getStackDynamic(side));
 }
 
-const std::vector<IWordIterator*>& WordBuildingStack::getStackDynamic(Side side) const
+const std::vector<std::unique_ptr<IWordIterator>>& WordBuildingStack::getStackDynamic(Side side) const
 {
 	if (side == Side::Left)
 	{
@@ -237,7 +247,3 @@ bool WordBuildingStack::empty() const
 {
 	return lastAddition.empty();
 }
-
-// Explicitly instantiate public functions
-template void WordBuildingStack::push<Side::Left>(IWordCandidateIterator<Side::Left>* newIterator);
-template void WordBuildingStack::push<Side::Right>(IWordCandidateIterator<Side::Right>* newIterator);

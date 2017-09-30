@@ -1,6 +1,6 @@
 #include <palindrome_calculation.h>
 
-void incrementStack(WordBuildingStack& wordBuildingStack, std::stack<WordCandidateIterator<Side::Left>>& concreteLeftIterators, std::stack<WordCandidateIterator<Side::Right>>& concreteRightIterators)
+void incrementStack(WordBuildingStack& wordBuildingStack)
 {
 	wordBuildingStack.incrementTop();
 
@@ -13,24 +13,12 @@ void incrementStack(WordBuildingStack& wordBuildingStack, std::stack<WordCandida
 			break;
 		}
 
-		if (poppedSide == Side::Left)
-		{
-			concreteLeftIterators.pop();
-		}
-		else
-		{
-			concreteRightIterators.pop();
-		}
-
 		wordBuildingStack.incrementTop();
 	}
 }
 
 std::vector<std::string> calculatePalindromes(const std::vector<std::string>& seedWords, int numberOfWords)
 {
-	std::stack<WordCandidateIterator<Side::Right>> concreteRightIterators;
-	std::stack<WordCandidateIterator<Side::Left>> concreteLeftIterators;
-
 	ForwardStringSet forwardOrdering;
 	ReverseStringSet reverseOrdering;
 
@@ -46,9 +34,7 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 	// Output
 	std::vector<std::string> palindromes;
 
-
-	EntireSetIterator<Side::Left> entireSetOrdering(forwardOrdering);
-
+	/*
 	bool done = false;
 
 	int count = 0;
@@ -69,9 +55,12 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 	};
 
 	IteratorWrapper<decltype(counter), Side::Left> wrappedItr(entireSetOrdering, counter);
+	*/
+
+	auto entireSetOrdering = std::make_unique<EntireSetIterator<Side::Left>>(forwardOrdering);
 
 	WordBuildingStack wordBuildingStack;
-	wordBuildingStack.push(&wrappedItr);
+	wordBuildingStack.push(std::move(entireSetOrdering));
 
 	do
 	{
@@ -84,30 +73,28 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 			std::string reversedOverhang = reverseString(overhang.overhangText);
 			if (overhang.side == Side::Left)
 			{
-				WordCandidateIterator<Side::Right> cachedIterator(reversedOverhang, reverseOrdering);
+				auto cachedIterator = std::make_unique<WordCandidateIterator<Side::Right>>(reversedOverhang, reverseOrdering);
 
-				if (cachedIterator.hasNext())
+				if (cachedIterator->hasNext())
 				{
-					concreteRightIterators.push(cachedIterator);
-					wordBuildingStack.push(&concreteRightIterators.top());
+					wordBuildingStack.push(std::move(cachedIterator));
 				}
 				else
 				{
-					incrementStack(wordBuildingStack, concreteLeftIterators, concreteRightIterators);
+					incrementStack(wordBuildingStack);
 				}
 			}
 			else
 			{
-				WordCandidateIterator<Side::Left> cachedIterator(reversedOverhang, forwardOrdering);
+				auto cachedIterator = std::make_unique<WordCandidateIterator<Side::Left>>(reversedOverhang, forwardOrdering);
 
-				if (cachedIterator.hasNext())
+				if (cachedIterator->hasNext())
 				{
-					concreteLeftIterators.push(cachedIterator);
-					wordBuildingStack.push(&concreteLeftIterators.top());
+					wordBuildingStack.push(std::move(cachedIterator));
 				}
 				else
 				{
-					incrementStack(wordBuildingStack, concreteLeftIterators, concreteRightIterators);
+					incrementStack(wordBuildingStack);
 				}
 			}
 
@@ -159,7 +146,7 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 			}
 		}
 
-		incrementStack(wordBuildingStack, concreteLeftIterators, concreteRightIterators);
+		incrementStack(wordBuildingStack);
 
 	} while (!wordBuildingStack.empty() && !done);
 
