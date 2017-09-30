@@ -99,6 +99,90 @@ class PalindromeCalculationTest : public CxxTest::TestSuite
 			verifyPalindrome(seedWords, palindromeLength, expectedResult);
 		}
 
+		bool allPalindromes(const std::vector<std::string>& results)
+		{
+			bool toReturn = true;
+			for (const auto& result : results) 
+			{
+				toReturn &= isPalindrome(result); 
+			}
+			return toReturn;
+		}
+
+		// Split a string into substrings separated by a character
+		std::vector<std::string> splitString(const std::string& toSplit, char splittingChar)
+		{
+			std::vector<std::string> toReturn;
+
+			auto beginSplit = toSplit.begin();
+			decltype(beginSplit) endSplit;
+
+			do
+			{
+				endSplit = std::find(beginSplit, toSplit.end(), splittingChar);
+
+				if (beginSplit == toSplit.end())
+				{
+					break;
+				}
+
+				toReturn.push_back(std::string(beginSplit, endSplit));
+				
+				beginSplit = std::next(endSplit);
+
+			} while (endSplit != toSplit.end());
+
+			return toReturn;
+
+		}
+
+		void testSplitSingleString(void)
+		{
+			std::string single = "single";	
+
+			std::vector<std::string> expected = { "single" };
+
+			TS_ASSERT(expected == splitString(single, ' '));
+		}
+
+		void testSplitMultipleStrings(void)
+		{
+			std::string single = "first second third";	
+
+			std::vector<std::string> expected = { "first", "second", "third" };
+
+			TS_ASSERT(expected == splitString(single, ' '));
+		}
+
+		// Verify that the results only contain words from the seeds
+		bool resultsFromSeed(const std::vector<std::string>& seedWords, const std::vector<std::string>& results)
+		{
+			std::unordered_set<std::string> seedSet(seedWords.begin(), seedWords.end());
+
+			bool toReturn = true;
+			for (const auto& result : results)
+			{
+				auto splitResult = splitString(result, ' ');
+				for (const auto& word : splitResult)
+				{
+					toReturn &= (seedSet.count(word) == 1);
+				}
+			}
+			return toReturn;
+		}
+
+		bool foundPalindromes(const std::unordered_set<std::string>& expectedPalindromes, const std::vector<std::string>& results)
+		{
+			std::unordered_set<std::string> resultsSet(results.begin(), results.end());
+
+			bool toReturn = true;
+			for (const auto& expectedPalindrome : expectedPalindromes)
+			{
+				toReturn &= (resultsSet.count(expectedPalindrome) == 1);
+			}
+			return toReturn;
+		}
+
 		// Make sure palindromes are found in the extreme case of a, aaa, z and zzz.
 		// These have caused problems before where they were skipped or caused hanging/crashes.
 		void testLongerPhrases(void)
@@ -125,12 +209,14 @@ class PalindromeCalculationTest : public CxxTest::TestSuite
 			std::unordered_set<std::string> expectedResult =
 			{
 				"rats live on no evil star",
-				"live on time emit no evil",
-				"my owl ate my metal worm"
+				"live on time emit no evil"
 			};
 
-			// TODO: Add test
+			std::vector<std::string> result = calculatePalindromes(seedWords, palindromeLength);
 
+			TS_ASSERT(allPalindromes(result));
+			TS_ASSERT(resultsFromSeed(seedWords, result));
+			TS_ASSERT(foundPalindromes(expectedResult, result));
 		}
 
 		void testLongerWord(void)

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.2.2)
 project(palindrome_generator)
 
-set(CMAKE_CXX_FLAGS "-std=c++11 -Wall ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++14 -Wall ${CMAKE_CXX_FLAGS}")
 
 add_library(palindrome_generator
 	src/palindrome_tools.cpp
