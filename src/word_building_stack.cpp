@@ -104,10 +104,6 @@ std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) c
 	return generateTextFromSplit<side>(splitProperties);
 }
 
-// Explicitly extantiate public functions
-template void WordBuildingStack::push<Side::Left>(IWordCandidateIterator<Side::Left>* newIterator);
-template void WordBuildingStack::push<Side::Right>(IWordCandidateIterator<Side::Right>* newIterator);
-
 template <>
 const std::vector<IWordIterator*>& WordBuildingStack::getStackStatic<Side::Left>() const
 {
@@ -191,18 +187,17 @@ std::string WordBuildingStack::generateString(std::string middleString) const
 		toReturn += ' ';
 	}
 
-	if (middleString != "")
-	{
-		toReturn += middleString;
-		toReturn += ' ';
-	}
+	toReturn += middleString;
+	toReturn += ' ';
 
+	// Note: Have to go backwards over right iterators to create the word in correct order
 	for (int i = rightIterators.size() - 1; i >= 0; i--)
 	{
 		toReturn += **rightIterators[i];
 		toReturn += ' ';
 	}
 
+	// Remove last space added
 	toReturn.pop_back();
 
 	return toReturn;
@@ -240,3 +235,7 @@ bool WordBuildingStack::empty() const
 {
 	return lastAddition.empty();
 }
+
+// Explicitly instantiate public functions
+template void WordBuildingStack::push<Side::Left>(IWordCandidateIterator<Side::Left>* newIterator);
+template void WordBuildingStack::push<Side::Right>(IWordCandidateIterator<Side::Right>* newIterator);
