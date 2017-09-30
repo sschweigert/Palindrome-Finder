@@ -7,6 +7,7 @@ add_library(palindrome_generator
 	src/palindrome_tools.cpp
 	src/string_set.cpp
 	src/subword_iterator.cpp
+	src/specialized_subword_behaviors.cpp
 	src/superword_iterator.cpp
 	src/word_building_stack.cpp
 	src/timer.cpp
