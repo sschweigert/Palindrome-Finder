@@ -20,7 +20,7 @@ class EntireSetIterator : public IWordCandidateIterator<side>
 
 		virtual bool hasNext();
 
-		virtual IWordCandidateIterator<side>& operator++();
+		virtual IWordIterator& operator++();
 
 	private:
 

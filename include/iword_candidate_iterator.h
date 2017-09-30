@@ -4,11 +4,11 @@
 #include <string>
 #include <side.h>
 
+
 //! \brief Interface for an iterator that returns a set of words determind by 
 //! an algorithm. Implementations of these iterators are used to search through
 //! sets of words for ones that can be used to generate palindromes.
-template <Side side>
-class IWordCandidateIterator
+class IWordIterator
 {
 
 	public:
@@ -20,11 +20,15 @@ class IWordCandidateIterator
 		virtual bool hasNext() = 0;
 
 		//! \brief Generate and cache the next word
-		virtual IWordCandidateIterator<side>& operator++() = 0;
+		virtual IWordIterator& operator++() = 0;
 
-		virtual ~IWordCandidateIterator()
+		virtual ~IWordIterator()
 		{}
 
 };
+
+template <Side side>
+class IWordCandidateIterator : public IWordIterator
+{};
 
 #endif

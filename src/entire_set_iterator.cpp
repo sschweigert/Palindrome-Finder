@@ -19,7 +19,7 @@ bool EntireSetIterator<side>::hasNext()
 }
 
 template <Side side>
-IWordCandidateIterator<side>& EntireSetIterator<side>::operator++()
+IWordIterator& EntireSetIterator<side>::operator++()
 {
 	++mCurrent;
 	return *this;

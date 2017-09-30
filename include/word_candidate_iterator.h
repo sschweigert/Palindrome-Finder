@@ -5,8 +5,6 @@
 #include <subword_iterator.h>
 #include <superword_iterator.h>
 
-#include <iostream>
-
 #include <side.h>
 #include <string_set.h>
 
@@ -22,7 +20,7 @@ class WordCandidateIterator : public IWordCandidateIterator<side>
 
 		virtual bool hasNext();
 
-		virtual IWordCandidateIterator<side>& operator++();
+		virtual IWordIterator& operator++();
 
 	private:
 

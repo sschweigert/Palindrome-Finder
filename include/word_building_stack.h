@@ -7,45 +7,48 @@
 
 #include <word_candidate_iterator.h>
 #include <side.h>
-
-struct Overhang
-{
-
-	Side side;
-
-	std::string overhangText;
-
-};
+#include <overhang.h>
 
 class WordBuildingStack
 {
 
 	public:
 
+		//! \brief Calculate the amount one side is larger than the other, and the string
+		//! that accounts for the extra size.
 		Overhang getOverhang() const;
 
+		//! \brief Get the number of words in the stack.
 		int size() const;
 
-		void incrementTop();
-
-		bool topHasNext();
-
+		//! \brief Remove the top of the stack.
+		//! \return The Side from which the top was removed.
 		Side pop();
 
+		//! \brief Check if there are any iterators in the stack.
 		bool empty() const;
 
-		std::string generateString(std::string middleString = "") const;
+		//! \brief Generate a string from whatever is currently in the stack by concatenating
+		//! words stored in the iterators with spaces in between.
+		std::string generateString(std::string middleString) const;
 
+		//! \brief Increment the current top iterator.
+		void incrementTop();
+
+		//! \brief Check if the top iterator is pointing to a valid state.
+		bool topHasNext();
+
+		//! \brief Add a new iterator to the stack.
 		template <Side side>
 			void push(IWordCandidateIterator<side>* newIterator);
 
 	private:
 
 		template <Side side>
-			std::vector<IWordCandidateIterator<side>*>& getStack();
+			std::vector<IWordCandidateIterator<side>*>& getStackStatic();
 
 		template <Side side>
-			const std::vector<IWordCandidateIterator<side>*>& getStack() const;
+			const std::vector<IWordCandidateIterator<side>*>& getStackStatic() const;
 
 		template <Side side>
 			int getSideLength() const;

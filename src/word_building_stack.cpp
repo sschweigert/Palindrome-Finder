@@ -3,14 +3,14 @@
 template <Side side>
 void WordBuildingStack::push(IWordCandidateIterator<side>* newIterator)
 {
-	getStack<side>().push_back(newIterator);
+	getStackStatic<side>().push_back(newIterator);
 	lastAddition.push(side);
 }
 
 template <Side side>
 int WordBuildingStack::getSideLength() const
 {
-	const auto& sideStack = getStack<side>();
+	const auto& sideStack = getStackStatic<side>();
 	int length = 0;
 	for (auto& word : sideStack)
 	{
@@ -26,7 +26,7 @@ std::string WordBuildingStack::generateOverhangText(int numMatchingCharacters) c
 
 	int accumulatedChars = 0;
 
-	const auto& sideStack = getStack<side>();
+	const auto& sideStack = getStackStatic<side>();
 
 	int index = sideStack.size() - 1;
 	for (; index >= 0 && accumulatedChars <= numMatchingCharacters; --index)
@@ -78,25 +78,25 @@ template void WordBuildingStack::push<Side::Left>(IWordCandidateIterator<Side::L
 template void WordBuildingStack::push<Side::Right>(IWordCandidateIterator<Side::Right>* newIterator);
 
 template <>
-const std::vector<IWordCandidateIterator<Side::Left>*>& WordBuildingStack::getStack<Side::Left>() const
+const std::vector<IWordCandidateIterator<Side::Left>*>& WordBuildingStack::getStackStatic<Side::Left>() const
 {
 	return leftIterators;
 }
 
 template <>
-const std::vector<IWordCandidateIterator<Side::Right>*>& WordBuildingStack::getStack<Side::Right>() const
+const std::vector<IWordCandidateIterator<Side::Right>*>& WordBuildingStack::getStackStatic<Side::Right>() const
 {
 	return rightIterators;
 }
 
 	template <>
-std::vector<IWordCandidateIterator<Side::Left>*>& WordBuildingStack::getStack<Side::Left>()
+std::vector<IWordCandidateIterator<Side::Left>*>& WordBuildingStack::getStackStatic<Side::Left>()
 {
 	return leftIterators;
 }
 
 	template <>
-std::vector<IWordCandidateIterator<Side::Right>*>& WordBuildingStack::getStack<Side::Right>()
+std::vector<IWordCandidateIterator<Side::Right>*>& WordBuildingStack::getStackStatic<Side::Right>()
 {
 	return rightIterators;
 }
@@ -105,11 +105,11 @@ void WordBuildingStack::incrementTop()
 {
 	if (lastAddition.top() == Side::Left)
 	{
-		++(*(getStack<Side::Left>().back()));
+		++(*(getStackStatic<Side::Left>().back()));
 	}
 	else
 	{
-		++(*(getStack<Side::Right>().back()));
+		++(*(getStackStatic<Side::Right>().back()));
 	}
 }
 
@@ -117,11 +117,11 @@ bool WordBuildingStack::topHasNext()
 {
 	if (lastAddition.top() == Side::Left)
 	{
-		return getStack<Side::Left>().back()->hasNext();
+		return getStackStatic<Side::Left>().back()->hasNext();
 	}
 	else
 	{
-		return getStack<Side::Right>().back()->hasNext();
+		return getStackStatic<Side::Right>().back()->hasNext();
 	}
 }
 
@@ -200,5 +200,5 @@ std::string WordBuildingStack::generateString(std::string middleString) const
 
 bool WordBuildingStack::empty() const
 {
-	return (size() == 0);
+	return lastAddition.empty();
 }
