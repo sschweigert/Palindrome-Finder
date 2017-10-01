@@ -57,41 +57,52 @@ void fillWordBuildingStack(WordBuildingStack& wordBuildingStack, int numberOfWor
 	}
 }
 
+template <Side side>
+std::string buildOntoString(const std::string& initial, const std::string& toAdd);
+
+template <>
+std::string buildOntoString<Side::Left>(const std::string& initial, const std::string& toAdd)
+{
+	return toAdd + initial;
+}
+
+template <>
+std::string buildOntoString<Side::Right>(const std::string& initial, const std::string& toAdd)
+{
+	return initial + toAdd;
+}
+
+template <Side side>
+void constructPalindromesFromOverhang(std::string overhangText, WordBuildingStack& wordBuildingStack, const SortedStringSet<side>& forwardOrdering, std::vector<std::string>& palindromeOutput)
+{
+	std::string reversedOverhang(reverseString(overhangText));
+
+	WordCandidateIterator<side> newIterator(reversedOverhang, forwardOrdering);
+
+	while (newIterator.hasNext())
+	{
+		std::string potentialPalindrome = buildOntoString<side>(overhangText, *newIterator);
+		if (isPalindrome(potentialPalindrome))
+		{
+			std::string palindromeText = wordBuildingStack.generateString(*newIterator);
+			palindromeOutput.push_back(palindromeText);
+		}
+
+		++newIterator;
+	}
+}
+
 void constructPalindromesFromStack(WordBuildingStack& wordBuildingStack, const SortedStringSet<Side::Left>& forwardOrdering, const SortedStringSet<Side::Right>& reverseOrdering, std::vector<std::string>& palindromeOutput)
 {
 	Overhang overhang = wordBuildingStack.getOverhang();
 	std::string reversedOverhang(reverseString(overhang.overhangText));
 	if (overhang.side == Side::Left)
 	{
-		WordCandidateIterator<Side::Right> newIterator(reversedOverhang, reverseOrdering);
-
-		while (newIterator.hasNext())
-		{
-			std::string potentialPalindrome = overhang.overhangText + *newIterator;
-			if (isPalindrome(potentialPalindrome))
-			{
-				std::string palindromeText = wordBuildingStack.generateString(*newIterator);
-				palindromeOutput.push_back(palindromeText);
-			}
-
-			++newIterator;
-		}
+		constructPalindromesFromOverhang<Side::Right>(overhang.overhangText, wordBuildingStack, reverseOrdering, palindromeOutput);
 	}
 	else
 	{
-		WordCandidateIterator<Side::Left> newIterator(reversedOverhang, forwardOrdering);
-
-		while (newIterator.hasNext())
-		{
-			std::string potentialPalindrome = *newIterator + overhang.overhangText;
-			if (isPalindrome(potentialPalindrome))
-			{
-				std::string palindromeText = wordBuildingStack.generateString(*newIterator);
-				palindromeOutput.push_back(palindromeText);
-			}
-
-			++newIterator;
-		}
+		constructPalindromesFromOverhang<Side::Left>(overhang.overhangText, wordBuildingStack, forwardOrdering, palindromeOutput);
 	}
 }
 

@@ -13,4 +13,9 @@ enum class Side
 
 };
 
+constexpr Side opposite(Side side)
+{
+	return (side == Side::Left) ? Side::Right : Side::Left;
+}
+
 #endif
