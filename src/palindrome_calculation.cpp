@@ -17,6 +17,23 @@ void incrementStack(WordBuildingStack& wordBuildingStack)
 	}
 }
 
+template <Side side>
+void addIteratorToSide(const std::string& overhangText, WordBuildingStack& wordBuildingStack, const SortedStringSet<side>& stringSet)
+{
+	std::string reversedOverhang = reverseString(overhangText);
+	auto cachedIterator = std::make_unique<WordCandidateIterator<side>>(reversedOverhang, stringSet);
+
+	if (cachedIterator->hasNext())
+	{
+		wordBuildingStack.push(std::move(cachedIterator));
+	}
+	else
+	{
+		incrementStack(wordBuildingStack);
+	}
+
+}
+
 std::vector<std::string> calculatePalindromes(const std::vector<std::string>& seedWords, int numberOfWords)
 {
 	ForwardStringSet forwardOrdering;
@@ -34,34 +51,12 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 	// Output
 	std::vector<std::string> palindromes;
 
-	/*
-	bool done = false;
-
-	int count = 0;
-	auto counter = [&]
-	{
-		const float percentStep = 0.5;
-		int countStep = ((float)percentStep / 100.0) * (float)forwardOrdering.size();
-		countStep = std::max(1, countStep);
-
-		++count;
-		if (count % countStep == 0)
-		{
-			float fraction = (float)count / (float)forwardOrdering.size();
-			std::cout << (fraction * 100.0) << "% done" << std::endl;
-			
-		}
-
-	};
-
-	IteratorWrapper<decltype(counter), Side::Left> wrappedItr(entireSetOrdering, counter);
-	*/
-
 	auto entireSetOrdering = std::make_unique<EntireSetIterator<Side::Left>>(forwardOrdering);
 
 	WordBuildingStack wordBuildingStack;
 	wordBuildingStack.push(std::move(entireSetOrdering));
 
+	bool done = false;
 	do
 	{
 
@@ -70,32 +65,13 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 		{
 			Overhang overhang = wordBuildingStack.getOverhang();
 
-			std::string reversedOverhang = reverseString(overhang.overhangText);
 			if (overhang.side == Side::Left)
 			{
-				auto cachedIterator = std::make_unique<WordCandidateIterator<Side::Right>>(reversedOverhang, reverseOrdering);
-
-				if (cachedIterator->hasNext())
-				{
-					wordBuildingStack.push(std::move(cachedIterator));
-				}
-				else
-				{
-					incrementStack(wordBuildingStack);
-				}
+				addIteratorToSide<Side::Right>(overhang.overhangText, wordBuildingStack, reverseOrdering);
 			}
 			else
 			{
-				auto cachedIterator = std::make_unique<WordCandidateIterator<Side::Left>>(reversedOverhang, forwardOrdering);
-
-				if (cachedIterator->hasNext())
-				{
-					wordBuildingStack.push(std::move(cachedIterator));
-				}
-				else
-				{
-					incrementStack(wordBuildingStack);
-				}
+				addIteratorToSide<Side::Left>(overhang.overhangText, wordBuildingStack, forwardOrdering);
 			}
 
 			if (wordBuildingStack.empty())

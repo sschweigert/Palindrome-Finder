@@ -23,6 +23,9 @@
 
 std::vector<std::string> calculatePalindromes(const std::vector<std::string>& seedWords, int numberOfWords);
 
+void incrementStack(WordBuildingStack& wordBuildingStack, std::stack<WordCandidateIterator<Side::Left>>& concreteLeftIterators, std::stack<WordCandidateIterator<Side::Right>>& concreteRightIterators);
+
+/*
 template <class Functor, Side side>
 class IteratorWrapper : public IWordCandidateIterator<side>
 {
@@ -60,6 +63,25 @@ class IteratorWrapper : public IWordCandidateIterator<side>
 
 };
 
-void incrementStack(WordBuildingStack& wordBuildingStack, std::stack<WordCandidateIterator<Side::Left>>& concreteLeftIterators, std::stack<WordCandidateIterator<Side::Right>>& concreteRightIterators);
+
+int count = 0;
+auto counter = [&]
+{
+	const float percentStep = 0.5;
+	int countStep = ((float)percentStep / 100.0) * (float)forwardOrdering.size();
+	countStep = std::max(1, countStep);
+
+	++count;
+	if (count % countStep == 0)
+	{
+		float fraction = (float)count / (float)forwardOrdering.size();
+		std::cout << (fraction * 100.0) << "% done" << std::endl;
+		
+	}
+
+};
+
+IteratorWrapper<decltype(counter), Side::Left> wrappedItr(entireSetOrdering, counter);
+*/
 
 #endif
