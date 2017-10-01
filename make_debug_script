@@ -2,3 +2,4 @@ mkdir -p build_debug
 cd build_debug 
 cmake .. -DCMAKE_BUILD_TYPE=Debug
 make
+gdb ./palindrome_unit_test -ex run
