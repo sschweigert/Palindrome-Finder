@@ -1,5 +1,6 @@
 #include <file_io.h>
 #include <fstream>
+#include <iostream>
 
 #include <boost/filesystem.hpp>
 
@@ -57,6 +58,6 @@ boost::optional<std::vector<std::string>> importWordSet(std::string path)
 boost::optional<std::vector<std::string>> importGoogleWords()
 {
 	boost::filesystem::path filePath = topPath;
-	filePath /= "other_word_tests/google_words.txt";
+	filePath /= "other_word_sets/google_words.txt";
 	return importWordSet(filePath.string());
 }

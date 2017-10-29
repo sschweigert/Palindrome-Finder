@@ -21,7 +21,7 @@ int main(int argc, char** argv)
 {
 	boost::optional<std::vector<std::string>> words = importGoogleWords();
 
-	if (words)
+	if (!words)
 	{
 		std::cout << "Could not open file" << std::endl;	
 		return 0;
