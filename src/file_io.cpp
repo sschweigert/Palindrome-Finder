@@ -27,3 +27,36 @@ std::string homeDir()
 	}
 	return homeDir;
 }
+
+boost::optional<std::vector<std::string>> importWordSet(std::string path)
+{
+	std::fstream fileStream;
+	fileStream.open(path, std::fstream::in);
+
+	if (fileStream.fail())
+	{
+		return boost::none;
+	}
+
+	std::vector<std::string> toReturn;
+
+	while (!fileStream.eof())
+	{
+		std::string line;
+		fileStream >> line;
+
+		if (line.size() > 0)	
+		{
+			toReturn.push_back(line);
+		}
+	}
+	fileStream.close();
+	return toReturn;
+}
+
+boost::optional<std::vector<std::string>> importGoogleWords()
+{
+	boost::filesystem::path filePath = topPath;
+	filePath /= "other_word_tests/google_words.txt";
+	return importWordSet(filePath.string());
+}
