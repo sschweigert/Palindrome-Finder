@@ -14,7 +14,10 @@ add_library(palindrome_generator
 	src/entire_set_iterator.cpp
 	src/palindrome_calculation.cpp
 	src/word_candidate_iterator.cpp
+	src/file_io.cpp
 )
+
+find_package(Boost COMPONENTS system filesystem REQUIRED)
 
 target_include_directories(palindrome_generator
 	PUBLIC include)
@@ -22,8 +25,10 @@ target_include_directories(palindrome_generator
 add_executable(main src/main.cpp)
 
 target_link_libraries(main
-	palindrome_generator)
-
+	palindrome_generator
+	${Boost_FILESYSTEM_LIBRARY}
+	${Boost_SYSTEM_LIBRARY}
+)
 
 find_package(CxxTest)
 
@@ -37,3 +42,5 @@ if(CXXTEST_FOUND)
 	)
 	target_link_libraries(palindrome_unit_test palindrome_generator)
 endif()
+
+add_definitions( -DTOP_PATH=${CMAKE_SOURCE_DIR} )

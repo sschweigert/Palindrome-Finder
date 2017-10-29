@@ -14,12 +14,11 @@
 #include <entire_set_iterator.h>
 #include <word_building_stack.h>
 #include <palindrome_calculation.h>
+#include <file_io.h>
 #include <timer.h>
-
 
 int main(int argc, char** argv)
 {
-
 	std::fstream fileStream;
 	//fileStream.open("/home/sebastian/bOb-Programming-Problem/words.txt", std::fstream::in);
 	fileStream.open("/home/sebastian/bOb-Programming-Problem/google_words.txt", std::fstream::in);
@@ -53,16 +52,9 @@ int main(int argc, char** argv)
 
 	std::cout << "Processing to 10% took: " << timer.secondsElapsed() << std::endl;
 
-	std::fstream palindromeStream;
-	palindromeStream.open("/home/sebastian/generated_palindromes.txt", std::fstream::out);
-
 	std::cout << "Found " << palindromes.size() << " words. Now saving. " << std::endl;
 
-	for (const auto& palindrome : palindromes)
-	{
-		palindromeStream << palindrome << std::endl;
-	}
-
+	saveToHomeDir(palindromes, "generated_palindromes.txt");
 
 	return 0;
 }
