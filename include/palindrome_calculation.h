@@ -21,7 +21,7 @@
 #include <word_building_stack.h>
 #include <timer.h>
 
-std::vector<std::string> calculatePalindromes(const std::vector<std::string>& seedWords, int numberOfWords);
+std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seedWords, int numberOfWords);
 
 void incrementStack(WordBuildingStack& wordBuildingStack, std::stack<WordCandidateIterator<Side::Left>>& concreteLeftIterators, std::stack<WordCandidateIterator<Side::Right>>& concreteRightIterators);
 

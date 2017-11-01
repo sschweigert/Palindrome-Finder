@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 
 	Timer timer;
 
-	std::vector<std::string> palindromes = calculatePalindromes(*words, numberOfPalindromes);
+	std::vector<std::string> palindromes = findAllPalindromes(*words, numberOfPalindromes);
 
 	std::cout << "Processing to 10% took: " << timer.secondsElapsed() << std::endl;
 

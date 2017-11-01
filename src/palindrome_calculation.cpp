@@ -106,7 +106,7 @@ void constructPalindromesFromStack(WordBuildingStack& wordBuildingStack, const S
 	}
 }
 
-std::vector<std::string> calculatePalindromes(const std::vector<std::string>& seedWords, int numberOfWords)
+std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seedWords, int numberOfWords)
 {
 	ForwardStringSet forwardOrdering;
 	ReverseStringSet reverseOrdering;
@@ -116,9 +116,6 @@ std::vector<std::string> calculatePalindromes(const std::vector<std::string>& se
 		forwardOrdering.insert(word);
 		reverseOrdering.insert(word);
 	}
-
-	std::cout << "Words loaded into data structures" << std::endl;
-
 
 	// Output
 	std::vector<std::string> palindromes;

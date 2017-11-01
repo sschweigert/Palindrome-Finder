@@ -61,3 +61,24 @@ boost::optional<std::vector<std::string>> importGoogleWords()
 	filePath /= "other_word_sets/google_words.txt";
 	return importWordSet(filePath.string());
 }
+
+EnumMap< WordType, std::vector<std::string> > importTypedWords()
+{
+	boost::filesystem::path directoryPath = topPath;
+	directoryPath /= typedWordDirectory;
+
+	EnumMap< WordType, std::vector<std::string> > toReturn;
+
+	for (auto element : typedWordFilenames)
+	{
+		boost::filesystem::path fullPath = directoryPath / element.second;
+		auto importedWords = importWordSet(fullPath.string());	
+
+		if (importedWords)
+		{
+			toReturn[element.first] = *importedWords;
+		}
+	}
+
+	return toReturn;
+}

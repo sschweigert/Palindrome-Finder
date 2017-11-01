@@ -12,7 +12,7 @@ class PalindromeCalculationTest : public CxxTest::TestSuite
 
 		void verifyPalindrome(const std::vector<std::string>& input, int length, const std::unordered_set<std::string>& expectedOutput)
 		{
-			std::vector<std::string> result = calculatePalindromes(input, length);
+			std::vector<std::string> result = findAllPalindromes(input, length);
 
 			TS_ASSERT(expectedOutput.size() == result.size());
 
@@ -212,7 +212,7 @@ class PalindromeCalculationTest : public CxxTest::TestSuite
 				"live on time emit no evil"
 			};
 
-			std::vector<std::string> result = calculatePalindromes(seedWords, palindromeLength);
+			std::vector<std::string> result = findAllPalindromes(seedWords, palindromeLength);
 
 			TS_ASSERT(allPalindromes(result));
 			TS_ASSERT(resultsFromSeed(seedWords, result));
