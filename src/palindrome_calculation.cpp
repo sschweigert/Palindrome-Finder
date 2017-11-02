@@ -117,16 +117,8 @@ void constructPalindromesFromStack(WordBuildingStack& wordBuildingStack, const s
 	}
 }
 
-std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seedWords, int numberOfWords)
+std::vector<std::string> findPalindromes(const std::vector<DoubleOrderedSet*>& wordSets)
 {
-	DoubleOrderedSet orderedSet(seedWords);
-
-	std::vector<DoubleOrderedSet*> wordSets;
-	for (int i = 0; i < numberOfWords; i++)
-	{
-		wordSets.push_back(&orderedSet);
-	}
-
 	// Output
 	std::vector<std::string> palindromes;
 
@@ -155,4 +147,17 @@ std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seed
 	} while (!wordBuildingStack.empty() && !done);
 
 	return palindromes;
+}
+
+std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seedWords, int numberOfWords)
+{
+	DoubleOrderedSet orderedSet(seedWords);
+
+	std::vector<DoubleOrderedSet*> wordSets;
+	for (int i = 0; i < numberOfWords; i++)
+	{
+		wordSets.push_back(&orderedSet);
+	}
+
+	return findPalindromes(wordSets);
 }
