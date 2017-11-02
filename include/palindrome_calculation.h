@@ -19,6 +19,7 @@
 #include <word_candidate_iterator.h>
 #include <entire_set_iterator.h>
 #include <word_building_stack.h>
+#include <double_ordered_set.h>
 #include <timer.h>
 
 std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seedWords, int numberOfWords);

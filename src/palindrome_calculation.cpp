@@ -73,11 +73,11 @@ std::string buildOntoString<Side::Right>(const std::string& initial, const std::
 }
 
 template <Side side>
-void constructPalindromesFromOverhang(std::string overhangText, WordBuildingStack& wordBuildingStack, const SortedStringSet<side>& forwardOrdering, std::vector<std::string>& palindromeOutput)
+void constructPalindromesFromOverhang(std::string overhangText, WordBuildingStack& wordBuildingStack, const SortedStringSet<side>& ordering, std::vector<std::string>& palindromeOutput)
 {
 	std::string reversedOverhang(reverseString(overhangText));
 
-	WordCandidateIterator<side> newIterator(reversedOverhang, forwardOrdering);
+	WordCandidateIterator<side> newIterator(reversedOverhang, ordering);
 
 	while (newIterator.hasNext())
 	{
@@ -108,19 +108,12 @@ void constructPalindromesFromStack(WordBuildingStack& wordBuildingStack, const S
 
 std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seedWords, int numberOfWords)
 {
-	ForwardStringSet forwardOrdering;
-	ReverseStringSet reverseOrdering;
-
-	for (const auto& word : seedWords)
-	{
-		forwardOrdering.insert(word);
-		reverseOrdering.insert(word);
-	}
+	DoubleOrderedSet orderedSet(seedWords);
 
 	// Output
 	std::vector<std::string> palindromes;
 
-	auto entireSetOrdering = std::make_unique<EntireSetIterator<Side::Left>>(forwardOrdering);
+	auto entireSetOrdering = std::make_unique<EntireSetIterator<Side::Left>>(orderedSet.forward);
 
 	WordBuildingStack wordBuildingStack;
 	wordBuildingStack.push(std::move(entireSetOrdering));
@@ -130,7 +123,7 @@ std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seed
 	{
 
 		// Refill the stack to numberOfWords size
-		fillWordBuildingStack(wordBuildingStack, numberOfWords - 1, forwardOrdering, reverseOrdering);
+		fillWordBuildingStack(wordBuildingStack, numberOfWords - 1, orderedSet.forward, orderedSet.reverse);
 
 		// Fix double loop break outs
 		if (wordBuildingStack.empty())
@@ -138,7 +131,7 @@ std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seed
 			break;
 		}
 
-		constructPalindromesFromStack(wordBuildingStack, forwardOrdering, reverseOrdering, palindromes);
+		constructPalindromesFromStack(wordBuildingStack, orderedSet.forward, orderedSet.reverse, palindromes);
 
 		incrementStack(wordBuildingStack);
 
