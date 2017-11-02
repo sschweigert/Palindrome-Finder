@@ -161,3 +161,20 @@ std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seed
 
 	return findPalindromes(wordSets);
 }
+
+std::vector<std::string> findTypedPalindromes(const std::vector<WordType>& types, const EnumMap<WordType, std::vector<std::string>>& words)
+{
+	EnumMap<WordType, DoubleOrderedSet> mappedSets;
+	for (auto element : words)
+	{
+		mappedSets.insert({element.first, element.second});
+	}
+
+	std::vector<DoubleOrderedSet*> wordSets;
+	for (const auto& type : types)
+	{
+		wordSets.push_back(&(mappedSets.at(type)));
+	}
+
+	return findPalindromes(wordSets);
+}

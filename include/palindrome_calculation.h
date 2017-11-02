@@ -14,6 +14,7 @@
 #include <memory>
 #include <unordered_map>
 
+#include <enum_class_map.h>
 #include <string_set.h>
 #include <palindrome_tools.h>
 #include <word_candidate_iterator.h>
@@ -21,10 +22,13 @@
 #include <word_building_stack.h>
 #include <double_ordered_set.h>
 #include <timer.h>
+#include <word_type.h>
 
 std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seedWords, int numberOfWords);
 
 void incrementStack(WordBuildingStack& wordBuildingStack, std::stack<WordCandidateIterator<Side::Left>>& concreteLeftIterators, std::stack<WordCandidateIterator<Side::Right>>& concreteRightIterators);
+
+std::vector<std::string> findTypedPalindromes(const std::vector<WordType>& types, const EnumMap<WordType, std::vector<std::string>>& words);
 
 /*
 template <class Functor, Side side>
