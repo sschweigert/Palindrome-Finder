@@ -29,6 +29,16 @@ int WordBuildingStack::getSideLength() const
 	return length;
 }
 
+template <Side side>
+unsigned int WordBuildingStack::getSideSize() const
+{
+	return getStackStatic<side>().size();	
+}
+
+template unsigned int WordBuildingStack::getSideSize<Side::Left>() const;
+template unsigned int WordBuildingStack::getSideSize<Side::Right>() const;
+
+
 template <>
 int WordBuildingStack::calculateOverlapPosition<Side::Left>(int overlapIndex, int indexOffset) const
 {
@@ -173,7 +183,7 @@ Overhang WordBuildingStack::getOverhang() const
 
 }
 
-int WordBuildingStack::size() const
+unsigned int WordBuildingStack::size() const
 {
 	return lastAddition.size();
 }

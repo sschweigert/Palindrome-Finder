@@ -1,5 +1,7 @@
 #include <palindrome_calculation.h>
 
+#include <iostream>
+
 void incrementStack(WordBuildingStack& wordBuildingStack)
 {
 	wordBuildingStack.incrementTop();
@@ -34,19 +36,24 @@ void addIteratorToSide(const std::string& overhangText, WordBuildingStack& wordB
 
 }
 	
-void fillWordBuildingStack(WordBuildingStack& wordBuildingStack, int numberOfWords, const SortedStringSet<Side::Left>& forwardOrdering, const SortedStringSet<Side::Right>& reverseOrdering)
+void fillWordBuildingStack(WordBuildingStack& wordBuildingStack, const std::vector<DoubleOrderedSet*>& wordSets)
 {
-	while (wordBuildingStack.size() < numberOfWords)
+	unsigned int wordCount = wordSets.size();
+
+	// Fill up to the second last word
+	while (wordBuildingStack.size() < (wordCount - 1))
 	{
 		Overhang overhang = wordBuildingStack.getOverhang();
 
 		if (overhang.side == Side::Left)
 		{
-			addIteratorToSide<Side::Right>(overhang.overhangText, wordBuildingStack, reverseOrdering);
+			unsigned int index = (wordCount - 1) - wordBuildingStack.getSideSize<Side::Right>();
+			addIteratorToSide<Side::Right>(overhang.overhangText, wordBuildingStack, wordSets[index]->reverse);
 		}
 		else
 		{
-			addIteratorToSide<Side::Left>(overhang.overhangText, wordBuildingStack, forwardOrdering);
+			unsigned int index = wordBuildingStack.getSideSize<Side::Left>();
+			addIteratorToSide<Side::Left>(overhang.overhangText, wordBuildingStack, wordSets[index]->forward);
 		}
 
 		if (wordBuildingStack.empty())
@@ -110,10 +117,16 @@ std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seed
 {
 	DoubleOrderedSet orderedSet(seedWords);
 
+	std::vector<DoubleOrderedSet*> wordSets;
+	for (int i = 0; i < numberOfWords; i++)
+	{
+		wordSets.push_back(&orderedSet);
+	}
+
 	// Output
 	std::vector<std::string> palindromes;
 
-	auto entireSetOrdering = std::make_unique<EntireSetIterator<Side::Left>>(orderedSet.forward);
+	auto entireSetOrdering = std::make_unique<EntireSetIterator<Side::Left>>(wordSets.front()->forward);
 
 	WordBuildingStack wordBuildingStack;
 	wordBuildingStack.push(std::move(entireSetOrdering));
@@ -123,7 +136,7 @@ std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seed
 	{
 
 		// Refill the stack to numberOfWords size
-		fillWordBuildingStack(wordBuildingStack, numberOfWords - 1, orderedSet.forward, orderedSet.reverse);
+		fillWordBuildingStack(wordBuildingStack, wordSets);
 
 		// Fix double loop break outs
 		if (wordBuildingStack.empty())

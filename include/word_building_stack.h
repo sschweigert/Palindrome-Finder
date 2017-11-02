@@ -30,7 +30,7 @@ class WordBuildingStack
 		Overhang getOverhang() const;
 
 		//! \brief Get the number of words in the stack.
-		int size() const;
+		unsigned int size() const;
 
 		//! \brief Remove the top of the stack.
 		//! \return The Side from which the top was removed.
@@ -52,6 +52,10 @@ class WordBuildingStack
 		void push(std::unique_ptr<IWordCandidateIterator<Side::Left>> newIterator);
 
 		void push(std::unique_ptr<IWordCandidateIterator<Side::Right>> newIterator);
+
+		//! \brief Get the number of words 
+		template <Side side>
+			unsigned int getSideSize() const;
 
 	private:
 
@@ -84,12 +88,12 @@ class WordBuildingStack
 
 		const IWordIterator& getTop() const;
 
+		template <Side side>
+			std::string generateOverhangText(int numMatchingCharacters) const;
+
 		//! \brief Calculate the length of a specific side of iterators
 		template <Side side>
 			int getSideLength() const;
-
-		template <Side side>
-			std::string generateOverhangText(int numMatchingCharacters) const;
 
 		std::stack<Side> lastAddition;
 
