@@ -99,17 +99,21 @@ void constructPalindromesFromOverhang(std::string overhangText, WordBuildingStac
 	}
 }
 
-void constructPalindromesFromStack(WordBuildingStack& wordBuildingStack, const SortedStringSet<Side::Left>& forwardOrdering, const SortedStringSet<Side::Right>& reverseOrdering, std::vector<std::string>& palindromeOutput)
+void constructPalindromesFromStack(WordBuildingStack& wordBuildingStack, const std::vector<DoubleOrderedSet*>& wordSets, std::vector<std::string>& palindromeOutput)
 {
+	// Should always work no matter what the overhang because the last word will be to the left of left side
+	unsigned int wordSetIndex = wordBuildingStack.getSideSize<Side::Left>();
+	const DoubleOrderedSet& lastSet = *(wordSets[wordSetIndex]);
+
 	Overhang overhang = wordBuildingStack.getOverhang();
 	std::string reversedOverhang(reverseString(overhang.overhangText));
 	if (overhang.side == Side::Left)
 	{
-		constructPalindromesFromOverhang<Side::Right>(overhang.overhangText, wordBuildingStack, reverseOrdering, palindromeOutput);
+		constructPalindromesFromOverhang<Side::Right>(overhang.overhangText, wordBuildingStack, lastSet.reverse, palindromeOutput);
 	}
 	else
 	{
-		constructPalindromesFromOverhang<Side::Left>(overhang.overhangText, wordBuildingStack, forwardOrdering, palindromeOutput);
+		constructPalindromesFromOverhang<Side::Left>(overhang.overhangText, wordBuildingStack, lastSet.forward, palindromeOutput);
 	}
 }
 
@@ -144,7 +148,7 @@ std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seed
 			break;
 		}
 
-		constructPalindromesFromStack(wordBuildingStack, orderedSet.forward, orderedSet.reverse, palindromes);
+		constructPalindromesFromStack(wordBuildingStack, wordSets, palindromes);
 
 		incrementStack(wordBuildingStack);
 
