@@ -1,18 +1,3 @@
-#include <fstream>
-#include <iostream>
-#include <set>
-#include <vector>
-#include <algorithm>
-#include <functional>
-#include <stack>
-#include <memory>
-#include <unordered_map>
-
-#include <string_set.h>
-#include <palindrome_tools.h>
-#include <word_candidate_iterator.h>
-#include <entire_set_iterator.h>
-#include <word_building_stack.h>
 #include <palindrome_calculation.h>
 #include <file_io.h>
 #include <timer.h>

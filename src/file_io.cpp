@@ -31,8 +31,7 @@ std::string homeDir()
 
 boost::optional<std::vector<std::string>> importWordSet(std::string path)
 {
-	std::fstream fileStream;
-	fileStream.open(path, std::fstream::in);
+	std::fstream fileStream(path, std::fstream::in);
 
 	if (fileStream.fail())
 	{
@@ -41,11 +40,9 @@ boost::optional<std::vector<std::string>> importWordSet(std::string path)
 
 	std::vector<std::string> toReturn;
 
-	while (!fileStream.eof())
+	std::string line;
+	while (std::getline(fileStream, line))
 	{
-		std::string line;
-		fileStream >> line;
-
 		if (line.size() > 0)	
 		{
 			toReturn.push_back(line);
