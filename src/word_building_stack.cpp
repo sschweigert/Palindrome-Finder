@@ -21,6 +21,7 @@ template <Side side>
 int WordBuildingStack::getSideLength() const
 {
 	const auto& sideStack = getStackStatic<side>();
+	// TODO: Extract function
 	int length = 0;
 	for (auto& word : sideStack)
 	{

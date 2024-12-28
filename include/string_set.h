@@ -15,12 +15,6 @@ struct ReverseLess
 
 };
 
-//! Ordered set with strings forward sorted
-typedef std::set<std::string, std::less<std::string>> ForwardStringSet;
-
-//! Ordered set with strings reverse sorted
-typedef std::set<std::string, ReverseLess> ReverseStringSet;
-
 //! Helper class necessary for full specialization of using template alias
 template <Side side>
 struct SetSpecializationHelper;
@@ -28,13 +22,13 @@ struct SetSpecializationHelper;
 template <>
 struct SetSpecializationHelper<Side::Left>
 {
-	typedef ForwardStringSet Set;
+	using Set = std::set<std::string, std::less<std::string>>;
 };
 
 template <>
 struct SetSpecializationHelper<Side::Right>
 {
-	typedef ReverseStringSet Set;
+	using Set = std::set<std::string, ReverseLess>;
 };
 
 //! Generalized version of sorted string set which is ForwardStringSet for Side::Left and

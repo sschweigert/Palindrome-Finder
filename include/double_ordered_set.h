@@ -13,9 +13,9 @@ struct DoubleOrderedSet
 		reverse(words.begin(), words.end())
 	{}
 
-	ForwardStringSet forward;
+	SortedStringSet<Side::Left> forward;
 
-	ReverseStringSet reverse;
+	SortedStringSet<Side::Right> reverse;
 
 };
 

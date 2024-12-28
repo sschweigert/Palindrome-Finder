@@ -75,16 +75,16 @@ void fillWordBuildingStack(WordBuildingStack& wordBuildingStack, const std::vect
 }
 
 template <Side side>
-std::string buildOntoString(const std::string& initial, const std::string& toAdd);
+std::string concatenate(const std::string& initial, const std::string& toAdd);
 
 template <>
-std::string buildOntoString<Side::Left>(const std::string& initial, const std::string& toAdd)
+std::string concatenate<Side::Left>(const std::string& initial, const std::string& toAdd)
 {
 	return toAdd + initial;
 }
 
 template <>
-std::string buildOntoString<Side::Right>(const std::string& initial, const std::string& toAdd)
+std::string concatenate<Side::Right>(const std::string& initial, const std::string& toAdd)
 {
 	return initial + toAdd;
 }
@@ -98,7 +98,7 @@ void constructPalindromesFromOverhang(std::string overhangText, WordBuildingStac
 
 	while (newIterator.hasNext())
 	{
-		std::string potentialPalindrome = buildOntoString<side>(overhangText, *newIterator);
+		std::string potentialPalindrome = concatenate<side>(overhangText, *newIterator);
 		if (isPalindrome(potentialPalindrome))
 		{
 			std::string palindromeText = wordBuildingStack.generateString(*newIterator);
@@ -159,7 +159,7 @@ std::vector<std::string> findPalindromes(const std::vector<DoubleOrderedSet*>& w
 	return palindromes;
 }
 
-}
+} // namespace
 
 std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seedWords, int numberOfWords)
 {
