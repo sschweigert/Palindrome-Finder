@@ -61,7 +61,7 @@ bool isPalindrome(const std::string& first)
 	auto forwardItr = first.begin();
 	auto reverseItr = std::prev(first.end());
 
-	while (forwardItr != first.end())
+	while (forwardItr <= reverseItr)
 	{
 		if (*forwardItr != *reverseItr)
 		{

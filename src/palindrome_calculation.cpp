@@ -163,7 +163,7 @@ std::vector<std::string> findPalindromes(const std::vector<DoubleOrderedSet*>& w
 
 std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seedWords, int numberOfWords)
 {
-	DoubleOrderedSet orderedSet(seedWords);
+	DoubleOrderedSet orderedSet = buildFrom(seedWords);
 
 	std::vector<DoubleOrderedSet*> wordSets;
 	for (int i = 0; i < numberOfWords; i++)
@@ -179,7 +179,7 @@ std::vector<std::string> findTypedPalindromes(const std::vector<WordType>& types
 	EnumMap<WordType, DoubleOrderedSet> mappedSets;
 	for (auto element : words)
 	{
-		mappedSets.insert({element.first, element.second});
+		mappedSets.insert({element.first, buildFrom(element.second)});
 	}
 
 	std::vector<DoubleOrderedSet*> wordSets;
