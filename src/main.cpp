@@ -1,6 +1,7 @@
 #include <palindrome_calculation.h>
 #include <file_io.h>
 #include <timer.h>
+#include <iostream>
 
 int main(int argc, char** argv)
 {
@@ -28,9 +29,23 @@ int main(int argc, char** argv)
 
 	EnumMap<WordType, std::vector<std::string>> typedWords = importTypedWords();
 
+	for (const auto wordset : typedWords)
+	{
+		std::cout << "For " << to_string(wordset.first) << " found " << wordset.second.size() << " word\n";
+	}
+
 	std::vector<WordType> types = { WordType::Adjective, WordType::Adjective, WordType::Adjective, WordType::Noun };
 
-	std::vector<std::string> palindromes = findTypedPalindromes(types, typedWords);
+	std::vector<std::string> palindromes;
+	
+	auto calc = [&] ()
+	{
+		std::vector<std::string> palindromes = findTypedPalindromes(types, typedWords);
+	};
+
+	double runtime = timeFunction(calc);
+
+	std::cout << "Found " << palindromes.size() << " palindromes in " << runtime << " seconds\n";
 
 	saveToHomeDir(palindromes, "generated_palindromes.txt");
 	return 0;

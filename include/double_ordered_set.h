@@ -8,15 +8,18 @@
 struct DoubleOrderedSet
 {
 
-	DoubleOrderedSet(const std::vector<std::string>& words) :
-		forward(words.begin(), words.end()),
-		reverse(words.begin(), words.end())
-	{}
-
 	SortedStringSet<Side::Left> forward;
 
 	SortedStringSet<Side::Right> reverse;
 
 };
+
+DoubleOrderedSet buildFrom(const std::vector<std::string>& words) {
+	return { 
+		{words.begin(), words.end()},
+		{words.begin(), words.end()}
+	};
+}
+
 
 #endif
