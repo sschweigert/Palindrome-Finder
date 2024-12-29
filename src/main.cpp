@@ -2,6 +2,7 @@
 #include <file_io.h>
 #include <timer.h>
 #include <iostream>
+#include <iomanip>
 
 int main(int argc, char** argv)
 {
@@ -27,12 +28,18 @@ int main(int argc, char** argv)
 	saveToHomeDir(palindromes, "generated_palindromes.txt");
 	*/
 
+	std::cout << "Importing word banks...\n";
+
 	EnumMap<WordType, std::vector<std::string>> typedWords = importTypedWords();
 
+	std::cout << "\nWord banks imported\n";
 	for (const auto wordset : typedWords)
 	{
-		std::cout << "For " << to_string(wordset.first) << " found " << wordset.second.size() << " word\n";
+		std::string desc = std::string(to_string(wordset.first)) + "s:";
+		std::cout << std::left << std::setw(14) << std::setfill(' ') << desc << wordset.second.size() << "\n";
 	}
+
+	std::cout << "\nRunning palindrome calculation\n";
 
 	std::vector<WordType> types = { WordType::Adjective, WordType::Adjective, WordType::Adjective, WordType::Noun };
 
@@ -40,7 +47,7 @@ int main(int argc, char** argv)
 	
 	auto calc = [&] ()
 	{
-		std::vector<std::string> palindromes = findTypedPalindromes(types, typedWords);
+		palindromes = findTypedPalindromes(types, typedWords);
 	};
 
 	double runtime = timeFunction(calc);
