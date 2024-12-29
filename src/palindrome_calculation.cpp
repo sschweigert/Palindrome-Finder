@@ -159,6 +159,27 @@ std::vector<std::string> findPalindromes(const std::vector<DoubleOrderedSet*>& w
 	return palindromes;
 }
 
+struct CalculationState
+{
+	Overhang overhang;
+
+	int leftIndex;
+
+	int rightIndex;
+};
+
+void findPalindromesImpl(const std::vector<DoubleOrderedSet*>& wordSets, const CalculationState& state, std::vector<std::string>& toReturn)
+{
+	
+}
+
+std::vector<std::string> findPalindromesNew(const std::vector<DoubleOrderedSet*>& wordSets)
+{
+	std::vector<std::string> toReturn;
+	findPalindromesImpl(wordSets, { { Side::Right, "" }, 0, wordSets.size() - 1 }, toReturn);
+	return toReturn;
+}
+
 } // namespace
 
 std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seedWords, int numberOfWords)

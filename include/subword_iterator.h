@@ -6,12 +6,19 @@
 #include <side.h>
 #include <specialized_subword_behaviors.h>
 
-//! \brief An iterator that is used to find substrings of a string have corresponding entries in a set.
-//! It is generalized so that the sub strings can be built eithr from the left or the right.
+//! \brief An iterator that is used to find substrings of a string which have corresponding entries in a set.
+//! The input is a string to be used to generate the search criteria and a set of sorted strings to search.
 //!
-//! For example, with "apple": 
-//! building from left: { "a", "ap", "app", "appl", "apple" }
-//! building from righr: { "e", "le", "ple", "pple", "apple" }
+//! The search criteria is composed of the subsets of a string, built one character at a time from either
+//! the left or the right.
+//!
+//! For example with  "apple," the following is used as the search criteria: 
+//! from left: { "a", "ap", "app", "appl", "apple" }
+//! from right: { "e", "le", "ple", "pple", "apple" }
+//
+//! The template parameter is used to determine if this iterator builds from the left or the right.
+//! Different strings are generated depending on the order in which they are built, although both
+//! sides will generate the entire string at the end.
 //!
 //! When constructed or operator++() is called, the iterator will build a word by adding characters,
 //! one by one, and will only stop when the resulting word matches one found in the set.
