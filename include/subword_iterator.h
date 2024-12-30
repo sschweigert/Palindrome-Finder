@@ -1,7 +1,6 @@
 #ifndef _SUBWORD_ITERATOR_
 #define _SUBWORD_ITERATOR_
 
-#include <iword_candidate_iterator.h>
 #include <string_set.h>
 #include <side.h>
 #include <specialized_subword_behaviors.h>
@@ -20,8 +19,14 @@
 //! Different strings are generated depending on the order in which they are built, although both
 //! sides will generate the entire string at the end.
 //!
-//! When constructed or operator++() is called, the iterator will build a word by adding characters,
-//! one by one, and will only stop when the resulting word matches one found in the set.
+//! This iterator is either in a valid or invalid state. If hasNext returns true, the iterator contains
+//! a value which can be obtained via operator*.
+//!
+//! When constructed, the iterator will update to first substring which matches in the set. If no value
+//! is found, the iterator will be set to the invalid state and hasNext() will return false.
+//!
+//! When operator++ is called, the iterator will update to the next matching substring, if one exists.
+//! If none exists, the iterator will be set to the invalid state and hasNext() will return false.
 template <Side side>
 class SubwordIterator
 {
