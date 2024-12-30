@@ -1,12 +1,8 @@
 #ifndef _SUPERWORD_ITERATOR_
 #define _SUPERWORD_ITERATOR_
 
-#include <iword_candidate_iterator.h>
 #include <string_set.h>
 #include <side.h>
-#include <boost/optional.hpp>
-#include <palindrome_tools.h>
-#include <algorithm>
 
 template <Side side>
 class SuperwordIterator
