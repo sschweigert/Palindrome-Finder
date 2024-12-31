@@ -159,6 +159,12 @@ std::vector<std::string> findPalindromes(const std::vector<DoubleOrderedSet*>& w
 	return palindromes;
 }
 
+struct WordStack
+{
+	std::vector<std::string> left;
+	std::vector<std::string> right;
+};
+
 struct CalculationState
 {
 	Overhang overhang;
@@ -166,17 +172,78 @@ struct CalculationState
 	int leftIndex;
 
 	int rightIndex;
+	
+	WordStack& wordStack;
 };
 
 void findPalindromesImpl(const std::vector<DoubleOrderedSet*>& wordSets, const CalculationState& state, std::vector<std::string>& toReturn)
 {
-	
+	if (state.overhang.side == Side::Left)
+	{
+		if (state.leftIndex < state.rightIndex)
+		{
+			std::string reversedOverhang = reverseString(state.overhang.overhangText);
+			const auto& wordset = wordSets[state.rightIndex];
+			auto itr = WordCandidateIterator<Side::Right>(reversedOverhang, wordset->reverse);
+			
+			while (itr.hasNext())
+			{
+				const auto& nextCandidate = *itr;
+				if (nextCandidate.size() > reversedOverhang.size())
+				{
+					// Next overhang is going to be on right side now
+					std::string nextOverhang = nextCandidate.substr(nextCandidate.size() - reversedOverhang.size());
+					findPalindromesImpl(wordSets, { { Side::Right, nextOverhang}, state.leftIndex, state.rightIndex - 1, state.wordStack }, toReturn);
+				}
+				else
+				{
+					// New word is not long enough, so overhang will remain on left side
+					std::string nextOverhang = state.overhang.overhangText.substr(nextCandidate.size());
+					findPalindromesImpl(wordSets, { { Side::Left, nextOverhang }, state.leftIndex, state.rightIndex - 1, state.wordStack }, toReturn);
+
+				}
+			}
+		}
+		else
+		{
+			std::string reversedOverhang = reverseString(state.overhang.overhangText);
+			const auto& wordset = wordSets[state.rightIndex];
+			auto itr = WordCandidateIterator<Side::Right>(reversedOverhang, wordset->reverse);
+
+			while (itr.hasNext())
+			{
+				auto candidate = state.overhang.overhangText + *itr;
+				if (isPalindrome(candidate))
+				{
+					std::string foundPalindrome = "";
+					for (const auto& val : state.wordStack.left)
+					{
+						foundPalindrome += val;
+						foundPalindrome += " ";
+					}
+					foundPalindrome += candidate;
+					for (const auto& val : state.wordStack.right)
+					{
+						foundPalindrome += " ";
+						foundPalindrome += val;
+					}
+					toReturn.push_back(foundPalindrome);
+				}
+
+			}		
+		}
+	}
+	else
+	{
+
+	}
 }
 
 std::vector<std::string> findPalindromesNew(const std::vector<DoubleOrderedSet*>& wordSets)
 {
 	std::vector<std::string> toReturn;
-	findPalindromesImpl(wordSets, { { Side::Right, "" }, 0, wordSets.size() - 1 }, toReturn);
+	WordStack wordStack;
+	findPalindromesImpl(wordSets, { { Side::Right, "" }, 0, wordSets.size() - 1, wordStack }, toReturn);
 	return toReturn;
 }
 
