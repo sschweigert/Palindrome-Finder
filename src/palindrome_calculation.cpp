@@ -176,65 +176,90 @@ struct CalculationState
 	WordStack& wordStack;
 };
 
+
+std::string fromStack(const WordStack& stack)
+{
+	bool first = true;
+	std::string toReturn = "";
+	for (const auto& val : stack.left)
+	{
+		if (!first)
+		{
+			toReturn += " ";
+		}
+		toReturn += val;
+	}
+	for (int i = stack.right.size() - 1; i >= 0; --i)
+	{
+		if (!first)
+		{
+			toReturn += " ";
+		}
+		toReturn += stack.right[i];
+	}
+	return toReturn;
+}
+
 void findPalindromesImpl(const std::vector<DoubleOrderedSet*>& wordSets, const CalculationState& state, std::vector<std::string>& toReturn)
 {
+	if (state.leftIndex > state.rightIndex)
+	{
+		if (isPalindrome(state.overhang.overhangText))
+		{
+			toReturn.push_back(fromStack(state.wordStack));
+		}
+		return;
+	}
+
+	std::string reversedOverhang = reverseString(state.overhang.overhangText);
 	if (state.overhang.side == Side::Left)
 	{
-		if (state.leftIndex < state.rightIndex)
+		const auto& wordset = wordSets[state.rightIndex];
+		auto itr = WordCandidateIterator<Side::Right>(reversedOverhang, wordset->reverse);
+		
+		while (itr.hasNext())
 		{
-			std::string reversedOverhang = reverseString(state.overhang.overhangText);
-			const auto& wordset = wordSets[state.rightIndex];
-			auto itr = WordCandidateIterator<Side::Right>(reversedOverhang, wordset->reverse);
-			
-			while (itr.hasNext())
+			const auto& nextCandidate = *itr;
+			state.wordStack.right.push_back(nextCandidate);
+			if (nextCandidate.size() > reversedOverhang.size())
 			{
-				const auto& nextCandidate = *itr;
-				if (nextCandidate.size() > reversedOverhang.size())
-				{
-					// Next overhang is going to be on right side now
-					std::string nextOverhang = nextCandidate.substr(nextCandidate.size() - reversedOverhang.size());
-					findPalindromesImpl(wordSets, { { Side::Right, nextOverhang}, state.leftIndex, state.rightIndex - 1, state.wordStack }, toReturn);
-				}
-				else
-				{
-					// New word is not long enough, so overhang will remain on left side
-					std::string nextOverhang = state.overhang.overhangText.substr(nextCandidate.size());
-					findPalindromesImpl(wordSets, { { Side::Left, nextOverhang }, state.leftIndex, state.rightIndex - 1, state.wordStack }, toReturn);
-
-				}
+				// Next overhang is going to be on right side now
+				std::string nextOverhang = nextCandidate.substr(nextCandidate.size() - reversedOverhang.size());
+				findPalindromesImpl(wordSets, { { Side::Right, nextOverhang}, state.leftIndex, state.rightIndex - 1, state.wordStack }, toReturn);
 			}
-		}
-		else
-		{
-			std::string reversedOverhang = reverseString(state.overhang.overhangText);
-			const auto& wordset = wordSets[state.rightIndex];
-			auto itr = WordCandidateIterator<Side::Right>(reversedOverhang, wordset->reverse);
-
-			while (itr.hasNext())
+			else
 			{
-				auto candidate = state.overhang.overhangText + *itr;
-				if (isPalindrome(candidate))
-				{
-					std::string foundPalindrome = "";
-					for (const auto& val : state.wordStack.left)
-					{
-						foundPalindrome += val;
-						foundPalindrome += " ";
-					}
-					foundPalindrome += candidate;
-					for (const auto& val : state.wordStack.right)
-					{
-						foundPalindrome += " ";
-						foundPalindrome += val;
-					}
-					toReturn.push_back(foundPalindrome);
-				}
-
-			}		
+				// New word is not long enough, so overhang will remain on left side
+				std::string nextOverhang = state.overhang.overhangText.substr(nextCandidate.size());
+				findPalindromesImpl(wordSets, { { Side::Left, nextOverhang }, state.leftIndex, state.rightIndex - 1, state.wordStack }, toReturn);
+			}
+			state.wordStack.right.pop_back();
 		}
 	}
 	else
 	{
+		// Side == Right
+		const auto& wordset = wordSets[state.leftIndex];
+		auto itr = WordCandidateIterator<Side::Left>(reversedOverhang, wordset->forward);
+		
+		while (itr.hasNext())
+		{
+			const auto& nextCandidate = *itr;
+			state.wordStack.left.push_back(nextCandidate);
+			if (nextCandidate.size() > reversedOverhang.size())
+			{
+				// Next overhang is going to be on left side now
+				std::string nextOverhang = nextCandidate.substr(reversedOverhang.size());
+				findPalindromesImpl(wordSets, { { Side::Left, nextOverhang}, state.leftIndex + 1, state.rightIndex, state.wordStack }, toReturn);
+			}
+			else
+			{
+				// New word is not long enough, so overhang will remain on left side
+				std::string nextOverhang = state.overhang.overhangText.substr(reversedOverhang.size() - nextCandidate.size());
+				findPalindromesImpl(wordSets, { { Side::Left, nextOverhang }, state.leftIndex + 1, state.rightIndex, state.wordStack }, toReturn);
+			}
+			state.wordStack.left.pop_back();
+		}
 
 	}
 }
