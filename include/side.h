@@ -18,4 +18,16 @@ constexpr Side opposite(Side side)
 	return (side == Side::Left) ? Side::Right : Side::Left;
 }
 
+inline const char* to_string(Side side)
+{
+	switch (side)
+	{
+		case Side::Left:
+			return "Left";
+		case Side::Right:
+			return "Right";
+	}
+	return "[INVALID]";
+}
+
 #endif

@@ -2,6 +2,7 @@
 
 #include <side.h>
 
+#include <iostream>
 #include <string_set.h>
 #include <palindrome_tools.h>
 #include <word_candidate_iterator.h>
@@ -188,6 +189,7 @@ std::string fromStack(const WordStack& stack)
 			toReturn += " ";
 		}
 		toReturn += val;
+		first = false;
 	}
 	for (int i = stack.right.size() - 1; i >= 0; --i)
 	{
@@ -196,6 +198,7 @@ std::string fromStack(const WordStack& stack)
 			toReturn += " ";
 		}
 		toReturn += stack.right[i];
+		first = false;
 	}
 	return toReturn;
 }
@@ -224,7 +227,7 @@ void findPalindromesImpl(const std::vector<DoubleOrderedSet*>& wordSets, const C
 			if (nextCandidate.size() > reversedOverhang.size())
 			{
 				// Next overhang is going to be on right side now
-				std::string nextOverhang = nextCandidate.substr(nextCandidate.size() - reversedOverhang.size());
+				std::string nextOverhang = nextCandidate.substr(0, nextCandidate.size() - reversedOverhang.size());
 				findPalindromesImpl(wordSets, { { Side::Right, nextOverhang}, state.leftIndex, state.rightIndex - 1, state.wordStack }, toReturn);
 			}
 			else
@@ -234,6 +237,7 @@ void findPalindromesImpl(const std::vector<DoubleOrderedSet*>& wordSets, const C
 				findPalindromesImpl(wordSets, { { Side::Left, nextOverhang }, state.leftIndex, state.rightIndex - 1, state.wordStack }, toReturn);
 			}
 			state.wordStack.right.pop_back();
+			++itr;
 		}
 	}
 	else
@@ -254,11 +258,12 @@ void findPalindromesImpl(const std::vector<DoubleOrderedSet*>& wordSets, const C
 			}
 			else
 			{
-				// New word is not long enough, so overhang will remain on left side
-				std::string nextOverhang = state.overhang.overhangText.substr(reversedOverhang.size() - nextCandidate.size());
-				findPalindromesImpl(wordSets, { { Side::Left, nextOverhang }, state.leftIndex + 1, state.rightIndex, state.wordStack }, toReturn);
+				// New word is not long enough, so overhang will remain on right side
+				std::string nextOverhang = state.overhang.overhangText.substr(0, reversedOverhang.size() - nextCandidate.size());
+				findPalindromesImpl(wordSets, { { Side::Right, nextOverhang }, state.leftIndex + 1, state.rightIndex, state.wordStack }, toReturn);
 			}
 			state.wordStack.left.pop_back();
+			++itr;
 		}
 
 	}
