@@ -1,8 +1,10 @@
 #include <palindrome_calculation.h>
+#include <palindrome_tools.h>
 #include <file_io.h>
 #include <timer.h>
 #include <iostream>
 #include <iomanip>
+#include <unordered_set>
 
 int main(int argc, char** argv)
 {
@@ -43,17 +45,34 @@ int main(int argc, char** argv)
 
 	std::vector<WordType> types = { WordType::Adjective, WordType::Adjective, WordType::Adjective, WordType::Noun };
 
-	std::vector<std::string> palindromes;
+	std::vector<std::string> palindromesNew;
 	
 	auto calc = [&] ()
 	{
-		palindromes = findTypedPalindromes(types, typedWords);
+		palindromesNew = findTypedPalindromes(types, typedWords, true);
 	};
 
 	double runtime = timeFunction(calc);
 
-	std::cout << "Found " << palindromes.size() << " palindromes in " << runtime << " seconds\n";
+	std::vector<std::string> palindromesOld;
+	
+	auto calcOld = [&] ()
+	{
+		palindromesOld = findTypedPalindromes(types, typedWords, false);
+	};
 
-	saveToHomeDir(palindromes, "generated_palindromes.txt");
+	runtime = timeFunction(calcOld);
+
+	std::cout << "Found " << palindromesNew.size() << " palindromes in " << runtime << " seconds\n";
+
+	for (const auto& val : palindromesOld)
+	{
+		if (!isSpacedPalindrome(val))
+		{
+			std::cout << "Invalid result found: \"" << val << "\"\n";
+		}
+	}
+
+	//saveToHomeDir(palindromes, "generated_palindromes.txt");
 	return 0;
 }

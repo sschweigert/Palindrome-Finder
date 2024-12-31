@@ -2,7 +2,6 @@
 
 #include <side.h>
 
-#include <iostream>
 #include <string_set.h>
 #include <palindrome_tools.h>
 #include <word_candidate_iterator.h>
@@ -289,10 +288,10 @@ std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seed
 		wordSets.push_back(&orderedSet);
 	}
 
-	return findPalindromes(wordSets);
+	return findPalindromesNew(wordSets);
 }
 
-std::vector<std::string> findTypedPalindromes(const std::vector<WordType>& types, const EnumMap<WordType, std::vector<std::string>>& words)
+std::vector<std::string> findTypedPalindromes(const std::vector<WordType>& types, const EnumMap<WordType, std::vector<std::string>>& words, bool useNew)
 {
 	EnumMap<WordType, DoubleOrderedSet> mappedSets;
 	for (auto element : words)
@@ -306,69 +305,12 @@ std::vector<std::string> findTypedPalindromes(const std::vector<WordType>& types
 		wordSets.push_back(&(mappedSets.at(type)));
 	}
 
-	return findPalindromes(wordSets);
-}
-
-/*
- * The below stuff can likely be deleted.
- *
-void incrementStack(WordBuildingStack& wordBuildingStack, std::stack<WordCandidateIterator<Side::Left>>& concreteLeftIterators, std::stack<WordCandidateIterator<Side::Right>>& concreteRightIterators);
-
-template <class Functor, Side side>
-class IteratorWrapper : public IWordCandidateIterator<side>
-{
-
-	public:
-
-		IteratorWrapper(IWordCandidateIterator<side>& wordCandidateIterator, Functor& functor) :
-			wordCandidateIterator(wordCandidateIterator),
-			functor(functor)
-	{}
-
-		virtual const std::string& operator*() const
-		{
-			return *wordCandidateIterator;
-		}
-
-		virtual bool hasNext() const
-		{
-			return wordCandidateIterator.hasNext();
-		}
-
-		virtual IWordCandidateIterator<side>& operator++()
-		{
-			functor();
-			++wordCandidateIterator;
-			return *this;
-		}
-
-
-	private:
-
-		IWordCandidateIterator<side>& wordCandidateIterator;
-
-		Functor& functor;
-
-};
-
-
-int count = 0;
-auto counter = [&]
-{
-	const float percentStep = 0.5;
-	int countStep = ((float)percentStep / 100.0) * (float)forwardOrdering.size();
-	countStep = std::max(1, countStep);
-
-	++count;
-	if (count % countStep == 0)
+	if (useNew)
 	{
-		float fraction = (float)count / (float)forwardOrdering.size();
-		std::cout << (fraction * 100.0) << "% done" << std::endl;
-		
+		return findPalindromesNew(wordSets);
 	}
-
-};
-
-IteratorWrapper<decltype(counter), Side::Left> wrappedItr(entireSetOrdering, counter);
-*/
-
+	else
+	{
+		return findPalindromes(wordSets);
+	}
+}
