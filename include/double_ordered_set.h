@@ -15,7 +15,8 @@ struct DoubleOrderedSet
 };
 
 DoubleOrderedSet buildFrom(const std::vector<std::string>& words) {
-	return { 
+	return
+	{
 		{words.begin(), words.end()},
 		{words.begin(), words.end()}
 	};
