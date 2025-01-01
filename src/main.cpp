@@ -45,27 +45,18 @@ int main(int argc, char** argv)
 
 	std::vector<WordType> types = { WordType::Adjective, WordType::Adjective, WordType::Adjective, WordType::Noun };
 
-	std::vector<std::string> palindromesNew;
+	std::vector<std::string> palindromes;
 	
 	auto calc = [&] ()
 	{
-		palindromesNew = findTypedPalindromes(types, typedWords, true);
+		palindromes = findTypedPalindromes(types, typedWords);
 	};
 
 	double runtime = timeFunction(calc);
 
-	std::vector<std::string> palindromesOld;
-	
-	auto calcOld = [&] ()
-	{
-		palindromesOld = findTypedPalindromes(types, typedWords, false);
-	};
+	std::cout << "Found " << palindromes.size() << " palindromes in " << runtime << " seconds\n";
 
-	runtime = timeFunction(calcOld);
-
-	std::cout << "Found " << palindromesNew.size() << " palindromes in " << runtime << " seconds\n";
-
-	for (const auto& val : palindromesOld)
+	for (const auto& val : palindromes)
 	{
 		if (!isSpacedPalindrome(val))
 		{
@@ -73,6 +64,6 @@ int main(int argc, char** argv)
 		}
 	}
 
-	//saveToHomeDir(palindromes, "generated_palindromes.txt");
+	saveToHomeDir(palindromes, "generated_palindromes.txt");
 	return 0;
 }

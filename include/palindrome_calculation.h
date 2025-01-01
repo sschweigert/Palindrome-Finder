@@ -17,6 +17,6 @@ std::vector<std::string> findAllPalindromes(const std::vector<std::string>& seed
 // implicitly defines the length of the palindrome (ie. types.size() words)
 // @param types The description of the phrase
 // @param words Vocabulary of words sorted by word type
-std::vector<std::string> findTypedPalindromes(const std::vector<WordType>& types, const EnumMap<WordType, std::vector<std::string>>& words, bool useNew);
+std::vector<std::string> findTypedPalindromes(const std::vector<WordType>& types, const EnumMap<WordType, std::vector<std::string>>& words);
 
 #endif
