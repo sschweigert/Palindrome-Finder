@@ -37,7 +37,7 @@ bool WordCandidateIterator<side>::hasNext() const
 }
 
 template <Side side>
-IWordIterator& WordCandidateIterator<side>::operator++()
+WordCandidateIterator<side>& WordCandidateIterator<side>::operator++()
 {
 	if (mCurrentState == State::SubWord)
 	{

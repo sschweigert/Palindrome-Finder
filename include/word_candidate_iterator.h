@@ -1,7 +1,6 @@
 #ifndef _WORD_CANDIDATE_ITERATOR_
 #define _WORD_CANDIDATE_ITERATOR_
 
-#include <iword_candidate_iterator.h>
 #include <subword_iterator.h>
 #include <superword_iterator.h>
 
@@ -9,18 +8,18 @@
 #include <string_set.h>
 
 template <Side side>
-class WordCandidateIterator : public IWordCandidateIterator<side>
+class WordCandidateIterator
 {
 
 	public:
 
 		WordCandidateIterator(const std::string& wordToMatch, const SortedStringSet<side>& wordsToSearch);
 
-		virtual const std::string& operator*() const;
+		const std::string& operator*() const;
 
-		virtual bool hasNext() const; 
+		bool hasNext() const; 
 
-		virtual IWordIterator& operator++();
+		WordCandidateIterator<side>& operator++();
 
 	private:
 
@@ -41,7 +40,7 @@ class WordCandidateIterator : public IWordCandidateIterator<side>
 
 };
 
-typedef WordCandidateIterator<Side::Left> ForwardCandidateIterator;
-typedef WordCandidateIterator<Side::Right> ReverseCandidateIterator;
+using ForwardCandidateIterator = WordCandidateIterator<Side::Left>;
+using ReverseCandidateIterator = WordCandidateIterator<Side::Right>;
 
 #endif
